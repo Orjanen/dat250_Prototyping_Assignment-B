@@ -2,13 +2,14 @@ package DAO;
 
 
 import models.User;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import java.util.List;
 
-
+@Repository("pollDatabase")
 public class UserDAO {
     EntityManagerFactory emf = Persistence.createEntityManagerFactory("proto");
     EntityManager em = emf.createEntityManager();

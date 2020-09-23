@@ -2,6 +2,7 @@ package DAO;
 
 import models.Poll;
 import models.User;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -13,6 +14,7 @@ import javax.persistence.criteria.Root;
 import java.util.List;
 
 
+@Repository("pollDatabase")
 public class PollDAO {
     EntityManagerFactory emf = Persistence.createEntityManagerFactory("proto");
     EntityManager em = emf.createEntityManager();
