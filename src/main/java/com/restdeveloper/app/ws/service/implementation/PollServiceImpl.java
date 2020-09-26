@@ -2,6 +2,7 @@ package com.restdeveloper.app.ws.service.implementation;
 
 import com.restdeveloper.app.ws.io.entity.PollEntity;
 import com.restdeveloper.app.ws.io.entity.UserEntity;
+import com.restdeveloper.app.ws.io.entity.VoteEntity;
 import com.restdeveloper.app.ws.io.repository.PollRepository;
 import com.restdeveloper.app.ws.io.repository.UserRepository;
 import com.restdeveloper.app.ws.service.PollService;
@@ -32,10 +33,14 @@ public class PollServiceImpl implements PollService {
     public PollDto createPoll(PollDto poll, String userId) {
         UserEntity user = userRepository.findByUserId(userId);
         if(user == null) throw new ResourceNotFoundException("User not found");
-
         PollEntity pollEntity = modelMapper.map(poll, PollEntity.class);
+
         pollEntity.setUserDetails(user);
         pollEntity.setPollId(utils.generatePollId(30));
+
+        VoteEntity voteEntity = new VoteEntity();
+        voteEntity.setPollEntity(pollEntity);
+        pollEntity.setVoteEntity(voteEntity);
 
         PollEntity storedPollDetails = pollRepository.save(pollEntity);
 

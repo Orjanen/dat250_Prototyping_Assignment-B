@@ -22,8 +22,8 @@ public class PollController {
     PollService pollService;
 
     @PutMapping
-    public String updateUser(){
-        return "post poll was called";
+    public String uodatePoll(){
+        return "put poll was called";
     }
 
     @GetMapping(path = "/{id}")

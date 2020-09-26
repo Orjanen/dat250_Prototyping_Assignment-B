@@ -5,6 +5,7 @@ public class PollDto {
     private String pollId;
     private String pollName;
     private UserDto userDetails;
+    private VoteDto voteEntity;
 
     public long getId() {
         return id;
@@ -12,6 +13,14 @@ public class PollDto {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public VoteDto getVoteEntity() {
+        return voteEntity;
+    }
+
+    public void setVoteEntity(VoteDto voteEntity) {
+        this.voteEntity = voteEntity;
     }
 
     public String getPollName() {
@@ -37,5 +46,13 @@ public class PollDto {
 
     public void setUserDetails(UserDto userDetails) {
         this.userDetails = userDetails;
+    }
+
+    public VoteDto getVoteDetails() {
+        return voteEntity;
+    }
+
+    public void setVoteDetails(VoteDto voteDetails) {
+        this.voteEntity = voteDetails;
     }
 }

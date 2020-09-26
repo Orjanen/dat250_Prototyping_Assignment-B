@@ -20,6 +20,9 @@ public class PollEntity implements Serializable {
     @JoinColumn(name = "users_id")
     private UserEntity userDetails;
 
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "pollEntity")
+    private VoteEntity voteEntity;
+
     public long getId() {
         return id;
     }
@@ -50,5 +53,13 @@ public class PollEntity implements Serializable {
 
     public void setUserDetails(UserEntity userDetails) {
         this.userDetails = userDetails;
+    }
+
+    public VoteEntity getVoteEntity() {
+        return voteEntity;
+    }
+
+    public void setVoteEntity(VoteEntity voteEntity) {
+        this.voteEntity = voteEntity;
     }
 }
