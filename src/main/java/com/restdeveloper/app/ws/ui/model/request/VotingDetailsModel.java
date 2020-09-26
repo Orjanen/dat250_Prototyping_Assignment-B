@@ -1,17 +1,8 @@
-package com.restdeveloper.app.ws.ui.model.response;
+package com.restdeveloper.app.ws.ui.model.request;
 
-public class VoteRest {
+public class VotingDetailsModel {
     private int option1Count;
     private int option2Count;
-    private String voteId;
-
-    public String getVoteId() {
-        return voteId;
-    }
-
-    public void setVoteId(String voteId) {
-        this.voteId = voteId;
-    }
 
     public int getOption1Count() {
         return option1Count;
@@ -28,5 +19,4 @@ public class VoteRest {
     public void setOption2Count(int option2Count) {
         this.option2Count = option2Count;
     }
-
 }

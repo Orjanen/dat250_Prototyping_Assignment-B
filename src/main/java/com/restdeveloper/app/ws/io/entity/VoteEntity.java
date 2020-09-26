@@ -11,7 +11,7 @@ public class VoteEntity implements Serializable {
     @Id
     @GeneratedValue
     private Long id;
-    private String VoteId;
+    private String voteId;
 
     private int option1Count = 0;
     private int option2Count = 0;
@@ -29,11 +29,11 @@ public class VoteEntity implements Serializable {
     }
 
     public String getVoteId() {
-        return VoteId;
+        return voteId;
     }
 
     public void setVoteId(String voteId) {
-        VoteId = voteId;
+        this.voteId = voteId;
     }
 
     public int getOption1Count() {

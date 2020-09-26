@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface VoteRepository extends CrudRepository<VoteEntity, Long> {
+    VoteEntity findByVoteId(String id);
 }

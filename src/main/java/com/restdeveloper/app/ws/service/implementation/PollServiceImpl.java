@@ -39,6 +39,7 @@ public class PollServiceImpl implements PollService {
         pollEntity.setPollId(utils.generatePollId(30));
 
         VoteEntity voteEntity = new VoteEntity();
+        voteEntity.setVoteId(utils.generateUserId(30));
         voteEntity.setPollEntity(pollEntity);
         pollEntity.setVoteEntity(voteEntity);
 
