@@ -1,10 +1,10 @@
-package com.dat250.assignmentB.demo;
+package com.restdeveloper.app.ws;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class AssignmentBApplicationTests {
+class SpringAppWsApplicationTests {
 
 	@Test
 	void contextLoads() {
