@@ -1,11 +1,16 @@
 package com.restdeveloper.app.ws.shared.dto;
 
+import java.util.List;
+
 public class PollDto {
     private long id;
     private String pollId;
     private String pollName;
-    private UserDto userDetails;
-    private VoteDto voteEntity;
+    private UserDto creator;
+    private List<VoteDto> votes;
+    private String optionOne;
+    private String optionTwo;
+    private boolean isPrivate;
 
     public long getId() {
         return id;
@@ -15,13 +20,7 @@ public class PollDto {
         this.id = id;
     }
 
-    public VoteDto getVoteEntity() {
-        return voteEntity;
-    }
 
-    public void setVoteEntity(VoteDto voteEntity) {
-        this.voteEntity = voteEntity;
-    }
 
     public String getPollName() {
         return pollName;
@@ -40,19 +39,42 @@ public class PollDto {
         this.pollId = pollId;
     }
 
-    public UserDto getUserDetails() {
-        return userDetails;
+    public UserDto getCreator() {
+        return creator;
     }
 
-    public void setUserDetails(UserDto userDetails) {
-        this.userDetails = userDetails;
+    public void setCreator(UserDto creator) {
+        this.creator = creator;
     }
 
-    public VoteDto getVoteDetails() {
-        return voteEntity;
+    public List<VoteDto> getVotes() {
+        return votes;
+    }
+    public void setVotes(List<VoteDto> votes) {
+        this.votes = votes;
     }
 
-    public void setVoteDetails(VoteDto voteDetails) {
-        this.voteEntity = voteDetails;
+    public String getOptionOne() {
+        return optionOne;
+    }
+
+    public void setOptionOne(String optionOne) {
+        this.optionOne = optionOne;
+    }
+
+    public String getOptionTwo() {
+        return optionTwo;
+    }
+
+    public void setOptionTwo(String optionTwo) {
+        this.optionTwo = optionTwo;
+    }
+
+    public boolean isPrivate() {
+        return isPrivate;
+    }
+
+    public void setPrivate(boolean aPrivate) {
+        isPrivate = aPrivate;
     }
 }

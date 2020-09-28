@@ -21,8 +21,10 @@ public class VoteController {
     public String vote(@PathVariable String pollId, @RequestBody VotingDetailsModel votingDetails){
 
         PollDto pollDto = pollService.getPollByPollId(pollId);
-        voteService.updateVotes(pollDto.getVoteDetails().getVoteId(),votingDetails);
+        //voteService.updateVotes(pollDto.getVoteDetails().getVoteId(),votingDetails);
 
         return "put Vote was called";
     }
+
+
 }

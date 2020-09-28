@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PollServiceImpl implements PollService {
@@ -35,13 +36,13 @@ public class PollServiceImpl implements PollService {
         if(user == null) throw new ResourceNotFoundException("User not found");
         PollEntity pollEntity = modelMapper.map(poll, PollEntity.class);
 
-        pollEntity.setUserDetails(user);
+        pollEntity.setCreator(user);
         pollEntity.setPollId(utils.generatePollId(30));
 
         VoteEntity voteEntity = new VoteEntity();
         voteEntity.setVoteId(utils.generateUserId(30));
         voteEntity.setPollEntity(pollEntity);
-        pollEntity.setVoteEntity(voteEntity);
+        //pollEntity.setVoteEntity(voteEntity);
 
         PollEntity storedPollDetails = pollRepository.save(pollEntity);
 
@@ -62,8 +63,11 @@ public class PollServiceImpl implements PollService {
 
 
     @Override
-    public List<PollDto> getPolls(String userId) {
-        List<PollDto> returnValue = new ArrayList<>();
+    public List<PollDto> getAllPollsByCreator(String userId) {
+        UserEntity user = userRepository.findByUserId(userId);
+        List<PollEntity> polls = pollRepository.findAllPollsByCreator(user);
+
+        List<PollDto> returnValue = polls.stream().map(poll -> modelMapper.map(poll, PollDto.class)).collect(Collectors.toList());
 
         return returnValue;
     }

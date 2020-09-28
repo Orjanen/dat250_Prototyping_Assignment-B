@@ -16,7 +16,11 @@ public class VoteEntity implements Serializable {
     private int option1Count = 0;
     private int option2Count = 0;
 
-    @OneToOne()
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private UserEntity user;
+
+    @ManyToOne
     @JoinColumn(name = "poll_id")
     private PollEntity pollEntity;
 
@@ -60,5 +64,11 @@ public class VoteEntity implements Serializable {
         this.pollEntity = pollEntity;
     }
 
+    public UserEntity getUser() {
+        return user;
+    }
 
+    public void setUser(UserEntity user) {
+        this.user = user;
+    }
 }

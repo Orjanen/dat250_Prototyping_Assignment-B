@@ -13,6 +13,7 @@ public class UserDto implements Serializable {
     private String password;
     private String encryptedPassword;
     private List<PollDto> myPolls;
+    private List<VoteDto> myVotes;
 
 
     public long getId() {
@@ -77,5 +78,13 @@ public class UserDto implements Serializable {
 
     public void setMyPolls(List<PollDto> myPolls) {
         this.myPolls = myPolls;
+    }
+
+    public List<VoteDto> getMyVotes() {
+        return myVotes;
+    }
+
+    public void setMyVotes(List<VoteDto> myVotes) {
+        this.myVotes = myVotes;
     }
 }

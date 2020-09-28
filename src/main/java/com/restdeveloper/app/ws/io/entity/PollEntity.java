@@ -2,6 +2,7 @@ package com.restdeveloper.app.ws.io.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity(name = "polls")
 public class PollEntity implements Serializable {
@@ -17,11 +18,50 @@ public class PollEntity implements Serializable {
     private String pollName;
 
     @ManyToOne
-    @JoinColumn(name = "users_id")
-    private UserEntity userDetails;
+    private UserEntity creator; //bruker som opprettet poll
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "pollEntity")
-    private VoteEntity voteEntity;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pollEntity")
+    private List<VoteEntity> votes;
+
+    private String optionOne;
+    private String optionTwo;
+
+    @Transient
+    private int optionOneVotes;
+    public int getOptionOneVotes(){
+        int numberOfVotes = 0;
+
+        if(votes != null && votes.size() > 0){
+            for(VoteEntity v : votes){
+                numberOfVotes += v.getOption1Count();
+            }
+        }
+
+        return numberOfVotes;
+    }
+
+    @Transient
+    private int optionTwoVotes;
+    public int getOptionTwoVotes(){
+        int numberOfVotes = 0;
+        if(votes != null && votes.size() > 0){
+            for(VoteEntity v : votes){
+                numberOfVotes += v.getOption2Count();
+            }
+        }
+
+        return numberOfVotes;
+    }
+
+
+
+    private boolean isPrivate;
+
+
+    //TODO: Når ble poll opprettet, hvor lenge skal den vare
+    //TODO: liste med IoTDevice
+
+
 
     public long getId() {
         return id;
@@ -47,19 +87,27 @@ public class PollEntity implements Serializable {
         this.pollName = pollName;
     }
 
-    public UserEntity getUserDetails() {
-        return userDetails;
+    public UserEntity getCreator() {
+        return creator;
     }
 
-    public void setUserDetails(UserEntity userDetails) {
-        this.userDetails = userDetails;
+    public void setCreator(UserEntity creator) {
+        this.creator = creator;
     }
 
-    public VoteEntity getVoteEntity() {
-        return voteEntity;
+    public List<VoteEntity> getVotes(){
+        return votes;
     }
 
-    public void setVoteEntity(VoteEntity voteEntity) {
-        this.voteEntity = voteEntity;
+    public void setVotes(List<VoteEntity> votes){
+        this.votes = votes;
+    }
+
+    public boolean isPrivate() {
+        return isPrivate;
+    }
+
+    public void setPrivate(boolean aPrivate) {
+        isPrivate = aPrivate;
     }
 }

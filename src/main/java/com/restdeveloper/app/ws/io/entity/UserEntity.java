@@ -27,8 +27,11 @@ public class UserEntity implements Serializable {
     @Column(nullable = false)
     private String encryptedPassword;
 
-    @OneToMany(mappedBy = "userDetails", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
     private List<PollEntity> myPolls;
+
+    @OneToMany(mappedBy = "user")
+    private List<VoteEntity> myVotes;
 
     public List<PollEntity> getMyPolls() {
         return myPolls;

@@ -1,14 +1,21 @@
 package com.restdeveloper.app.ws.ui.controller;
 
+import com.restdeveloper.app.ws.service.PollService;
 import com.restdeveloper.app.ws.service.UserService;
+import com.restdeveloper.app.ws.service.VoteService;
+import com.restdeveloper.app.ws.shared.dto.PollDto;
 import com.restdeveloper.app.ws.shared.dto.UserDto;
+import com.restdeveloper.app.ws.shared.dto.VoteDto;
+import com.restdeveloper.app.ws.ui.model.request.PollsRequestModel;
 import com.restdeveloper.app.ws.ui.model.request.UserDetailsRequestModel;
-import com.restdeveloper.app.ws.ui.model.response.OperationStatusModel;
-import com.restdeveloper.app.ws.ui.model.response.RequestOperationStatus;
-import com.restdeveloper.app.ws.ui.model.response.UserRest;
+import com.restdeveloper.app.ws.ui.model.request.VotingDetailsModel;
+import com.restdeveloper.app.ws.ui.model.response.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("users")
@@ -17,6 +24,12 @@ public class UserController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    PollService pollService;
+
+    @Autowired
+    VoteService voteService;
 
     @GetMapping(path = "/{id}")
     public UserRest getUser(@PathVariable String id){
@@ -57,4 +70,35 @@ public class UserController {
 
         return returnValue;
     }
+
+    @PostMapping(path = "/{id}/polls")
+    public PollRest addNewPollByUser(@PathVariable("id") String id, @RequestBody PollsRequestModel newPoll){
+        //UserDto user = userService.getUserByUserId(id);
+        PollDto pollDto = modelMapper.map(newPoll, PollDto.class);
+
+
+
+        //pollDto.setUserDetails(user);
+        PollDto savedPoll = pollService.createPoll(pollDto, id);
+
+        PollRest returnPoll = modelMapper.map(savedPoll, PollRest.class);
+        return returnPoll;
+    }
+
+    @GetMapping(path = "/{id}/polls")
+    public List<PollRest> findPollsCreatedByUser(@PathVariable("id") String id){
+        List<PollDto> pollDtos = pollService.getAllPollsByCreator(id);
+        List<PollRest> pollRests = pollDtos.stream().map(pollDto -> modelMapper.map(pollDto, PollRest.class)).collect(Collectors.toList());
+        return pollRests;
+    }
+
+    @GetMapping(path = "/{id}/votes")
+    public List<VoteRest> findAllVotesByUser(@PathVariable("id") String userId){
+        List<VoteDto> voteDtos = voteService.getAllVotesByUser(userId);
+        List<VoteRest> voteRests = voteDtos.stream().map(voteDto -> modelMapper.map(voteDto, VoteRest.class)).collect(Collectors.toList());
+
+        return voteRests;
+    }
+
+
 }
