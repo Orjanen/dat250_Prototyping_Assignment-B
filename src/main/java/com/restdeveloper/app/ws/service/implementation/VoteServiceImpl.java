@@ -57,6 +57,7 @@ public class VoteServiceImpl implements VoteService {
         if(poll == null) throw new ResourceNotFoundException("Poll not found");
 
         VoteEntity newVote = modelMapper.map(voteDto, VoteEntity.class);
+        newVote.setVoteId(UUID.randomUUID().toString());
         newVote.setUser(user);
         newVote.setPollEntity(poll);
 
