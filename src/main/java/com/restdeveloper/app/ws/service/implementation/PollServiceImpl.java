@@ -37,7 +37,7 @@ public class PollServiceImpl implements PollService {
 
         PollEntity pollEntity = modelMapper.map(poll, PollEntity.class);
         pollEntity.setCreator(user);
-        pollEntity.setPollId(utils.generatePollId(30));
+        pollEntity.setPollId(utils.generatePollId(8));
 
         VoteEntity voteEntity = new VoteEntity();
         voteEntity.setVoteId(utils.generateUserId(30));
@@ -49,7 +49,6 @@ public class PollServiceImpl implements PollService {
 
         return returnValue;
     }
-
     @Override
     public PollDto getPollByPollId(String id) {
 
