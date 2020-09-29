@@ -13,7 +13,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,7 +21,6 @@ public class PollServiceImpl implements PollService {
 
     @Autowired
     Utils utils;
-
     @Autowired
     PollRepository pollRepository;
     @Autowired
@@ -32,10 +30,12 @@ public class PollServiceImpl implements PollService {
 
     @Override
     public PollDto createPoll(PollDto poll, String userId) {
-        UserEntity user = userRepository.findByUserId(userId);
-        if(user == null) throw new ResourceNotFoundException("User not found");
-        PollEntity pollEntity = modelMapper.map(poll, PollEntity.class);
 
+        UserEntity user = userRepository.findByUserId(userId);
+
+        if(user == null) throw new ResourceNotFoundException("User not found");
+
+        PollEntity pollEntity = modelMapper.map(poll, PollEntity.class);
         pollEntity.setCreator(user);
         pollEntity.setPollId(utils.generatePollId(30));
 
@@ -45,7 +45,6 @@ public class PollServiceImpl implements PollService {
         //pollEntity.setVoteEntity(voteEntity);
 
         PollEntity storedPollDetails = pollRepository.save(pollEntity);
-
         PollDto returnValue = modelMapper.map(storedPollDetails, PollDto.class);
 
         return returnValue;
@@ -53,9 +52,9 @@ public class PollServiceImpl implements PollService {
 
     @Override
     public PollDto getPollByPollId(String id) {
+
         PollEntity pollEntity = pollRepository.findByPollId(id);
         if(pollEntity == null) throw new ResourceNotFoundException("pollEntity is null");
-
         PollDto returnValue = modelMapper.map(pollEntity, PollDto.class);
 
         return returnValue;
@@ -64,9 +63,9 @@ public class PollServiceImpl implements PollService {
 
     @Override
     public List<PollDto> getAllPollsByCreator(String userId) {
+
         UserEntity user = userRepository.findByUserId(userId);
         List<PollEntity> polls = pollRepository.findAllPollsByCreator(user);
-
         List<PollDto> returnValue = polls.stream().map(poll -> modelMapper.map(poll, PollDto.class)).collect(Collectors.toList());
 
         return returnValue;

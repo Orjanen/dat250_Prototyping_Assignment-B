@@ -10,9 +10,6 @@ public class PollRest {
     private List<VoteRest> votes;
     private boolean isPrivate;
 
-
-
-
     public String getPollId() {
         return pollId;
     }

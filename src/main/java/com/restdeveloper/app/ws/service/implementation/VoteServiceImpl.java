@@ -10,7 +10,6 @@ import com.restdeveloper.app.ws.service.VoteService;
 import com.restdeveloper.app.ws.shared.UnregisteredVoteForPrivatePollException;
 import com.restdeveloper.app.ws.shared.dto.VoteDto;
 import com.restdeveloper.app.ws.ui.model.request.VotingDetailsModel;
-import com.restdeveloper.app.ws.ui.model.response.PollRest;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,15 +33,14 @@ public class VoteServiceImpl implements VoteService {
 
     ModelMapper modelMapper = new ModelMapper();
 
-
-
     @Override
     public void updateVotes(String voteId, VotingDetailsModel votingDetailsModel) {
+
         VoteEntity voteEntity = voteRepository.findByVoteId(voteId);
         if (voteEntity == null) throw new ResourceNotFoundException("Vote entity not found");
+
         int vote1 = voteEntity.getOption1Count();
         int vote2 = voteEntity.getOption2Count();
-
         voteEntity.setOption1Count(vote1 + votingDetailsModel.getOption1Count());
         voteEntity.setOption2Count(vote2 + votingDetailsModel.getOption2Count());
 
@@ -51,8 +49,10 @@ public class VoteServiceImpl implements VoteService {
 
     @Override
     public VoteDto addVoteByRegisteredUserToPoll(VoteDto voteDto, String pollId, String userId) {
+
         UserEntity user = userRepository.findByUserId(userId);
         if(user == null) throw new ResourceNotFoundException("User not found");
+
         PollEntity poll = pollRepository.findByPollId(pollId);
         if(poll == null) throw new ResourceNotFoundException("Poll not found");
 
@@ -85,17 +85,15 @@ public class VoteServiceImpl implements VoteService {
         VoteEntity savedVote = voteRepository.save(newVote);
         VoteDto returnVote = modelMapper.map(savedVote, VoteDto.class);
         return returnVote;
-
-
     }
 
     @Override
     public List<VoteDto> getAllVotesByUser(String userId) {
+
         UserEntity user = userRepository.findByUserId(userId);
         List<VoteEntity> votes = voteRepository.findAllVotesByUser(user);
         List<VoteDto> voteDtos = votes.stream().map(voteEntity -> modelMapper.map(voteEntity, VoteDto.class)).collect(Collectors.toList());
+
         return voteDtos;
     }
-
-
 }

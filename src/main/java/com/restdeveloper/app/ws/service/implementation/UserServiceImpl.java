@@ -15,7 +15,6 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     Utils utils;
-
     @Autowired
     UserRepository userRepository;
 
@@ -26,12 +25,11 @@ public class UserServiceImpl implements UserService {
 
         if(userRepository.findByEmail(user.getEmail()) != null)
             throw new ResourceNotFoundException("Email already in use");
-        UserEntity userEntity = modelMapper.map(user, UserEntity.class);
 
+        UserEntity userEntity = modelMapper.map(user, UserEntity.class);
         //TODO Make a EncryptedPassword method
         userEntity.setEncryptedPassword("setEncryptedPassword");
         userEntity.setUserId(utils.generateUserId(30));
-
         UserEntity storedUserDetails = userRepository.save(userEntity);
 
         UserDto returnValue = modelMapper.map(storedUserDetails, UserDto.class);
@@ -41,6 +39,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUserByUserId(String id) {
+
         UserEntity userEntity = userRepository.findByUserId(id);
         if(userEntity == null) throw new ResourceNotFoundException("userEntity is null");
 
@@ -51,6 +50,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(String userId) {
+
         UserEntity userEntity = userRepository.findByUserId(userId);
         if(userEntity == null) throw new ResourceNotFoundException("userEntity is null");
 

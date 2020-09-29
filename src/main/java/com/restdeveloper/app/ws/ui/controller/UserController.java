@@ -6,9 +6,7 @@ import com.restdeveloper.app.ws.service.VoteService;
 import com.restdeveloper.app.ws.shared.dto.PollDto;
 import com.restdeveloper.app.ws.shared.dto.UserDto;
 import com.restdeveloper.app.ws.shared.dto.VoteDto;
-import com.restdeveloper.app.ws.ui.model.request.PollsRequestModel;
 import com.restdeveloper.app.ws.ui.model.request.UserDetailsRequestModel;
-import com.restdeveloper.app.ws.ui.model.request.VotingDetailsModel;
 import com.restdeveloper.app.ws.ui.model.response.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("users")
+@RequestMapping("user")
 public class UserController {
     ModelMapper modelMapper = new ModelMapper();
 
@@ -31,22 +29,22 @@ public class UserController {
     @Autowired
     VoteService voteService;
 
+
+    @PostMapping
+    public UserRest createUser(@RequestBody UserDetailsRequestModel userDetails){
+        UserDto userDto = modelMapper.map(userDetails, UserDto.class);
+        UserDto createdUser = userService.createUser(userDto);
+        UserRest returnValue = modelMapper.map(createdUser, UserRest.class);
+
+        return returnValue;
+    }
+
     @GetMapping(path = "/{id}")
     public UserRest getUser(@PathVariable String id){
         ModelMapper modelMapper = new ModelMapper();
         UserRest returnValue;
         UserDto userDto = userService.getUserByUserId(id);
         returnValue = modelMapper.map(userDto, UserRest.class);
-
-        return returnValue;
-    }
-
-    @PostMapping
-    public UserRest createUser(@RequestBody UserDetailsRequestModel userDetails){
-        UserDto userDto = modelMapper.map(userDetails, UserDto.class);
-
-        UserDto createdUser = userService.createUser(userDto);
-        UserRest returnValue = modelMapper.map(createdUser, UserRest.class);
 
         return returnValue;
     }
@@ -71,21 +69,7 @@ public class UserController {
         return returnValue;
     }
 
-    @PostMapping(path = "/{id}/polls")
-    public PollRest addNewPollByUser(@PathVariable("id") String id, @RequestBody PollsRequestModel newPoll){
-        //UserDto user = userService.getUserByUserId(id);
-        PollDto pollDto = modelMapper.map(newPoll, PollDto.class);
-
-
-
-        //pollDto.setUserDetails(user);
-        PollDto savedPoll = pollService.createPoll(pollDto, id);
-
-        PollRest returnPoll = modelMapper.map(savedPoll, PollRest.class);
-        return returnPoll;
-    }
-
-    @GetMapping(path = "/{id}/polls")
+    @GetMapping(path = "/{id}/allPolls")
     public List<PollRest> findPollsCreatedByUser(@PathVariable("id") String id){
         List<PollDto> pollDtos = pollService.getAllPollsByCreator(id);
         List<PollRest> pollRests = pollDtos.stream().map(pollDto -> modelMapper.map(pollDto, PollRest.class)).collect(Collectors.toList());
