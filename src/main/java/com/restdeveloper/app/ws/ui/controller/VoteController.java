@@ -22,7 +22,7 @@ public class VoteController {
     VoteService voteService;
 
     //TODO: Heller hente User fra authorization?
-    @PostMapping(path = "/{pollId}/{userId}")
+    @PostMapping(path = "/poll/{pollId}/user/{userId}")
     public VoteRest addVoteByRegisteredUserToPoll(@RequestBody VotingDetailsModel vote, @PathVariable("pollId") String pollId, @PathVariable("userId") String userId){
         VoteDto voteDto = modelMapper.map(vote, VoteDto.class);
         VoteDto savedVote = voteService.addVoteByRegisteredUserToPoll(voteDto, pollId, userId);
@@ -30,7 +30,15 @@ public class VoteController {
         return returnValue;
     }
 
-    @PostMapping(path = "/{pollId}")
+    @PutMapping(path = "/poll/{pollId}/user/{userId}")
+    public VoteRest updateVoteByRegisteredUser(@RequestBody VotingDetailsModel vote, @PathVariable("pollId") String pollId, @PathVariable("userId") String userId){
+        VoteDto voteDto = modelMapper.map(vote, VoteDto.class);
+        VoteDto updatedVote = voteService.updateVote(voteDto, pollId, userId);
+        VoteRest returnValue = modelMapper.map(updatedVote, VoteRest.class);
+        return returnValue;
+    }
+
+    @PostMapping(path = "/poll/{pollId}")
     public VoteRest addVoteByUnregisteredUserToPoll(@RequestBody VotingDetailsModel vote, @PathVariable("pollId") String pollId){
         VoteDto voteDto = modelMapper.map(vote, VoteDto.class);
         VoteDto savedVote = voteService.addVoteByUnregisteredUserToPoll(voteDto, pollId);

@@ -39,7 +39,7 @@ public class PollController {
         return returnValue;
     }
 
-    @PostMapping(path = "/{userId}/createPoll")
+    @PostMapping(path = "/user/{userId}")
     public PollRest addNewPollByUser(@PathVariable String userId, @RequestBody PollsRequestModel newPoll){
         PollDto pollDto = modelMapper.map(newPoll, PollDto.class);
         PollDto savedPoll = pollService.createPoll(pollDto, userId);

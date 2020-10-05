@@ -10,6 +10,7 @@ import com.restdeveloper.app.ws.service.VoteService;
 import com.restdeveloper.app.ws.shared.UnregisteredVoteForPrivatePollException;
 import com.restdeveloper.app.ws.shared.dto.VoteDto;
 import com.restdeveloper.app.ws.ui.model.request.VotingDetailsModel;
+import org.apache.tomcat.jni.Poll;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,22 @@ public class VoteServiceImpl implements VoteService {
         voteEntity.setOption2Count(vote2 + votingDetailsModel.getOption2Count());
 
         voteRepository.save(voteEntity);
+    }
+
+    @Override
+    public VoteDto updateVote(VoteDto voteDto, String pollId, String userId) {
+        //VoteEntity voteEntity = voteRepository.findByVoteId(voteDto.getVoteId());
+        PollEntity poll = pollRepository.findByPollId(pollId);
+        UserEntity user = userRepository.findByUserId(userId);
+        VoteEntity voteEntity = voteRepository.findByUserAndPollEntity(user, poll);
+        if(voteEntity == null) throw new ResourceNotFoundException("Vote not found");
+
+        voteEntity.setOption1Count(voteDto.getOption1Count());
+        voteEntity.setOption2Count(voteDto.getOption2Count());
+
+        VoteEntity updatedVote = voteRepository.save(voteEntity);
+        VoteDto returnVote = modelMapper.map(updatedVote, VoteDto.class);
+        return returnVote;
     }
 
     @Override

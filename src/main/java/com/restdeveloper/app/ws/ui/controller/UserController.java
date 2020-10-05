@@ -69,7 +69,7 @@ public class UserController {
         return returnValue;
     }
 
-    @GetMapping(path = "/{id}/allPolls")
+    @GetMapping(path = "/{id}/polls")
     public List<PollRest> findPollsCreatedByUser(@PathVariable("id") String id){
         List<PollDto> pollDtos = pollService.getAllPollsByCreator(id);
         List<PollRest> pollRests = pollDtos.stream().map(pollDto -> modelMapper.map(pollDto, PollRest.class)).collect(Collectors.toList());

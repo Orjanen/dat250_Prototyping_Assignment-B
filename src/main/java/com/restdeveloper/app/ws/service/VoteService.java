@@ -10,6 +10,8 @@ import java.util.List;
 public interface VoteService {
     void updateVotes(String voteId, VotingDetailsModel votingDetailsModel);
 
+    VoteDto updateVote(VoteDto voteDto, String pollId, String userId);
+
     VoteDto addVoteByRegisteredUserToPoll(VoteDto voteDto, String pollId, String userId);
 
     VoteDto addVoteByUnregisteredUserToPoll(VoteDto voteDto, String pollId);
