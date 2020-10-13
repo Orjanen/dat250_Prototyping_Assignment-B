@@ -1,12 +1,18 @@
-import React from 'react';
+import React, {Fragment} from 'react';
+import {Button, Input, Segment} from "semantic-ui-react";
+import IconHeader from "../components/header/IconHeader";
 
 const HomePage = () => {
     return (
-        <div>
-            <h1 style={{textAlign:'center'}}>
-                User homepage
-            </h1>
-        </div>
+        <Fragment>
+            <Segment textAlign='center' style={{marginTop: '2em'}}>
+                <IconHeader
+                    mainText='Home Page'
+                    subText='Manages your polls here'
+                    icon='user'
+                />
+            </Segment>
+        </Fragment>
     );
 }
 

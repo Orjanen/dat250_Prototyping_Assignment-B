@@ -14,6 +14,7 @@ const NavBar = () => {
                >
                    Welcome
                </Menu.Item>
+
                <Menu.Item position='right' style={{marginRight: '10em'}}>
                    <Icon name='user'/>
                    <Dropdown pointing='top left'>
