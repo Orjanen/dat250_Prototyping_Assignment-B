@@ -1,12 +1,26 @@
-import React from 'react';
+import React, {Fragment} from 'react';
+import IconHeader from "../components/header/IconHeader";
+import {Segment, Input, Button} from 'semantic-ui-react'
 
 const WelcomePage = () => {
     return (
-        <div style={{marginTop: '7em'}}>
-            <h1 style={{textAlign:'center'}}>
-                Welcome Page
-            </h1>
-        </div>
+        <Fragment>
+            <Segment textAlign='center' style={{marginTop: '2em'}}>
+            <IconHeader
+                mainText='Welcome'
+                subText= 'Please enter the code'
+                icon = 'keyboard'
+            />
+            <div/>
+            <Input placeholder='12 34 56'  />
+            <div/>
+            <Button
+                primary
+                style={{marginTop: '1em'}}
+            > Submit </Button>
+
+            </Segment>
+        </Fragment>
     );
 }
 
