@@ -1,13 +1,13 @@
 import React from 'react';
 
-const WelcomePage = () => {
+const CreatePollPage = () => {
     return (
-        <div style={{marginTop: '7em'}}>
+        <div>
             <h1 style={{textAlign:'center'}}>
-                Welcome Page
+               Create poll
             </h1>
         </div>
     );
 }
 
-export default WelcomePage;
+export default CreatePollPage;

@@ -1,13 +1,13 @@
 import React from 'react';
 
-const WelcomePage = () => {
+const ProfileDetails = () => {
     return (
         <div style={{marginTop: '7em'}}>
             <h1 style={{textAlign:'center'}}>
-                Welcome Page
+               ProfileDetails
             </h1>
         </div>
     );
 }
 
-export default WelcomePage;
+export default ProfileDetails;
