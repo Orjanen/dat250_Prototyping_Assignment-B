@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react';
+import React, {Fragment, } from 'react';
 import {Route, Switch} from 'react-router-dom'
 import {Container} from 'semantic-ui-react'
 
@@ -11,23 +11,23 @@ import ProfileDetails from "./pages/ProfileDetails";
 
 const App = () => {
   return (
-      <Fragment>
-          <NavBar/>
-          <Route path='/' exact component={welcomePage}/>
-          <Route path={'/(.+)'} render={() => (
-              <Fragment>
-                  <Container style={{marginTop: '7em'}}>
-                      <Switch>
-                          <Route path='/login' exact component={LoginPage}/>
-                          <Route path='/homepage/:id' exact component={HomePage}/>
-                          <Route path='/createnewpoll' exact component={CreatePollPage}/>
-                          <Route path='/profiledetails' exact component={ProfileDetails}/>
-                      </Switch>
-                  </Container>
-              </Fragment>
-          )}/>
-      </Fragment>
-  );
+        <Fragment>
+            <NavBar/>
+            <Route path='/' exact component={welcomePage}/>
+            <Route path={'/(.+)'} render={() => (
+                <Fragment>
+                    <Container>
+                        <Switch>
+                            <Route path='/login' exact component={LoginPage}/>
+                            <Route path='/homepage/:id' exact component={HomePage}/>
+                            <Route path='/createnewpoll' exact component={CreatePollPage}/>
+                            <Route path='/profiledetails' exact component={ProfileDetails}/>
+                        </Switch>
+                    </Container>
+                </Fragment>
+            )}/>
+        </Fragment>
+    );
 }
 
 export default App;

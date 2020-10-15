@@ -29,7 +29,7 @@ public class UserController {
     @Autowired
     VoteService voteService;
 
-
+    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping
     public UserRest createUser(@RequestBody UserDetailsRequestModel userDetails){
         UserDto userDto = modelMapper.map(userDetails, UserDto.class);
@@ -39,6 +39,7 @@ public class UserController {
         return returnValue;
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping(path = "/{id}")
     public UserRest getUser(@PathVariable String id){
         ModelMapper modelMapper = new ModelMapper();
@@ -49,6 +50,7 @@ public class UserController {
         return returnValue;
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @PutMapping(path = "{id}")
     public UserRest updateUser(@RequestBody UserDetailsRequestModel userDetails, @PathVariable String id){
         UserDto userDto = modelMapper.map(userDetails, UserDto.class);
@@ -59,6 +61,7 @@ public class UserController {
 
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @DeleteMapping(path = "{id}")
     public OperationStatusModel deleteUser(@PathVariable String id){
         OperationStatusModel returnValue = new OperationStatusModel();
@@ -69,6 +72,7 @@ public class UserController {
         return returnValue;
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping(path = "/{id}/polls")
     public List<PollRest> findPollsCreatedByUser(@PathVariable("id") String id){
         List<PollDto> pollDtos = pollService.getAllPollsByCreator(id);
@@ -76,6 +80,7 @@ public class UserController {
         return pollRests;
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping(path = "/{id}/votes")
     public List<VoteRest> findAllVotesByUser(@PathVariable("id") String userId){
         List<VoteDto> voteDtos = voteService.getAllVotesByUser(userId);

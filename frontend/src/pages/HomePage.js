@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react';
-import {Button, Input, Segment} from "semantic-ui-react";
+import {Segment} from "semantic-ui-react";
 import IconHeader from "../components/header/IconHeader";
 
 const HomePage = () => {

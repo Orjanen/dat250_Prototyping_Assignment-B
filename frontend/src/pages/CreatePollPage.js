@@ -1,12 +1,9 @@
 import React from 'react';
+import PollForm from "../components/Poll/form/PollForm";
 
 const CreatePollPage = () => {
     return (
-        <div>
-            <h1 style={{textAlign:'center'}}>
-               Create poll
-            </h1>
-        </div>
+       <PollForm/>
     );
 }
 
