@@ -1,6 +1,7 @@
 import React, {Fragment} from 'react';
 import {Segment, Input, Button} from "semantic-ui-react";
 import IconHeader from "../components/header/IconHeader";
+import {Link} from "react-router-dom";
 
 const LoginPage = () => {
     return (
@@ -16,7 +17,10 @@ const LoginPage = () => {
                 <div/>
                 <Input placeholder='Password'/>
                 <div/>
-                    <Button primary style={{marginTop:'5px'}}>Sign up</Button>
+                    <Button primary style={{marginTop:'5px'}}
+                            as={Link}
+                            to='/signup'
+                    >Sign up</Button>
                     <Button primary>Login</Button>
             </Segment>
         </Fragment>

@@ -8,6 +8,8 @@ import HomePage from "./pages/HomePage";
 import NavBar from "./shared/navigation/NavBar";
 import CreatePollPage from "./pages/CreatePollPage";
 import ProfileDetails from "./pages/ProfileDetails";
+import VotePage from "./pages/VotePage";
+import SignupPage from "./pages/SignupPage";
 
 const App = () => {
   return (
@@ -21,7 +23,9 @@ const App = () => {
                             <Route path='/login' exact component={LoginPage}/>
                             <Route path='/homepage/:id' exact component={HomePage}/>
                             <Route path='/createnewpoll' exact component={CreatePollPage}/>
+                            <Route path='/poll/:pollId' exact component={VotePage}/>
                             <Route path='/profiledetails' exact component={ProfileDetails}/>
+                            <Route path='/signup' exact component={SignupPage}/>
                         </Switch>
                     </Container>
                 </Fragment>
