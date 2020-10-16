@@ -1,27 +1,67 @@
 import React, {Fragment} from 'react';
-import {Segment, Input, Button} from "semantic-ui-react";
+import {Segment,Button, Form, Label} from "semantic-ui-react";
 import IconHeader from "../components/header/IconHeader";
 import {Link} from "react-router-dom";
+import {Field, Form as FinalForm} from "react-final-form";
+import TextInput from "../shared/Form/TextInput";
 
-const LoginPage = () => {
+
+const LoginPage = (props) => {
+
+
+    const handleFinalFormSubmit = async (values) => {
+        console.log(values)
+        try {
+
+        }catch (e){
+
+        }
+        props.history.push('/homepage/123')
+    }
+
     return (
         <Fragment>
-            <Segment textAlign='center' style={{marginTop: '2em'}}>
+            <Segment style={{marginTop: '2em'}}>
+                <div style={{textAlign:'center'}}>
                 <IconHeader
                     mainText='Login or Sign up'
                     subText=''
                     icon='lock'
                 />
-                <div/>
-                <Input placeholder='Email Address'/>
-                <div/>
-                <Input placeholder='Password'/>
-                <div/>
-                    <Button primary style={{marginTop:'5px'}}
+                </div>
+                <FinalForm
+                    onSubmit={handleFinalFormSubmit}
+                    render={({handleSubmit}) =>(
+                        <Form onSubmit={handleSubmit}>
+                            <Label basic>First name</Label>
+                            <Field
+                                name='email'
+                                placeholder='Email'
+                                component={TextInput}
+                            />
+                            <Label basic>Last name</Label>
+                            <Field
+                                name='lastName'
+                                placeholder='Last Name'
+                                component={TextInput}
+                                type='password'
+                            />
+                            <Button
+                                type='submit'
+                                content='Login'
+                                color = 'green'
+                                floated='right'
+                            />
+                        </Form>
+                    )}
+                />
+                    <Button primary
                             as={Link}
                             to='/signup'
+                            color='blue'
+                            floated='right'
+
                     >Sign up</Button>
-                    <Button primary>Login</Button>
             </Segment>
         </Fragment>
     );

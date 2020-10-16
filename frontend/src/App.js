@@ -1,5 +1,5 @@
 import React, {Fragment, } from 'react';
-import {Route, Switch} from 'react-router-dom'
+import {Route, Switch, withRouter} from 'react-router-dom'
 import {Container} from 'semantic-ui-react'
 
 import welcomePage from './pages/welcomePage'
@@ -34,4 +34,4 @@ const App = () => {
     );
 }
 
-export default App;
+export default withRouter(App);

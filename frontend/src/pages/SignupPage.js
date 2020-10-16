@@ -5,13 +5,18 @@ import {Link} from "react-router-dom";
 
 import TextInput from "../shared/Form/TextInput";
 import IconHeader from "../components/header/IconHeader";
+import agent from "../api/agent";
 
 
-const SignupPage = () => {
+const SignupPage = (props) => {
 
     const handleFinalFormSubmit = async (values) => {
         console.log(values)
         try {
+            await agent.User.create(values).then(resp =>{
+                console.log(resp)
+            })
+            props.history.push(`/login`)
         }catch (e){
             console.log(e)
         }
@@ -29,10 +34,16 @@ const SignupPage = () => {
                 onSubmit={handleFinalFormSubmit}
                 render={({handleSubmit}) =>(
                     <Form onSubmit={handleSubmit}>
-                        <Label basic>Username</Label>
+                        <Label basic>First name</Label>
                         <Field
-                            name='userName'
-                            placeholder='UserName'
+                            name='firstName'
+                            placeholder='First Name'
+                            component={TextInput}
+                        />
+                        <Label basic>Last name</Label>
+                        <Field
+                            name='lastName'
+                            placeholder='Last Name'
                             component={TextInput}
                         />
                         <Label basic>Email</Label>
@@ -48,14 +59,6 @@ const SignupPage = () => {
                             type='password'
                             component={TextInput}
                         />
-                        <Label basic>Confirm Password</Label>
-                        <Field
-                            name='confirmPassword'
-                            placeholder='Confirm Password'
-                            type='password'
-                            component={TextInput}
-                        />
-
                         <Button
                             positive
                             floated='right'
