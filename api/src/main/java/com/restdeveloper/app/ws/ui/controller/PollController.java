@@ -30,7 +30,7 @@ public class PollController {
         return "put poll was called";
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+
     @GetMapping(path = "/{id}")
     public PollRest getPoll(@PathVariable String id){
         PollRest returnValue;
@@ -39,7 +39,7 @@ public class PollController {
 
         return returnValue;
     }
-    @CrossOrigin(origins = "http://localhost:3000")
+
     @PostMapping(path = "/user/{userId}")
     public PollRest addNewPollByUser(@PathVariable String userId, @RequestBody PollsRequestModel newPoll){
         PollDto pollDto = modelMapper.map(newPoll, PollDto.class);

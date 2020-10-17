@@ -4,6 +4,10 @@ axios.defaults.baseURL ='http://localhost:8080'
 
 const responseBody = (response) => response.data;
 
+axios.interceptors.response.use((config) => {
+    console.log(config)
+})
+
 const requests = {
     get: (url) => axios.get(url).then(responseBody),
     post: (url, body) => axios.post(url, body).then(responseBody),
@@ -14,6 +18,7 @@ const requests = {
 const User = {
     create: (user) => requests.post('/user', user),
     details: (id) => requests.get(`/user/${id}`),
+    login: (body) => requests.post('/user/login', body)
 }
 
 const Poll = {

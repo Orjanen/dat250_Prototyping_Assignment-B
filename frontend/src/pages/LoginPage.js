@@ -4,6 +4,7 @@ import IconHeader from "../components/header/IconHeader";
 import {Link} from "react-router-dom";
 import {Field, Form as FinalForm} from "react-final-form";
 import TextInput from "../shared/Form/TextInput";
+import agent from "../api/agent";
 
 
 const LoginPage = (props) => {
@@ -12,11 +13,12 @@ const LoginPage = (props) => {
     const handleFinalFormSubmit = async (values) => {
         console.log(values)
         try {
+            await agent.User.login(values).then(res => console.log(res))
 
         }catch (e){
 
         }
-        props.history.push('/homepage/123')
+        //props.history.push('/homepage/123')
     }
 
     return (
@@ -33,7 +35,7 @@ const LoginPage = (props) => {
                     onSubmit={handleFinalFormSubmit}
                     render={({handleSubmit}) =>(
                         <Form onSubmit={handleSubmit}>
-                            <Label basic>First name</Label>
+                            <Label basic>Email</Label>
                             <Field
                                 name='email'
                                 placeholder='Email'
@@ -41,7 +43,7 @@ const LoginPage = (props) => {
                             />
                             <Label basic>Last name</Label>
                             <Field
-                                name='lastName'
+                                name='password'
                                 placeholder='Last Name'
                                 component={TextInput}
                                 type='password'
