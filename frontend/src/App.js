@@ -10,6 +10,7 @@ import CreatePollPage from "./pages/CreatePollPage";
 import ProfileDetails from "./pages/ProfileDetails";
 import VotePage from "./pages/VotePage";
 import SignupPage from "./pages/SignupPage";
+import PrivateRoute from "./PrivateRoute";
 
 const App = () => {
   return (
@@ -21,10 +22,10 @@ const App = () => {
                     <Container>
                         <Switch>
                             <Route path='/login' exact component={LoginPage}/>
-                            <Route path='/homepage/:id' exact component={HomePage}/>
-                            <Route path='/createnewpoll' exact component={CreatePollPage}/>
+                            <PrivateRoute path='/homepage/:id' exact component={HomePage}/>
+                            <PrivateRoute path='/createnewpoll' exact component={CreatePollPage}/>
                             <Route path='/poll/:pollId' exact component={VotePage}/>
-                            <Route path='/profiledetails' exact component={ProfileDetails}/>
+                            <PrivateRoute path='/profiledetails' exact component={ProfileDetails}/>
                             <Route path='/signup' exact component={SignupPage}/>
                         </Switch>
                     </Container>

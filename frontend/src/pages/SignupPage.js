@@ -11,11 +11,9 @@ import agent from "../api/agent";
 const SignupPage = (props) => {
 
     const handleFinalFormSubmit = async (values) => {
-        console.log(values)
         try {
-            await agent.User.create(values).then(resp =>{
-                console.log(resp)
-            })
+            await agent.User.create(values)
+
             props.history.push(`/login`)
         }catch (e){
             console.log(e)

@@ -11,14 +11,12 @@ const LoginPage = (props) => {
 
 
     const handleFinalFormSubmit = async (values) => {
-        console.log(values)
         try {
-            await agent.User.login(values).then(res => console.log(res))
-
+            await agent.User.login(values)
         }catch (e){
-
+            console.log(e + 'Login failed')
         }
-        //props.history.push('/homepage/123')
+        props.history.push(`/homepage/${window.localStorage.getItem('userId')}`)
     }
 
     return (

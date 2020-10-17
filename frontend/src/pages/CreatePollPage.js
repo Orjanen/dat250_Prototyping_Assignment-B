@@ -8,15 +8,14 @@ import TextInput from "../shared/Form/TextInput";
 const CreatePollPage = (props) => {
 
     const handleFinalFormSubmit = async (values) => {
-        console.log(values)
+        const userId  = window.localStorage.getItem('userId');
         try {
-            await agent.Poll.create('C8qZXUOpLbrfZKnYQ1Vzsm65oM1SZS', values).then(res =>{
+            await agent.Poll.create(userId, values).then(res =>{
                 props.history.push(`/poll/${res.pollId}`)
             })
         }catch (e){
             console.log(e)
         }
-
     }
 
     return (

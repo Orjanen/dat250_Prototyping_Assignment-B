@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom'
 import IconHeader from "../components/header/IconHeader";
 
 const HomePage = () => {
+
     return (
         <Fragment>
             <Segment textAlign='center' style={{marginTop: '2em'}}>

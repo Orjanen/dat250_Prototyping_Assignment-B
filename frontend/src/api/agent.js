@@ -2,17 +2,31 @@ import axios from "axios";
 
 axios.defaults.baseURL ='http://localhost:8080'
 
-const responseBody = (response) => response.data;
+axios.interceptors.request.use(
+    (config) => {
+        const token = window.localStorage.getItem("token");
+        if (token) config.headers.Authorization = token;
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
 
 axios.interceptors.response.use((config) => {
-    console.log(config)
+    const token = config.headers.authorization;
+    if (token){
+        window.localStorage.setItem('token', token)
+        window.localStorage.setItem('userId', config.headers.userid)
+    }
+    return config
 })
 
 const requests = {
-    get: (url) => axios.get(url).then(responseBody),
-    post: (url, body) => axios.post(url, body).then(responseBody),
-    put: (url, body) => axios.put(url, body).then(responseBody),
-    del: (url) => axios.delete(url).then(responseBody),
+    get: (url) => axios.get(url).then((res) => res.data),
+    post: (url, body) => axios.post(url, body).then((res) => res.data),
+    put: (url, body) => axios.put(url, body).then((res) => res.data),
+    del: (url) => axios.delete(url).then((res) => res.data),
 }
 
 const User = {
