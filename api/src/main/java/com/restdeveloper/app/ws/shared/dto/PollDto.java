@@ -12,6 +12,9 @@ public class PollDto {
     private String optionTwo;
     private boolean isPrivate;
 
+    private int optionOneVotes;
+    private int optionTwoVotes;
+
     public long getId() {
         return id;
     }
@@ -76,5 +79,21 @@ public class PollDto {
 
     public void setPrivate(boolean aPrivate) {
         isPrivate = aPrivate;
+    }
+
+    public int getOptionOneVotes() {
+        return optionOneVotes;
+    }
+
+    public void setOptionOneVotes(int optionOneVotes) {
+        this.optionOneVotes = optionOneVotes;
+    }
+
+    public int getOptionTwoVotes() {
+        return optionTwoVotes;
+    }
+
+    public void setOptionTwoVotes(int optionTwoVotes) {
+        this.optionTwoVotes = optionTwoVotes;
     }
 }

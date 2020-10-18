@@ -2,6 +2,8 @@ package com.restdeveloper.app.ws.io.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity(name = "polls")
@@ -22,6 +24,8 @@ public class PollEntity implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "pollEntity")
     private List<VoteEntity> votes;
+
+
 
     private String optionOne;
     private String optionTwo;
@@ -58,8 +62,18 @@ public class PollEntity implements Serializable {
     private boolean isPrivate;
 
 
-    //TODO: Når ble poll opprettet, hvor lenge skal den vare
     //TODO: liste med IoTDevice
+
+    private LocalDateTime startTime;
+    private Duration duration;
+
+    public Duration getTimeRemaining(){
+        LocalDateTime endTime = startTime.plus(duration);
+
+        Duration remaining = Duration.between(LocalDateTime.now(), endTime);
+
+        return remaining.isNegative() ? Duration.ofDays(0) : remaining;
+    }
 
 
 
@@ -109,5 +123,45 @@ public class PollEntity implements Serializable {
 
     public void setPrivate(boolean aPrivate) {
         isPrivate = aPrivate;
+    }
+
+    public String getOptionOne() {
+        return optionOne;
+    }
+
+    public void setOptionOne(String optionOne) {
+        this.optionOne = optionOne;
+    }
+
+    public String getOptionTwo() {
+        return optionTwo;
+    }
+
+    public void setOptionTwo(String optionTwo) {
+        this.optionTwo = optionTwo;
+    }
+
+    public void setOptionOneVotes(int optionOneVotes) {
+        this.optionOneVotes = optionOneVotes;
+    }
+
+    public void setOptionTwoVotes(int optionTwoVotes) {
+        this.optionTwoVotes = optionTwoVotes;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
     }
 }

@@ -10,6 +10,9 @@ public class PollRest {
     private List<VoteRest> votes;
     private boolean isPrivate;
 
+    private int optionOneVotes;
+    private int optionTwoVotes;
+
     public String getPollId() {
         return pollId;
     }
@@ -58,5 +61,19 @@ public class PollRest {
         isPrivate = aPrivate;
     }
 
+    public int getOptionOneVotes() {
+        return optionOneVotes;
+    }
 
+    public void setOptionOneVotes(int optionOneVotes) {
+        this.optionOneVotes = optionOneVotes;
+    }
+
+    public int getOptionTwoVotes() {
+        return optionTwoVotes;
+    }
+
+    public void setOptionTwoVotes(int optionTwoVotes) {
+        this.optionTwoVotes = optionTwoVotes;
+    }
 }
