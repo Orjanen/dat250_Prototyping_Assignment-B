@@ -1,5 +1,6 @@
 package com.restdeveloper.app.ws.ui.model.response;
 
+import java.time.Duration;
 import java.util.List;
 
 public class PollRest {
@@ -12,6 +13,8 @@ public class PollRest {
 
     private int optionOneVotes;
     private int optionTwoVotes;
+
+    private Duration timeRemaining;
 
     public String getPollId() {
         return pollId;
@@ -75,5 +78,13 @@ public class PollRest {
 
     public void setOptionTwoVotes(int optionTwoVotes) {
         this.optionTwoVotes = optionTwoVotes;
+    }
+
+    public Duration getTimeRemaining() {
+        return timeRemaining;
+    }
+
+    public void setTimeRemaining(Duration timeRemaining) {
+        this.timeRemaining = timeRemaining;
     }
 }

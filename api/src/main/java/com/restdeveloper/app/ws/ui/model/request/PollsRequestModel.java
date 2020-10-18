@@ -1,10 +1,13 @@
 package com.restdeveloper.app.ws.ui.model.request;
 
+import java.time.Duration;
+
 public class PollsRequestModel {
     private String pollName;
     private String optionOne;
     private String optionTwo;
     private boolean isPrivate;
+    private Duration duration;
 
 
     public String getPollName() {
@@ -37,5 +40,13 @@ public class PollsRequestModel {
 
     public void setPrivate(boolean aPrivate) {
         isPrivate = aPrivate;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
     }
 }

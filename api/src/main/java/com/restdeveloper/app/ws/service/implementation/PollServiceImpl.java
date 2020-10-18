@@ -13,6 +13,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,6 +39,10 @@ public class PollServiceImpl implements PollService {
         PollEntity pollEntity = modelMapper.map(poll, PollEntity.class);
         pollEntity.setCreator(user);
         pollEntity.setPollId(utils.generatePollId(8));
+
+
+        pollEntity.setStartTime(LocalDateTime.now());
+
 
         VoteEntity voteEntity = new VoteEntity();
         voteEntity.setVoteId(utils.generateUserId(30));

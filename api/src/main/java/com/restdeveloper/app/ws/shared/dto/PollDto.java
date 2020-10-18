@@ -1,5 +1,7 @@
 package com.restdeveloper.app.ws.shared.dto;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class PollDto {
@@ -14,6 +16,11 @@ public class PollDto {
 
     private int optionOneVotes;
     private int optionTwoVotes;
+
+    private LocalDateTime startTime;
+    private Duration duration;
+
+    private Duration timeRemaining;
 
     public long getId() {
         return id;
@@ -95,5 +102,29 @@ public class PollDto {
 
     public void setOptionTwoVotes(int optionTwoVotes) {
         this.optionTwoVotes = optionTwoVotes;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public Duration getTimeRemaining() {
+        return timeRemaining;
+    }
+
+    public void setTimeRemaining(Duration timeRemaining) {
+        this.timeRemaining = timeRemaining;
     }
 }

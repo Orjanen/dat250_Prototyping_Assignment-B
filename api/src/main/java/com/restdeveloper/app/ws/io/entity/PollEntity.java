@@ -67,6 +67,8 @@ public class PollEntity implements Serializable {
     private LocalDateTime startTime;
     private Duration duration;
 
+    @Transient
+    private Duration timeRemaining;
     public Duration getTimeRemaining(){
         LocalDateTime endTime = startTime.plus(duration);
 
