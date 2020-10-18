@@ -1,0 +1,372 @@
+{
+	"info": {
+		"_postman_id": "b2a55844-efc4-4c1d-828c-83714a13928b",
+		"name": "PollApp stuff",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "User Operations",
+			"item": [
+				{
+					"name": "Sign up a User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Tester\",\n    \"lastName\" : \"Utvikler\",\n    \"email\": \"testUtvikler@testland.com\",\n    \"password\" : \"12345\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a user by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/user/Wjz9eAB1HDhBBKXB2k6tnGgvwOvc7t",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"Wjz9eAB1HDhBBKXB2k6tnGgvwOvc7t"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit User Info",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\" : \"Best\",\n    \"lastName\" : \"Update\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/user/Wjz9eAB1HDhBBKXB2k6tnGgvwOvc7t",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"Wjz9eAB1HDhBBKXB2k6tnGgvwOvc7t"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all polls made by this user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/user/Wjz9eAB1HDhBBKXB2k6tnGgvwOvc7t/polls",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"Wjz9eAB1HDhBBKXB2k6tnGgvwOvc7t",
+								"polls"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find all votes by this user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/user/Wjz9eAB1HDhBBKXB2k6tnGgvwOvc7t/votes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"Wjz9eAB1HDhBBKXB2k6tnGgvwOvc7t",
+								"votes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User by id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "cccacdf4-7bf8-4a85-bbdb-4e20a9f9b21b",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "207cdfc3-56e5-4751-a9c2-c48b743979d8",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Poll Operations",
+			"item": [
+				{
+					"name": "Create a Poll",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"pollName\" : \"utviklerpoll\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/poll/user/Wjz9eAB1HDhBBKXB2k6tnGgvwOvc7t",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"poll",
+								"user",
+								"Wjz9eAB1HDhBBKXB2k6tnGgvwOvc7t"
+							]
+						},
+						"description": "Remember to insert a valid UserId"
+					},
+					"response": []
+				},
+				{
+					"name": "Get a Poll by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/poll/06885661",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"poll",
+								"06885661"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "495334fc-21ad-42c8-9437-f37604898dd9",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "9d17ed1f-5325-4f7b-9b01-1af9bb33bdfd",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Vote Operations",
+			"item": [
+				{
+					"name": "Vote on a Poll with loged in user",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"option1Count\": 2,\n    \"option2Count\": 0\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/vote/poll/06885661/user/Wjz9eAB1HDhBBKXB2k6tnGgvwOvc7t",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"vote",
+								"poll",
+								"06885661",
+								"user",
+								"Wjz9eAB1HDhBBKXB2k6tnGgvwOvc7t"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Vote with guest user",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"option1Count\": 0,\n    \"option2Count\": 1\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/vote/poll/06885661",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"vote",
+								"poll",
+								"06885661"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Vote by registered User",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"option1Count\": 5,\r\n    \"option2Count\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/vote/poll/06885661/user/Wjz9eAB1HDhBBKXB2k6tnGgvwOvc7t",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"vote",
+								"poll",
+								"06885661",
+								"user",
+								"Wjz9eAB1HDhBBKXB2k6tnGgvwOvc7t"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
