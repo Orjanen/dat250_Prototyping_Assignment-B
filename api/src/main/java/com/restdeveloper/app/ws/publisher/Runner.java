@@ -25,17 +25,16 @@ public class Runner implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         // NOTE: This following code-block is only for "debugging"
-        List<String> tempDebugArgs = new ArrayList<>(Arrays.asList(args));
-        tempDebugArgs.addAll(Arrays.asList("Hello test 1!","Hello test 2!"));
-        System.out.println("\n\n\n     TESTMETHOD START:   Length of args: " + tempDebugArgs.size() + "\n");
-        for (String s : tempDebugArgs) {System.out.println(s);}
-        System.out.println("\n     TESTMETHOD DONE \n\n\n");
+        //List<String> tempDebugArgs = new ArrayList<>(Arrays.asList(args));
+        //tempDebugArgs.add("Hello test 1!");
+        System.out.println("\n     RUNNER START:   Length of args: " + args.length);
+        for (String s : args) {System.out.println(s);}
+        System.out.println("     RUNNER DONE \n");
 
 
 
-        for (String s : tempDebugArgs) {
+        for (String s : args) {
             System.out.println("Sending message...");
-
 
             rabbitTemplate.convertAndSend(SpringAppWsApplication.topicExchangeName,
                                           "foo.bar.baz",
