@@ -1,9 +1,12 @@
 package com.restdeveloper.app.ws.io.entity;
 
+import com.restdeveloper.app.ws.publisher.listener.VoteListener;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity(name = "vote")
+@EntityListeners(VoteListener.class)
 public class VoteEntity implements Serializable {
 
     private static final long serialVersionUID= -1061455199903170385L;
