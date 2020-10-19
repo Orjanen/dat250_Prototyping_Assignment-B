@@ -66,39 +66,34 @@ public class VoteServiceImpl implements VoteService {
 
     @Override
     public VoteDto addVoteByRegisteredUserToPoll(VoteDto voteDto, String pollId, String userId) {
-
-        UserEntity user = userRepository.findByUserId(userId);
-        if(user == null) throw new ResourceNotFoundException("User not found");
-
-        PollEntity poll = pollRepository.findByPollId(pollId);
-        if(poll == null) throw new ResourceNotFoundException("Poll not found");
-
-        VoteEntity newVote = modelMapper.map(voteDto, VoteEntity.class);
-        newVote.setVoteId(UUID.randomUUID().toString());
-        newVote.setUser(user);
-        newVote.setPollEntity(poll);
-
-        VoteEntity savedVote = voteRepository.save(newVote);
-        VoteDto returnVote = modelMapper.map(savedVote, VoteDto.class);
-        return returnVote;
-
+        return addVote(voteDto, pollId, userId);
     }
 
     @Override
     public VoteDto addVoteByUnregisteredUserToPoll(VoteDto voteDto, String pollId) {
+        return addVote(voteDto, pollId, null);
+    }
+
+    private VoteDto addVote(VoteDto voteDto, String pollId, String userId) {
+        VoteEntity newVote = modelMapper.map(voteDto, VoteEntity.class);
+        newVote.setVoteId(UUID.randomUUID().toString());
 
         PollEntity poll = pollRepository.findByPollId(pollId);
         if(poll == null) throw new ResourceNotFoundException("Poll not found");
 
-        //Private poll can't accept votes not linked to users
-        if(poll.isPrivate()){
-            throw new UnregisteredVoteForPrivatePollException("Unregistered users can't vote in private poll");
+        UserEntity user = null;
+        if (userId == null) {
+            //Private poll can't accept votes not linked to users
+            if(poll.isPrivate()){
+                throw new UnregisteredVoteForPrivatePollException("Unregistered users can't vote in private poll");
+            }
+        } else {
+            user = userRepository.findByUserId(userId);
+            if(user == null) throw new ResourceNotFoundException("User not found");
+            newVote.setUser(user);
         }
 
-        VoteEntity newVote = modelMapper.map(voteDto, VoteEntity.class);
-        newVote.setVoteId(UUID.randomUUID().toString());
         newVote.setPollEntity(poll);
-
         VoteEntity savedVote = voteRepository.save(newVote);
         VoteDto returnVote = modelMapper.map(savedVote, VoteDto.class);
         return returnVote;
@@ -113,4 +108,5 @@ public class VoteServiceImpl implements VoteService {
 
         return voteDtos;
     }
+
 }
