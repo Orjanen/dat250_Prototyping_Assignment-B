@@ -1,4 +1,4 @@
-package com.restdeveloper.app.ws.publisher;
+package com.example.analytics;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
