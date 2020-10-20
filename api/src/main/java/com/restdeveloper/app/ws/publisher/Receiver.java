@@ -8,8 +8,9 @@ public class Receiver {
 
     private CountDownLatch latch = new CountDownLatch(1);
 
-    public void receiveMessage(String message) {
-        System.out.println("Received <" + message + ">");
+    public void receiveMessage(Object message) {
+        System.out.print("Received message:\n\t");
+        System.out.println(message);
         latch.countDown();
     }
 
