@@ -1,6 +1,6 @@
 package com.restdeveloper.app.ws.io.entity;
 
-import com.restdeveloper.app.ws.publisher.listener.PollListener;
+import com.restdeveloper.app.ws.publisher.listener.EntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity(name = "polls")
-@EntityListeners(PollListener.class)
+@EntityListeners(EntityListener.class)
 public class PollEntity implements Serializable {
     private static final long serialVersionUID = 829864162685009192L;
     @Id

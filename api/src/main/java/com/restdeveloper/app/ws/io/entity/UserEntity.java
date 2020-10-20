@@ -1,13 +1,13 @@
 package com.restdeveloper.app.ws.io.entity;
 
-import com.restdeveloper.app.ws.publisher.listener.UserListener;
+import com.restdeveloper.app.ws.publisher.listener.EntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
 @Entity(name = "users")
-@EntityListeners(UserListener.class)
+@EntityListeners(EntityListener.class)
 public class UserEntity implements Serializable {
     private static final long serialVersionUID= -3609876517654923756L;
 
