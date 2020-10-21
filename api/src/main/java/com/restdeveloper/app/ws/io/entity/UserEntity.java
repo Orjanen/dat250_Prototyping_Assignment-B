@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Entity(name = "users")
-public class UserEntity implements Serializable {
+public class UserEntity extends Voter implements Serializable {
     private static final long serialVersionUID= -3609876517654923756L;
 
     @Id
@@ -30,8 +30,7 @@ public class UserEntity implements Serializable {
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
     private List<PollEntity> myPolls;
 
-    @OneToMany(mappedBy = "user")
-    private List<VoteEntity> myVotes;
+
 
     public List<PollEntity> getMyPolls() {
         return myPolls;
@@ -41,13 +40,7 @@ public class UserEntity implements Serializable {
         this.myPolls = myPolls;
     }
 
-    public long getId() {
-        return id;
-    }
 
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public String getUserId() {
         return userId;

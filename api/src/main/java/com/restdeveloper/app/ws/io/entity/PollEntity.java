@@ -26,7 +26,6 @@ public class PollEntity implements Serializable {
     private List<VoteEntity> votes;
 
 
-
     private String optionOne;
     private String optionTwo;
 
