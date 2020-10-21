@@ -25,13 +25,23 @@ public class VoteEntity implements Serializable {
     private int option2Count = 0;
 
     @ManyToOne
-    @JoinColumn(name="user_id")
-    private UserEntity user;
+    @JoinColumn(name="voter_id")
+    private Voter voter;
 
     @ManyToOne
     @JoinColumn(name = "poll_id")
     @Expose(serialize = false, deserialize = false)
     private PollEntity pollEntity;
+
+
+
+    public void addVotesToOption1(int count){
+        option1Count += count;
+    }
+
+    public void addVotesToOption2(int count){
+        option2Count += count;
+    }
 
     public Long getId() {
         return id;
@@ -73,11 +83,15 @@ public class VoteEntity implements Serializable {
         this.pollEntity = pollEntity;
     }
 
-    public UserEntity getUser() {
-        return user;
+    public Voter getVoter() {
+        return voter;
     }
 
-    public void setUser(UserEntity user) {
-        this.user = user;
+    public void setVoter(Voter voter) {
+        this.voter = voter;
     }
+
+
+
+
 }

@@ -10,7 +10,6 @@ import com.restdeveloper.app.ws.service.VoteService;
 import com.restdeveloper.app.ws.shared.UnregisteredVoteForPrivatePollException;
 import com.restdeveloper.app.ws.shared.dto.VoteDto;
 import com.restdeveloper.app.ws.ui.model.request.VotingDetailsModel;
-import org.apache.tomcat.jni.Poll;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +52,7 @@ public class VoteServiceImpl implements VoteService {
         //VoteEntity voteEntity = voteRepository.findByVoteId(voteDto.getVoteId());
         PollEntity poll = pollRepository.findByPollId(pollId);
         UserEntity user = userRepository.findByUserId(userId);
-        VoteEntity voteEntity = voteRepository.findByUserAndPollEntity(user, poll);
+        VoteEntity voteEntity = voteRepository.findByVoterAndPollEntity(user, poll);
         if(voteEntity == null) throw new ResourceNotFoundException("Vote not found");
 
         voteEntity.setOption1Count(voteDto.getOption1Count());
@@ -90,7 +89,7 @@ public class VoteServiceImpl implements VoteService {
         } else {
             user = userRepository.findByUserId(userId);
             if(user == null) throw new ResourceNotFoundException("User not found");
-            newVote.setUser(user);
+            newVote.setVoter(user);
         }
 
         newVote.setPollEntity(poll);
@@ -103,7 +102,7 @@ public class VoteServiceImpl implements VoteService {
     public List<VoteDto> getAllVotesByUser(String userId) {
 
         UserEntity user = userRepository.findByUserId(userId);
-        List<VoteEntity> votes = voteRepository.findAllVotesByUser(user);
+        List<VoteEntity> votes = voteRepository.findAllVotesByVoter(user);
         List<VoteDto> voteDtos = votes.stream().map(voteEntity -> modelMapper.map(voteEntity, VoteDto.class)).collect(Collectors.toList());
 
         return voteDtos;
