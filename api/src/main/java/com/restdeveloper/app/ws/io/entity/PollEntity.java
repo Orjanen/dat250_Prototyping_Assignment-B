@@ -1,5 +1,6 @@
 package com.restdeveloper.app.ws.io.entity;
 
+import com.google.gson.annotations.Expose;
 import com.restdeveloper.app.ws.publisher.listener.EntityListener;
 
 import javax.persistence.*;
@@ -14,12 +15,15 @@ public class PollEntity implements Serializable {
     private static final long serialVersionUID = 829864162685009192L;
     @Id
     @GeneratedValue
+    @Expose
     private long id;
 
     @Column(nullable = false, length = 30)
+    @Expose
     private String pollId;
 
     @Column(nullable = false, length = 20)
+    @Expose
     private String pollName;
 
     @ManyToOne
@@ -29,11 +33,13 @@ public class PollEntity implements Serializable {
     private List<VoteEntity> votes;
 
 
-
+    @Expose
     private String optionOne;
+    @Expose
     private String optionTwo;
 
     @Transient
+    @Expose
     private int optionOneVotes;
     public int getOptionOneVotes(){
         int numberOfVotes = 0;
@@ -48,6 +54,7 @@ public class PollEntity implements Serializable {
     }
 
     @Transient
+    @Expose
     private int optionTwoVotes;
     public int getOptionTwoVotes(){
         int numberOfVotes = 0;

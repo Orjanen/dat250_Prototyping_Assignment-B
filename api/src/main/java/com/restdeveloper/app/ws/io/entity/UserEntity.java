@@ -1,5 +1,6 @@
 package com.restdeveloper.app.ws.io.entity;
 
+import com.google.gson.annotations.Expose;
 import com.restdeveloper.app.ws.publisher.listener.EntityListener;
 
 import javax.persistence.*;
@@ -13,27 +14,34 @@ public class UserEntity implements Serializable {
 
     @Id
     @GeneratedValue
+    @Expose
     private long id;
 
     @Column(nullable = false)
+    @Expose
     private String userId;
 
     @Column(nullable = false, length = 50)
+    @Expose
     private String firstName;
 
     @Column(nullable = false, length = 50)
+    @Expose
     private String lastName;
 
     @Column(nullable = false, length = 120)
+    @Expose
     private String email;
 
     @Column(nullable = false)
     private String encryptedPassword;
 
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
+    @Expose(serialize = false, deserialize = false)
     private List<PollEntity> myPolls;
 
     @OneToMany(mappedBy = "user")
+    @Expose(serialize = false, deserialize = false)
     private List<VoteEntity> myVotes;
 
     public List<PollEntity> getMyPolls() {
