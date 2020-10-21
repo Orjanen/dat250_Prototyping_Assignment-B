@@ -1,9 +1,9 @@
 package com.restdeveloper.app.ws.publisher;
 
-import java.util.concurrent.CountDownLatch;
-
+import com.restdeveloper.app.ws.publisher.util.Converter;
 import org.springframework.stereotype.Component;
-import com.google.gson.Gson;
+
+import java.util.concurrent.CountDownLatch;
 
 
 @Component
@@ -20,18 +20,19 @@ public class Receiver {
     private void processMessage(Object object) {
         String type = object.getClass().getSimpleName();
         System.out.println(type);
-        //String jsonFormat = new Gson().toJson(object);
-        System.out.println("jsonFormat");
-        System.out.println("\n");
+
+        String jsonFormat = Converter.convertToJson(object);
+
+
         switch (type) {
             case "VoteEntity":
-                System.out.println("VoteEntity:\n" + "jsonFormat");
+                System.out.println("VoteEntity:\n" + jsonFormat);
                 break;
             case "PollEntity":
-                System.out.println("PollEntity:\n" + "jsonFormat");
+                System.out.println("PollEntity:\n" + jsonFormat);
                 break;
             case "UserEntity":
-                System.out.println("UserEntity:\n" + "jsonFormat");
+                System.out.println("UserEntity:\n" + jsonFormat);
                 break;
             default:
                 throw new IllegalArgumentException("Message is not an entity");
