@@ -20,13 +20,7 @@ public class Runner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        runObject((Object[]) args);
-    }
-
-
-    public void runObject(Object... args) throws InterruptedException {
-
-        System.out.println("\n\tRUNNER START:   Length of args: " + args.length);
+            System.out.println("Runner initialized with args-length: " + args.length);
 
         for (Object s : args) {
             System.out.println("Sending message...");
@@ -34,7 +28,7 @@ public class Runner implements CommandLineRunner {
             receiver.getLatch().await(10000, TimeUnit.MILLISECONDS);
         }
 
-        System.out.println("\tRUNNER DONE \n");
+        System.out.println("Runner done");
 
     }
 

@@ -1,6 +1,10 @@
 package com.restdeveloper.app.ws.publisher.listener;
 
+import com.google.gson.JsonObject;
+import com.restdeveloper.app.ws.io.entity.PollEntity;
+import com.restdeveloper.app.ws.io.entity.VoteEntity;
 import com.restdeveloper.app.ws.publisher.Runner;
+import com.restdeveloper.app.ws.publisher.util.Converter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,12 +20,27 @@ public class EntityListener {
     @PostPersist
     @PostUpdate
     @PostRemove
-    public void voteListener(Object entity) {
-        System.out.print("\n\t- EntityListener started with entity: " + entity.getClass().getSimpleName());
+    public void entityListener(Object entity) {
+        System.out.println("EntityListener initialized with entity: " + entity.getClass().getSimpleName());
+        String json = processEntity(entity);
+
         try {
-            runner.runObject(entity);
+            runner.run(json);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private String processEntity(Object entity) {
+        String type = entity.getClass().getSimpleName();
+
+        switch (type) {
+            case "VoteEntity":
+                return Converter.convertVoteToJson((VoteEntity) entity);
+            case "PollEntity":
+                return Converter.convertPollToJson((PollEntity) entity);
+            default:
+                throw new IllegalArgumentException("EntityListener has no implementation with entity: " + type);
         }
     }
 
