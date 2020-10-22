@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.util.List;
 
 @Entity(name = "users")
-@EntityListeners(EntityListener.class)
 public class UserEntity extends Voter implements Serializable {
     private static final long serialVersionUID= -3609876517654923756L;
 
