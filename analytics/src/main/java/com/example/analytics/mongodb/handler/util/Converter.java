@@ -22,9 +22,8 @@ public final class Converter {
         return gson.toJson(object);
     }
 
-    public static JsonObject convertToJsonObject(Object object) {
-        String jsonFormat = convertToJson(object);
-        return gson.fromJson(jsonFormat,JsonObject.class);
+    public static JsonObject convertToJsonObject(String json) {
+        return gson.fromJson(json,JsonObject.class);
     }
 
 
