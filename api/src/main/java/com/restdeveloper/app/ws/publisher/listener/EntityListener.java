@@ -1,9 +1,8 @@
 package com.restdeveloper.app.ws.publisher.listener;
 
-import com.google.gson.JsonObject;
 import com.restdeveloper.app.ws.io.entity.PollEntity;
 import com.restdeveloper.app.ws.io.entity.VoteEntity;
-import com.restdeveloper.app.ws.publisher.Runner;
+import com.restdeveloper.app.ws.publisher.rabbitmq.Runner;
 import com.restdeveloper.app.ws.publisher.util.Converter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,11 +23,8 @@ public class EntityListener {
         System.out.println("EntityListener initialized with entity: " + entity.getClass().getSimpleName());
         String json = processEntity(entity);
 
-        try {
-            runner.run(json);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        runner.run(json);
+
     }
 
     private String processEntity(Object entity) {
