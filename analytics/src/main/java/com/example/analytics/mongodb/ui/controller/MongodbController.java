@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("poll")
-public class mongodbController {
+public class MongodbController {
 
 
     @Autowired
