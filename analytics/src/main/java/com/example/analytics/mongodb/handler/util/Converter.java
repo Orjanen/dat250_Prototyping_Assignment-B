@@ -1,6 +1,8 @@
 package com.example.analytics.mongodb.handler.util;
 
 
+import com.example.analytics.mongodb.ui.model.PollModel;
+import com.example.analytics.mongodb.ui.model.VoteModel;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -26,5 +28,12 @@ public final class Converter {
         return gson.fromJson(json,JsonObject.class);
     }
 
+    public static VoteModel convertToVoteModel(JsonObject json) {
+        return gson.fromJson(json,VoteModel.class);
+    }
+
+    public static PollModel convertToPollModel(JsonObject json) {
+        return gson.fromJson(json,PollModel.class);
+    }
 
 }
