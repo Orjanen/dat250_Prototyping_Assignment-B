@@ -61,7 +61,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
         // Temp fix to allow IoT device websocket connection
         // TODO: Find better implementation
-        configuration.setAllowedOrigins(Arrays.asList("*"));
+        //configuration.setAllowedOrigins(Arrays.asList("*"));
 
         configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE"));
         configuration.setExposedHeaders(Arrays.asList("Authorization", "UserId"));
