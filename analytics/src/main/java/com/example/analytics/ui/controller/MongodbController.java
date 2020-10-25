@@ -1,75 +1,73 @@
 package com.example.analytics.ui.controller;
 
-import com.example.analytics.io.entity.PollEntity;
 import com.example.analytics.io.repository.PollRepository;
-import com.example.analytics.ui.model.VoteModel;
+import com.example.analytics.service.PollService;
+import com.example.analytics.shared.dto.PollDto;
+import com.example.analytics.ui.model.PollModel;
+import com.example.analytics.ui.model.RabbitPollModel;
+import com.example.analytics.ui.model.RabbitVoteModel;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("poll")
 public class MongodbController {
 
+    ModelMapper modelMapper = new ModelMapper();
 
     @Autowired
+    PollService pollService;
+
+
+    /* TODO: The following code-block is only meant to help testing during code-production.
+     * Erase this code-block, when project is finished. (Or implement it with PollService, to keep it.)
+     */
+    @Autowired
     PollRepository pollRepository;
-
-    @GetMapping
-    public List<PollEntity> getAllPolls() {
-        System.out.println("Getting all polls...");
-        return pollRepository.findAll();
-    }
-
-    @GetMapping(path = "/{id}")
-    public PollEntity getPollById(@PathVariable String id) {
-        System.out.println("Getting poll with ID: " + id);
-        PollEntity poll = pollRepository.findById(id).orElse(null);
-
-        if (poll == null) {
-            System.out.println("Could not find poll");
-            return null;
-        } else return poll;
-    }
-
-    @PostMapping
-    public PollEntity createPoll(@RequestBody PollEntity poll) {
-        System.out.println("Creating a poll...");
-        return pollRepository.save(poll);
-    }
-
     @DeleteMapping
     public String deleteAllPolls() {
         System.out.println("Deleting all polls...");
         pollRepository.deleteAll();
         return "Polls are deleted successfully";
     }
+    // End of temporary code-block
+
+
+    @GetMapping
+    public List<PollModel> getAllPolls() {
+        List<PollDto> pollDtos = pollService.getAllPolls();
+        return pollDtos.stream().map(pollDto -> modelMapper.map(pollDto, PollModel.class)).collect(Collectors.toList());
+    }
+
+    @GetMapping(path = "/{id}")
+    public PollModel getPollById(@PathVariable String id) {
+        PollDto pollDto = pollService.getPollById(id);
+        return modelMapper.map(pollDto, PollModel.class);
+    }
+
+    @PostMapping
+    public PollModel createPoll(@RequestBody RabbitPollModel pollModel) {
+        PollDto receivedPoll = modelMapper.map(pollModel, PollDto.class);
+        PollDto pollDto = pollService.createPoll(receivedPoll);
+        return modelMapper.map(pollDto, PollModel.class);
+    }
+
+
 
     @GetMapping(path = "/jpa-id/{jpaId}")
-    public PollEntity getPollByJpaId(@PathVariable String jpaId) {
-        System.out.println("Getting poll with JPA-ID: " + jpaId);
-        PollEntity poll = pollRepository.findByJpaId(jpaId);
-
-        if (poll == null) {
-            System.out.println("Could not find poll");
-            return null;
-        } else return poll;
+    public PollModel getPollByJpaId(@PathVariable String jpaId) {
+        PollDto pollDto = pollService.getPollByJpaId(jpaId);
+        return modelMapper.map(pollDto, PollModel.class);
     }
 
     @PutMapping(path = "/jpa-id/{jpaId}")
-    public PollEntity updatePollVotes(@RequestBody VoteModel vote, @PathVariable("jpaId") String jpaId){
-        System.out.println("Starting poll-update on poll with JPA-ID: " + jpaId);
-        PollEntity poll = pollRepository.findByJpaId(jpaId);
-        if (poll == null) {
-            System.out.println("Could not find poll, and therefore, could not update poll");
-            return null;
-        }
-
-        System.out.println("Updating votes on poll with JPA-ID: " + jpaId);
-        poll.setOptionOneVotes(poll.getOptionOneVotes() + vote.getOptionOneVotes());
-        poll.setOptionTwoVotes(poll.getOptionTwoVotes() + vote.getOptionTwoVotes());
-
-        return pollRepository.save(poll);
+    public PollModel updatePollVotes(@RequestBody RabbitVoteModel voteModel, @PathVariable("jpaId") String jpaId){
+        PollDto receivedVotes = modelMapper.map(voteModel,PollDto.class);
+        PollDto pollDto = pollService.updatePollVotes(receivedVotes, jpaId);
+        return modelMapper.map(pollDto,PollModel.class);
     }
 }
