@@ -80,6 +80,7 @@ public class PollEntity {
     public void setStillActive(boolean stillActive) {
         this.isStillActive = stillActive;
     }
+
     @Override
     public String toString() {
         return String.format(

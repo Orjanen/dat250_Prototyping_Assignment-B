@@ -45,8 +45,8 @@ public class JsonHandler {
         RabbitVoteModel voteModel = Converter.convertToVoteModel(message);
 
         String jpaId = voteModel.getJpaId();
-        PollDto receivedPoll = modelMapper.map(voteModel,PollDto.class);
-        pollService.updatePollVotes(receivedPoll,jpaId);
+        PollDto receivedPoll = modelMapper.map(voteModel, PollDto.class);
+        pollService.updatePollVotes(receivedPoll, jpaId);
 
         System.out.println("Vote-handling done");
 
@@ -56,7 +56,7 @@ public class JsonHandler {
         System.out.println("Initialized poll-handling...");
 
         RabbitPollModel pollModel = Converter.convertToPollModel(message);
-        PollDto receivedPoll = modelMapper.map(pollModel,PollDto.class);
+        PollDto receivedPoll = modelMapper.map(pollModel, PollDto.class);
         pollService.createPoll(receivedPoll);
 
         System.out.println("Poll-handling done");

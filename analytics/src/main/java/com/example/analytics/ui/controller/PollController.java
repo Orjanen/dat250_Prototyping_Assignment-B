@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("poll")
-public class MongodbController {
+public class PollController {
 
     ModelMapper modelMapper = new ModelMapper();
 
@@ -28,6 +28,7 @@ public class MongodbController {
      */
     @Autowired
     PollRepository pollRepository;
+
     @DeleteMapping
     public String deleteAllPolls() {
         System.out.println("Deleting all polls...");
@@ -57,7 +58,6 @@ public class MongodbController {
     }
 
 
-
     @GetMapping(path = "/jpa-id/{jpaId}")
     public PollModel getPollByJpaId(@PathVariable String jpaId) {
         PollDto pollDto = pollService.getPollByJpaId(jpaId);
@@ -65,9 +65,9 @@ public class MongodbController {
     }
 
     @PutMapping(path = "/jpa-id/{jpaId}")
-    public PollModel updatePollVotes(@RequestBody RabbitVoteModel voteModel, @PathVariable("jpaId") String jpaId){
-        PollDto receivedVotes = modelMapper.map(voteModel,PollDto.class);
+    public PollModel updatePollVotes(@RequestBody RabbitVoteModel voteModel, @PathVariable("jpaId") String jpaId) {
+        PollDto receivedVotes = modelMapper.map(voteModel, PollDto.class);
         PollDto pollDto = pollService.updatePollVotes(receivedVotes, jpaId);
-        return modelMapper.map(pollDto,PollModel.class);
+        return modelMapper.map(pollDto, PollModel.class);
     }
 }

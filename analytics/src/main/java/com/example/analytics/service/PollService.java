@@ -3,7 +3,6 @@ package com.example.analytics.service;
 import com.example.analytics.io.entity.PollEntity;
 import com.example.analytics.io.repository.PollRepository;
 import com.example.analytics.shared.dto.PollDto;
-import com.example.analytics.ui.model.RabbitVoteModel;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

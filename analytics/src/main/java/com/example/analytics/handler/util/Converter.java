@@ -3,9 +3,7 @@ package com.example.analytics.handler.util;
 
 import com.example.analytics.ui.model.RabbitPollModel;
 import com.example.analytics.ui.model.RabbitVoteModel;
-import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 public final class Converter {
@@ -20,7 +18,7 @@ public final class Converter {
     }
 
     public static JsonObject convertToJsonObject(String json) {
-        return gson.fromJson(json,JsonObject.class);
+        return gson.fromJson(json, JsonObject.class);
     }
 
     public static RabbitVoteModel convertToVoteModel(String message) {
