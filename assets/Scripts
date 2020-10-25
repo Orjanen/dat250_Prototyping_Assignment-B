@@ -1,3 +1,9 @@
+# Following are the cmd-scripts to start servers:
+
+## RabbitMQ
+rabbitmq-server
+
+## MongoDB
 mongo --port 27017
 use admin
 db.createUser ({user: "test",pwd: "test",roles: [ {role: "userAdminAnyDatabase", db: "admin" } ]})
