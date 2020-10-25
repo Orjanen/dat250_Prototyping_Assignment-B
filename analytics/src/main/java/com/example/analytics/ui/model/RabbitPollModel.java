@@ -1,14 +1,20 @@
 package com.example.analytics.ui.model;
 
-public class PollModel {
+public class RabbitPollModel {
 
+    private String type;
     private String jpaId;
     private String pollName;
     private String optionOne;
     private String optionTwo;
-    private int optionOneVotes;
-    private int optionTwoVotes;
-    private boolean isStillActive;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public String getJpaId() {
         return jpaId;
@@ -42,27 +48,14 @@ public class PollModel {
         this.optionTwo = optionTwo;
     }
 
-    public int getOptionOneVotes() {
-        return optionOneVotes;
-    }
-
-    public void setOptionOneVotes(int optionOneVotes) {
-        this.optionOneVotes = optionOneVotes;
-    }
-
-    public int getOptionTwoVotes() {
-        return optionTwoVotes;
-    }
-
-    public void setOptionTwoVotes(int optionTwoVotes) {
-        this.optionTwoVotes = optionTwoVotes;
-    }
-
-    public boolean isStillActive() {
-        return isStillActive;
-    }
-
-    public void setStillActive(boolean stillActive) {
-        isStillActive = stillActive;
+    @Override
+    public String toString() {
+        return "RabbitPollModel{" +
+               "\n\ttype='" + type + '\'' +
+               "\n\tjpaId='" + jpaId + '\'' +
+               "\n\tpollName='" + pollName + '\'' +
+               "\n\toptionOne='" + optionOne + '\'' +
+               "\n\toptionTwo='" + optionTwo + '\'' +
+               "\n}\n";
     }
 }

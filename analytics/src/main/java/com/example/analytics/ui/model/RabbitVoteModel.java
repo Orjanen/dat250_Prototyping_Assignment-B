@@ -1,6 +1,6 @@
 package com.example.analytics.ui.model;
 
-public class VoteModel {
+public class RabbitVoteModel {
 
 
     private String type;
