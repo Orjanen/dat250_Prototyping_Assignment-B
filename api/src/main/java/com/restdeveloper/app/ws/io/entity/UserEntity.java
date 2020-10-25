@@ -11,10 +11,6 @@ import java.util.List;
 public class UserEntity extends Voter implements Serializable {
     private static final long serialVersionUID= -3609876517654923756L;
 
-    @Id
-    @GeneratedValue
-    @Expose
-    private long id;
 
     @Column(nullable = false)
     @Expose

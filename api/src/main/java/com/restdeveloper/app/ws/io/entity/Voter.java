@@ -15,8 +15,6 @@ public abstract class Voter {
     @OneToMany(mappedBy = "voter")
     private List<VoteEntity> myVotes;
 
-
-
     public Long getId() {
         return id;
     }

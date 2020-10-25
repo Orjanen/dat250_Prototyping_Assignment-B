@@ -10,4 +10,6 @@ public interface PollService {
     PollDto createPoll(PollDto poll, String id);
     PollDto getPollByPollId(String id);
     List<PollDto> getAllPollsByCreator(String userId);
+
+    String getCurrentPollStatus(String pollId);
 }

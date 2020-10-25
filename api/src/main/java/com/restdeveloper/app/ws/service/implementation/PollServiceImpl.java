@@ -54,6 +54,7 @@ public class PollServiceImpl implements PollService {
 
         return returnValue;
     }
+
     @Override
     public PollDto getPollByPollId(String id) {
 
@@ -74,4 +75,17 @@ public class PollServiceImpl implements PollService {
 
         return returnValue;
     }
+
+    @Override
+    public String getCurrentPollStatus(String pollId) {
+        PollEntity poll = pollRepository.findByPollId(pollId);
+        if(poll == null) throw new ResourceNotFoundException("Can't find poll with id: " + pollId);
+
+        PollDto pollDto = modelMapper.map(poll, PollDto.class);
+
+        return "Poll: " + pollDto.getPollId() + "\n1: " + pollDto.getOptionOneVotes() + "\n2: " + pollDto.getOptionTwoVotes();
+
+    }
+
+
 }

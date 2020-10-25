@@ -8,11 +8,14 @@ import com.restdeveloper.app.ws.io.repository.UserRepository;
 import com.restdeveloper.app.ws.io.repository.VoteRepository;
 import com.restdeveloper.app.ws.service.VoteService;
 import com.restdeveloper.app.ws.shared.UnregisteredVoteForPrivatePollException;
+import com.restdeveloper.app.ws.shared.WebSocketMessageConstants;
+import com.restdeveloper.app.ws.shared.dto.PollDto;
 import com.restdeveloper.app.ws.shared.dto.VoteDto;
 import com.restdeveloper.app.ws.ui.model.request.VotingDetailsModel;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,6 +33,10 @@ public class VoteServiceImpl implements VoteService {
 
     @Autowired
     PollRepository pollRepository;
+
+    @Autowired
+    SimpMessagingTemplate template;
+
 
     ModelMapper modelMapper = new ModelMapper();
 
@@ -60,6 +67,11 @@ public class VoteServiceImpl implements VoteService {
 
         VoteEntity updatedVote = voteRepository.save(voteEntity);
         VoteDto returnVote = modelMapper.map(updatedVote, VoteDto.class);
+
+        //TODO: WEBSOCKET: Må kanskje oppdatere poll før den sendes til websocket?
+
+        template.convertAndSend("/app/poll/" + poll.getPollId() + "/sub", WebSocketMessageConstants.POLL_UPDATE + "Poll: " + poll.getPollId() + " - 1: " + poll.getOptionOneVotes() + " - 2: " + poll.getOptionTwoVotes());
+
         return returnVote;
     }
 
@@ -95,6 +107,12 @@ public class VoteServiceImpl implements VoteService {
         newVote.setPollEntity(poll);
         VoteEntity savedVote = voteRepository.save(newVote);
         VoteDto returnVote = modelMapper.map(savedVote, VoteDto.class);
+
+        //PollDto pollDto = modelMapper.map(poll, PollDto.class);
+
+        template.convertAndSend("/app/poll/" + poll.getPollId() + "/sub",
+                WebSocketMessageConstants.POLL_UPDATE + "Poll: " + poll.getPollId() + " - 1: " + poll.getOptionOneVotes() + " - 2: " + poll.getOptionTwoVotes()
+        );
         return returnVote;
     }
 
