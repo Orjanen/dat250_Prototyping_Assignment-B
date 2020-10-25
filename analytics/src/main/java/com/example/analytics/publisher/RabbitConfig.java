@@ -1,4 +1,4 @@
-package com.example.analytics.mongodb.publisher;
+package com.example.analytics.publisher;
 
 import org.springframework.amqp.core.*;
 import org.springframework.context.annotation.Bean;

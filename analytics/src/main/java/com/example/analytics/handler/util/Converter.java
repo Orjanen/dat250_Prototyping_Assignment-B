@@ -1,8 +1,8 @@
-package com.example.analytics.mongodb.handler.util;
+package com.example.analytics.handler.util;
 
 
-import com.example.analytics.mongodb.ui.model.PollModel;
-import com.example.analytics.mongodb.ui.model.VoteModel;
+import com.example.analytics.ui.model.PollModel;
+import com.example.analytics.ui.model.VoteModel;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

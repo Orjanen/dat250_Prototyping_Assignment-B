@@ -1,8 +1,8 @@
-package com.example.analytics.mongodb.ui.controller;
+package com.example.analytics.ui.controller;
 
-import com.example.analytics.mongodb.io.entity.PollEntity;
-import com.example.analytics.mongodb.io.repository.PollRepository;
-import com.example.analytics.mongodb.ui.model.VoteModel;
+import com.example.analytics.io.entity.PollEntity;
+import com.example.analytics.io.repository.PollRepository;
+import com.example.analytics.ui.model.VoteModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

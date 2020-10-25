@@ -1,6 +1,6 @@
-package com.example.analytics.mongodb.publisher;
+package com.example.analytics.publisher;
 
-import com.example.analytics.mongodb.handler.JsonHandler;
+import com.example.analytics.handler.JsonHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 

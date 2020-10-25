@@ -1,4 +1,4 @@
-package com.example.analytics.mongodb.ui.model;
+package com.example.analytics.ui.model;
 
 public class VoteModel {
 
