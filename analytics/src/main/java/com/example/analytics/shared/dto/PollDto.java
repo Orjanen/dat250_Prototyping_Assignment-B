@@ -1,21 +1,18 @@
-package com.example.analytics.io.entity;
+package com.example.analytics.shared.dto;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document
-public class PollEntity {
-
-    @Id
+public class PollDto {
     private String id;
-
     private String jpaId;
     private String pollName;
     private String optionOne;
     private String optionTwo;
+
     private int optionOneVotes;
     private int optionTwoVotes;
+
     private boolean isStillActive;
+
 
     public String getId() {
         return id;
@@ -78,15 +75,20 @@ public class PollEntity {
     }
 
     public void setStillActive(boolean stillActive) {
-        this.isStillActive = stillActive;
+        isStillActive = stillActive;
     }
+
     @Override
     public String toString() {
-        return String.format(
-                "Poll[id=%s, jpaId='%s', pollName='%s', optionOne='%s', optionTwo='%s', " +
-                "optionOneVotes=%s, optionTwoVotes=%s]",
-                id, jpaId, pollName, optionOne, optionTwo, optionOneVotes, optionTwoVotes);
+        return "PollDto{" +
+               "\n\tid='" + id + '\'' +
+               "\n\tjpaId='" + jpaId + '\'' +
+               "\n\tpollName='" + pollName + '\'' +
+               "\n\toptionOne='" + optionOne + '\'' +
+               "\n\toptionTwo='" + optionTwo + '\'' +
+               "\n\toptionOneVotes=" + optionOneVotes +
+               "\n\toptionTwoVotes=" + optionTwoVotes +
+               "\n\tisStillActive=" + isStillActive +
+               "\n}";
     }
-
-
 }
