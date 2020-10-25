@@ -1,7 +1,11 @@
-# Following are the cmd-scripts to start servers:
+# Following are the needed servers:
+MySQL
+RabbitMQ
+MongoDB
+
 
 ## RabbitMQ
-rabbitmq-server
+In cmd: rabbitmq-server
 
 ## MongoDB
 mongo --port 27017
