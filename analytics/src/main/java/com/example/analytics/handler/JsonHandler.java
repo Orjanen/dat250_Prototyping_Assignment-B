@@ -8,6 +8,8 @@ import com.example.analytics.ui.model.RabbitVoteModel;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
@@ -17,14 +19,16 @@ public class JsonHandler {
     @Autowired
     private PollService pollService;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(JsonHandler.class);
+
     ModelMapper modelMapper = new ModelMapper();
 
 
     public void initializeHandlingProcess(String message) {
         JsonObject jsonObject = Converter.convertToJsonObject(message);
 
-        for (Map.Entry<String, JsonElement> e : jsonObject.entrySet()) {
-            String type = e.getValue().getAsString();
+        try {
+            String type = getTypeFromMessage(jsonObject);
             switch (type) {
                 case "poll":
                     handlePoll(message);
@@ -33,33 +37,44 @@ public class JsonHandler {
                     handleVote(message);
                     break;
                 default:
-                    System.out.println("JsonHandler has no implementation with entity: " + type);
+                    LOGGER.warn("JsonHandler has no implementation with entity-type: {}", type);
                     break;
             }
-            break;
+        } catch (NoSuchFieldException e) {
+            LOGGER.error("JsonHandler got error from getTypeFromMessage: ", e);
         }
+
+    }
+
+    private String getTypeFromMessage(JsonObject jsonObject) throws NoSuchFieldException {
+        for (Map.Entry<String, JsonElement> e : jsonObject.entrySet()) {
+            LOGGER.trace("Iterating over jsonObject gives element: {}", e);
+            String elementKey = e.getKey().toLowerCase();
+            if (elementKey.equals("type")) return e.getValue().getAsString().toLowerCase();
+        }
+        throw new NoSuchFieldException("Could not find element-key 'type'");
     }
 
     private void handleVote(String message) {
-        System.out.println("Initialized vote-handling...");
+        LOGGER.debug("Started handling of received vote");
         RabbitVoteModel voteModel = Converter.convertToVoteModel(message);
 
         String jpaId = voteModel.getJpaId();
         PollDto receivedPoll = modelMapper.map(voteModel, PollDto.class);
         pollService.updatePollVotes(receivedPoll, jpaId);
 
-        System.out.println("Vote-handling done");
+        LOGGER.debug("Vote-handling done");
 
     }
 
     private void handlePoll(String message) {
-        System.out.println("Initialized poll-handling...");
+        LOGGER.debug("Started handling of received poll");
 
         RabbitPollModel pollModel = Converter.convertToPollModel(message);
         PollDto receivedPoll = modelMapper.map(pollModel, PollDto.class);
         pollService.createPoll(receivedPoll);
 
-        System.out.println("Poll-handling done");
+        LOGGER.debug("Poll-handling done");
     }
 
 }
