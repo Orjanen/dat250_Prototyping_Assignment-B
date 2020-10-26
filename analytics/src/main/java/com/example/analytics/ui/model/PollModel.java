@@ -65,4 +65,17 @@ public class PollModel {
     public void setStillActive(boolean stillActive) {
         isStillActive = stillActive;
     }
+
+    @Override
+    public String toString() {
+        return "PollModel{" +
+               "\tjpaId='" + jpaId + '\'' +
+               ",\tpollName='" + pollName + '\'' +
+               ",\toptionOne='" + optionOne + '\'' +
+               ",\toptionTwo='" + optionTwo + '\'' +
+               ",\toptionOneVotes=" + optionOneVotes +
+               ",\toptionTwoVotes=" + optionTwoVotes +
+               ",\tisStillActive=" + isStillActive +
+               "\t}";
+    }
 }

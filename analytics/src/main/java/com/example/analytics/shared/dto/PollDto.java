@@ -82,13 +82,13 @@ public class PollDto {
     public String toString() {
         return "PollDto{" +
                "\tid='" + id + '\'' +
-               "\tjpaId='" + jpaId + '\'' +
-               "\tpollName='" + pollName + '\'' +
-               "\toptionOne='" + optionOne + '\'' +
-               "\toptionTwo='" + optionTwo + '\'' +
-               "\toptionOneVotes=" + optionOneVotes +
-               "\toptionTwoVotes=" + optionTwoVotes +
-               "\tisStillActive=" + isStillActive +
+               ",\tjpaId='" + jpaId + '\'' +
+               ",\tpollName='" + pollName + '\'' +
+               ",\toptionOne='" + optionOne + '\'' +
+               ",\toptionTwo='" + optionTwo + '\'' +
+               ",\toptionOneVotes=" + optionOneVotes +
+               ",\toptionTwoVotes=" + optionTwoVotes +
+               ",\tisStillActive=" + isStillActive +
                "\t}";
     }
 }

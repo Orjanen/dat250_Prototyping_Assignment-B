@@ -51,11 +51,11 @@ public class RabbitPollModel {
     @Override
     public String toString() {
         return "RabbitPollModel{" +
-               "\n\ttype='" + type + '\'' +
-               "\n\tjpaId='" + jpaId + '\'' +
-               "\n\tpollName='" + pollName + '\'' +
-               "\n\toptionOne='" + optionOne + '\'' +
-               "\n\toptionTwo='" + optionTwo + '\'' +
-               "\n}\n";
+               "\ttype='" + type + '\'' +
+               ",\tjpaId='" + jpaId + '\'' +
+               ",\tpollName='" + pollName + '\'' +
+               ",\toptionOne='" + optionOne + '\'' +
+               ",\toptionTwo='" + optionTwo + '\'' +
+               "\t}";
     }
 }
