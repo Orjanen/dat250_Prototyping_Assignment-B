@@ -1,38 +1,34 @@
 package com.restdeveloper.app.ws.io.entity;
 
-import com.google.gson.annotations.Expose;
-import com.restdeveloper.app.ws.publisher.listener.EntityListener;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import java.io.Serializable;
 import java.util.List;
 
 @Entity(name = "users")
 public class UserEntity extends Voter implements Serializable {
-    private static final long serialVersionUID= -3609876517654923756L;
+    private static final long serialVersionUID = -3609876517654923756L;
 
 
     @Column(nullable = false)
-    @Expose
     private String userId;
 
     @Column(nullable = false, length = 50)
-    @Expose
     private String firstName;
 
     @Column(nullable = false, length = 50)
-    @Expose
     private String lastName;
 
     @Column(nullable = false, length = 120)
-    @Expose
     private String email;
 
     @Column(nullable = false)
     private String encryptedPassword;
 
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
-    @Expose(serialize = false, deserialize = false)
     private List<PollEntity> myPolls;
 
     public List<PollEntity> getMyPolls() {
@@ -42,7 +38,6 @@ public class UserEntity extends Voter implements Serializable {
     public void setMyPolls(List<PollEntity> myPolls) {
         this.myPolls = myPolls;
     }
-
 
 
     public String getUserId() {
