@@ -9,22 +9,26 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 public class UserPrincipals implements UserDetails {
 
     private static final Long serialVersionUID = 2334567890345678904L;
 
-    UserEntity userEntity;
+    private UserEntity userEntity;
+    private String userId;
 
     public UserPrincipals(UserEntity userEntity) {
+
         this.userEntity = userEntity;
+        this.userId = userEntity.getUserId();
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        List<AuthorityEntity> authorityEntities = new ArrayList<>();
+        Collection<GrantedAuthority> authorities = new HashSet<>();
+        Collection<AuthorityEntity> authorityEntities = new HashSet<>();
         //get user roles
         Collection<RoleEntity> roles = userEntity.getRoles();
         if(roles == null) {
@@ -41,6 +45,14 @@ public class UserPrincipals implements UserDetails {
         });
 
         return authorities;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     @Override

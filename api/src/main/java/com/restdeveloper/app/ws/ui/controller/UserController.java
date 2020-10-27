@@ -3,6 +3,7 @@ package com.restdeveloper.app.ws.ui.controller;
 import com.restdeveloper.app.ws.service.PollService;
 import com.restdeveloper.app.ws.service.UserService;
 import com.restdeveloper.app.ws.service.VoteService;
+import com.restdeveloper.app.ws.shared.Roles;
 import com.restdeveloper.app.ws.shared.dto.PollDto;
 import com.restdeveloper.app.ws.shared.dto.UserDto;
 import com.restdeveloper.app.ws.shared.dto.VoteDto;
@@ -10,8 +11,13 @@ import com.restdeveloper.app.ws.ui.model.request.UserDetailsRequestModel;
 import com.restdeveloper.app.ws.ui.model.response.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,13 +39,14 @@ public class UserController {
     @PostMapping
     public UserRest createUser(@RequestBody UserDetailsRequestModel userDetails){
         UserDto userDto = modelMapper.map(userDetails, UserDto.class);
+        userDto.setRoles(new HashSet<>(Arrays.asList(Roles.ROLE_USER.name())));
         UserDto createdUser = userService.createUser(userDto);
         UserRest returnValue = modelMapper.map(createdUser, UserRest.class);
 
         return returnValue;
     }
 
-
+    @PreAuthorize("hasRole('ROLE_ADMIN') or #id == principal.userId")
     @GetMapping(path = "/{id}")
     public UserRest getUser(@PathVariable String id){
         ModelMapper modelMapper = new ModelMapper();
@@ -61,7 +68,8 @@ public class UserController {
 
     }
 
-
+    //@Secured("ROLE_ADMIN")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or #id == principal.userId")
     @DeleteMapping(path = "{id}")
     public OperationStatusModel deleteUser(@PathVariable String id){
         OperationStatusModel returnValue = new OperationStatusModel();

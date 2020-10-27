@@ -1,6 +1,8 @@
 package com.restdeveloper.app.ws.service.implementation;
 
+import com.restdeveloper.app.ws.io.entity.RoleEntity;
 import com.restdeveloper.app.ws.io.entity.UserEntity;
+import com.restdeveloper.app.ws.io.repository.RoleRepository;
 import com.restdeveloper.app.ws.io.repository.UserRepository;
 import com.restdeveloper.app.ws.service.UserService;
 import com.restdeveloper.app.ws.shared.Utils;
@@ -16,6 +18,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -26,6 +30,8 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    RoleRepository roleRepository;
 
     ModelMapper modelMapper = new ModelMapper();
 
@@ -38,6 +44,17 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = modelMapper.map(user, UserEntity.class);
         userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userEntity.setUserId(utils.generateUserId(30));
+
+        //set roles
+        Collection<RoleEntity> roleEntities = new HashSet<>();
+        for (String role: user.getRoles()){
+            RoleEntity roleEntity = roleRepository.findByName(role);
+            if (roleEntity != null){
+                roleEntities.add(roleEntity);
+            }
+        }
+        userEntity.setRoles(roleEntities);
+
         UserEntity storedUserDetails = userRepository.save(userEntity);
 
         UserDto returnValue = modelMapper.map(storedUserDetails, UserDto.class);

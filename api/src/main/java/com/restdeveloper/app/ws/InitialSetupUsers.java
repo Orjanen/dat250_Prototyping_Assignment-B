@@ -6,6 +6,7 @@ import com.restdeveloper.app.ws.io.entity.UserEntity;
 import com.restdeveloper.app.ws.io.repository.AuthorityRepository;
 import com.restdeveloper.app.ws.io.repository.RoleRepository;
 import com.restdeveloper.app.ws.io.repository.UserRepository;
+import com.restdeveloper.app.ws.shared.Roles;
 import com.restdeveloper.app.ws.shared.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -39,8 +40,8 @@ public class InitialSetupUsers {
         AuthorityEntity writeAuthority = createAuthority("WRITE_AUTHORITY");
         AuthorityEntity deleteAuthority = createAuthority("DELETE_AUTHORITY");
 
-        RoleEntity roleUser = createRole("ROLE_USER", Arrays.asList(readAuthority, writeAuthority));
-        RoleEntity roleAdmin = createRole("ROLE_ADMIN", Arrays.asList(readAuthority, writeAuthority, deleteAuthority));
+        createRole(Roles.ROLE_USER.name(), Arrays.asList(readAuthority, writeAuthority));
+        RoleEntity roleAdmin = createRole(Roles.ROLE_ADMIN.name(), Arrays.asList(readAuthority, writeAuthority, deleteAuthority));
 
         if (roleAdmin == null) return;
         if (userRepository.findByEmail("admin@admin.com") != null) return;
