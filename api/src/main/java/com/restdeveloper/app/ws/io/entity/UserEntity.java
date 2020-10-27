@@ -5,6 +5,7 @@ import com.restdeveloper.app.ws.publisher.listener.EntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 
 @Entity(name = "users")
@@ -34,6 +35,12 @@ public class UserEntity extends Voter implements Serializable {
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
     @Expose(serialize = false, deserialize = false)
     private List<PollEntity> myPolls;
+
+    @ManyToMany(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
+    @JoinTable(name = "users_roles",
+            joinColumns = @JoinColumn(name = "users_id", referencedColumnName ="id" ),
+            inverseJoinColumns = @JoinColumn(name = "roles_id", referencedColumnName = "id"))
+    private Collection<RoleEntity> roles;
 
     public List<PollEntity> getMyPolls() {
         return myPolls;
