@@ -42,6 +42,14 @@ public class UserEntity extends Voter implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "roles_id", referencedColumnName = "id"))
     private Collection<RoleEntity> roles;
 
+    public Collection<RoleEntity> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<RoleEntity> roles) {
+        this.roles = roles;
+    }
+
     public List<PollEntity> getMyPolls() {
         return myPolls;
     }

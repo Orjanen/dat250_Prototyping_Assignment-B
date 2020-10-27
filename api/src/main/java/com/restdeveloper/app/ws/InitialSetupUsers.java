@@ -2,11 +2,15 @@ package com.restdeveloper.app.ws;
 
 import com.restdeveloper.app.ws.io.entity.AuthorityEntity;
 import com.restdeveloper.app.ws.io.entity.RoleEntity;
+import com.restdeveloper.app.ws.io.entity.UserEntity;
 import com.restdeveloper.app.ws.io.repository.AuthorityRepository;
 import com.restdeveloper.app.ws.io.repository.RoleRepository;
+import com.restdeveloper.app.ws.io.repository.UserRepository;
+import com.restdeveloper.app.ws.shared.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
@@ -20,6 +24,12 @@ public class InitialSetupUsers {
     AuthorityRepository authorityRepository;
     @Autowired
     RoleRepository roleRepository;
+    @Autowired
+    Utils utils;
+    @Autowired
+    BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    UserRepository userRepository;
 
     @EventListener
     @Transactional
@@ -29,9 +39,20 @@ public class InitialSetupUsers {
         AuthorityEntity writeAuthority = createAuthority("WRITE_AUTHORITY");
         AuthorityEntity deleteAuthority = createAuthority("DELETE_AUTHORITY");
 
-        createRole("ROLE_USER", Arrays.asList(readAuthority, writeAuthority));
-        createRole("ROLE_ADMIN", Arrays.asList(readAuthority, writeAuthority, deleteAuthority));
+        RoleEntity roleUser = createRole("ROLE_USER", Arrays.asList(readAuthority, writeAuthority));
+        RoleEntity roleAdmin = createRole("ROLE_ADMIN", Arrays.asList(readAuthority, writeAuthority, deleteAuthority));
 
+        if (roleAdmin == null) return;
+
+        UserEntity adminUser = new UserEntity();
+        adminUser.setFirstName("admin");
+        adminUser.setLastName("admin");
+        adminUser.setEmail("admin@admin.com");
+        adminUser.setUserId(utils.generateUserId(30));
+        adminUser.setEncryptedPassword(bCryptPasswordEncoder.encode("admin"));
+        adminUser.setRoles(Arrays.asList(roleAdmin));
+
+        userRepository.save(adminUser);
     }
 
     @Transactional
