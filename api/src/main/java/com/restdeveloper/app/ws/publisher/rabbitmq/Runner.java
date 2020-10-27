@@ -1,5 +1,7 @@
 package com.restdeveloper.app.ws.publisher.rabbitmq;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +14,12 @@ public class Runner {
     @Autowired
     private FanoutExchange fanout;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(Runner.class);
+
     public void run(String s) {
-        System.out.println("Runner initialized. Sending message...");
+        LOGGER.info("Runner initialized. Sending message...");
         template.convertAndSend(fanout.getName(), "", s);
-        System.out.println("Runner done");
+        LOGGER.debug("Runner done");
     }
 
 }
