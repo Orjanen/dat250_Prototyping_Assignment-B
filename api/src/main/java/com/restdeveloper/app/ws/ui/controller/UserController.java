@@ -57,7 +57,7 @@ public class UserController {
         return returnValue;
     }
 
-
+    @PreAuthorize("hasRole('ROLE_ADMIN') or #id == principal.userId")
     @PutMapping(path = "{id}")
     public UserRest updateUser(@RequestBody UserDetailsRequestModel userDetails, @PathVariable String id){
         UserDto userDto = modelMapper.map(userDetails, UserDto.class);
@@ -68,7 +68,6 @@ public class UserController {
 
     }
 
-    //@Secured("ROLE_ADMIN")
     @PreAuthorize("hasRole('ROLE_ADMIN') or #id == principal.userId")
     @DeleteMapping(path = "{id}")
     public OperationStatusModel deleteUser(@PathVariable String id){
@@ -80,7 +79,7 @@ public class UserController {
         return returnValue;
     }
 
-
+    @PreAuthorize("hasRole('ROLE_ADMIN') or #id == principal.userId")
     @GetMapping(path = "/{id}/polls")
     public List<PollRest> findPollsCreatedByUser(@PathVariable("id") String id){
         List<PollDto> pollDtos = pollService.getAllPollsByCreator(id);
@@ -88,7 +87,7 @@ public class UserController {
         return pollRests;
     }
 
-
+    @PreAuthorize("hasRole('ROLE_ADMIN') or #id == principal.userId")
     @GetMapping(path = "/{id}/votes")
     public List<VoteRest> findAllVotesByUser(@PathVariable("id") String userId){
         List<VoteDto> voteDtos = voteService.getAllVotesByUser(userId);

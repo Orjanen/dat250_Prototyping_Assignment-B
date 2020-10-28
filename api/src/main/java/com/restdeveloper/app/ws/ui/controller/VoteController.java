@@ -7,6 +7,7 @@ import com.restdeveloper.app.ws.ui.model.request.VotingDetailsModel;
 import com.restdeveloper.app.ws.ui.model.response.VoteRest;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,6 +23,7 @@ public class VoteController {
     VoteService voteService;
 
     //TODO: Heller hente User fra authorization?
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping(path = "/poll/{pollId}/user/{userId}")
     public VoteRest addVoteByRegisteredUserToPoll(@RequestBody VotingDetailsModel vote, @PathVariable("pollId") String pollId, @PathVariable("userId") String userId){
         VoteDto voteDto = modelMapper.map(vote, VoteDto.class);
@@ -30,6 +32,7 @@ public class VoteController {
         return returnValue;
     }
 
+    @PreAuthorize("#userId == principal.userId")
     @PutMapping(path = "/poll/{pollId}/user/{userId}")
     public VoteRest updateVoteByRegisteredUser(@RequestBody VotingDetailsModel vote, @PathVariable("pollId") String pollId, @PathVariable("userId") String userId){
         VoteDto voteDto = modelMapper.map(vote, VoteDto.class);
