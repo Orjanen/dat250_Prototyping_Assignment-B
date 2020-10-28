@@ -30,6 +30,9 @@ public class UserEntity extends Voter implements Serializable {
     private String email;
 
     @Column(nullable = false)
+    private boolean banStatus = false;
+
+    @Column(nullable = false)
     private String encryptedPassword;
 
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
@@ -48,6 +51,14 @@ public class UserEntity extends Voter implements Serializable {
 
     public void setRoles(Collection<RoleEntity> roles) {
         this.roles = roles;
+    }
+
+    public boolean isBanStatus() {
+        return banStatus;
+    }
+
+    public void setBanStatus(boolean banStatus) {
+        this.banStatus = banStatus;
     }
 
     public List<PollEntity> getMyPolls() {

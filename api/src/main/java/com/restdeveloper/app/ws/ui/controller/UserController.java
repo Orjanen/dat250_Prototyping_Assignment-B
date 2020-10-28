@@ -79,6 +79,17 @@ public class UserController {
         return returnValue;
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PutMapping(path = "{id}/ban")
+    public OperationStatusModel banUser(@PathVariable String id){
+        OperationStatusModel returnValue = new OperationStatusModel();
+        returnValue.setOperationName(RequestOperationName.BAN.name());
+        userService.banUser(id);
+        returnValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
+
+        return returnValue;
+    }
+
     @PreAuthorize("hasRole('ROLE_ADMIN') or #id == principal.userId")
     @GetMapping(path = "/{id}/polls")
     public List<PollRest> findPollsCreatedByUser(@PathVariable("id") String id){

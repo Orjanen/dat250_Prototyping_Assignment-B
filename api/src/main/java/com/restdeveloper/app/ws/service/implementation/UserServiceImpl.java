@@ -93,6 +93,8 @@ public class UserServiceImpl implements UserService {
 
     }
 
+
+
     @Override
     public UserDto updateUser(String id, UserDto user) {
         UserEntity userEntity = userRepository.findByUserId(id);
@@ -106,6 +108,14 @@ public class UserServiceImpl implements UserService {
         UserDto returnValue = modelMapper.map(updatedUser, UserDto.class);
 
         return returnValue;
+    }
+
+    @Override
+    public void banUser(String userId) {
+        UserEntity userEntity = userRepository.findByUserId(userId);
+        if(userEntity == null) throw new ResourceNotFoundException("userEntity is null");
+        userEntity.setBanStatus(true);
+        userRepository.save(userEntity);
     }
 
     @Override
