@@ -13,8 +13,6 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -85,7 +83,9 @@ public class UserController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping(path = "{id}/ban")
-    public OperationStatusModel banUser(@PathVariable String id){
+    public OperationStatusModel banUser(@PathVariable String id) {
+        LOGGER.debug("User-Controller initialized to ban user");
+
         OperationStatusModel returnValue = new OperationStatusModel();
         returnValue.setOperationName(RequestOperationName.BAN.name());
         userService.banUser(id);
