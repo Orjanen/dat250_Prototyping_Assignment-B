@@ -62,6 +62,7 @@ public class PollController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping(path = "{id}")
     public OperationStatusModel deletePoll(@PathVariable String id){
+        LOGGER.debug("Poll-Controller initialized to delete poll by ID");
         OperationStatusModel returnValue = new OperationStatusModel();
         returnValue.setOperationName(RequestOperationName.DELETE.name());
         pollService.deletePoll(id);
