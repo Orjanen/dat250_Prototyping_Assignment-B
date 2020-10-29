@@ -1,6 +1,10 @@
 package com.restdeveloper.app.ws.security;
 
+import com.restdeveloper.app.ws.io.entity.UserEntity;
+import com.restdeveloper.app.ws.io.repository.UserRepository;
+import com.restdeveloper.app.ws.service.implementation.UserPrincipals;
 import io.jsonwebtoken.Jwts;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,8 +19,11 @@ import java.util.ArrayList;
 
 public class AuthorizationFilter extends BasicAuthenticationFilter {
 
-    public AuthorizationFilter(AuthenticationManager authenticationManager) {
+    private final UserRepository userRepository;
+
+    public AuthorizationFilter(AuthenticationManager authenticationManager, UserRepository userRepository) {
         super(authenticationManager);
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -49,7 +56,10 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
                     .getSubject();
 
             if (user != null){
-                return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+                UserEntity userEntity = userRepository.findByEmail(user);
+                if (userEntity == null) return null;
+                UserPrincipals userPrincipals = new UserPrincipals(userEntity);
+                return new UsernamePasswordAuthenticationToken(userPrincipals, null, userPrincipals.getAuthorities());
             }
             return null;
         }

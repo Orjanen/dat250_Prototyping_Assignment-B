@@ -1,6 +1,8 @@
 package com.restdeveloper.app.ws.service.implementation;
 
+import com.restdeveloper.app.ws.io.entity.RoleEntity;
 import com.restdeveloper.app.ws.io.entity.UserEntity;
+import com.restdeveloper.app.ws.io.repository.RoleRepository;
 import com.restdeveloper.app.ws.io.repository.UserRepository;
 import com.restdeveloper.app.ws.service.UserService;
 import com.restdeveloper.app.ws.shared.Utils;
@@ -11,13 +13,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -28,6 +30,8 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    RoleRepository roleRepository;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
     private static final String COULD_NOT_FIND_USER_WITH_USER_ID = "Could not find user with user-ID: ";
@@ -47,6 +51,17 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = modelMapper.map(user, UserEntity.class);
         userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userEntity.setUserId(utils.generateUserId(30));
+
+        //set roles
+        Collection<RoleEntity> roleEntities = new HashSet<>();
+        for (String role : user.getRoles()) {
+            RoleEntity roleEntity = roleRepository.findByName(role);
+            if (roleEntity != null) {
+                roleEntities.add(roleEntity);
+            }
+        }
+        userEntity.setRoles(roleEntities);
+
         UserEntity storedUserDetails = userRepository.save(userEntity);
 
         LOGGER.debug("Done creating user");
@@ -101,6 +116,7 @@ public class UserServiceImpl implements UserService {
         LOGGER.debug("Done deleting user");
     }
 
+
     @Override
     public UserDto updateUser(String id, UserDto user) {
         LOGGER.info("Updating user with user-ID: {}", id);
@@ -123,19 +139,30 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) {
-        LOGGER.info("Loading user by email");
+    public void banUser(String userId) {
+        LOGGER.info("Banning user with uder-ID: {}", userId);
 
-
-        UserEntity userEntity = userRepository.findByEmail(email);
-
+        UserEntity userEntity = userRepository.findByUserId(userId);
         if (userEntity == null) {
-            LOGGER.error(COULD_NOT_FIND_USER_WITH_EMAIL);
-            throw new UsernameNotFoundException(COULD_NOT_FIND_USER_WITH_EMAIL);
+            String errorMessage = COULD_NOT_FIND_USER_WITH_USER_ID + userId;
+            LOGGER.error(errorMessage);
+            throw new ResourceNotFoundException(errorMessage);
         }
 
+        userEntity.setBanStatus(true);
+        userRepository.save(userEntity);
+
+        LOGGER.debug("Done banning user");
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) {
+        LOGGER.info("Loading user by username");
+        UserEntity userEntity = userRepository.findByEmail(email);
 
         LOGGER.debug("Done loading user");
-        return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), new ArrayList<>());
+        return new UserPrincipals(userEntity);
+        //if (userEntity == null) throw new UsernameNotFoundException(email)
+        //return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), new ArrayList<>())
     }
 }

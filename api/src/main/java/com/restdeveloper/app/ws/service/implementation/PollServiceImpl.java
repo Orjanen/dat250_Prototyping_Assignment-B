@@ -91,6 +91,15 @@ public class PollServiceImpl implements PollService {
     }
 
     @Override
+    public void deletePoll(String pollId) {
+
+            PollEntity pollEntity = pollRepository.findByPollId(pollId);
+            if(pollEntity == null) throw new ResourceNotFoundException("pollEntity is null");
+
+            pollRepository.delete(pollEntity);
+    }
+
+    @Override
     public String getCurrentPollStatus(String pollId) {
         LOGGER.info("Getting current status of poll with poll-ID: {}", pollId);
 

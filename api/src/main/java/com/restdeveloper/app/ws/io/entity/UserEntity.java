@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 
 @Entity(name = "users")
@@ -26,10 +27,35 @@ public class UserEntity extends Voter implements Serializable {
     private String email;
 
     @Column(nullable = false)
+    private boolean banStatus = false;
+
+    @Column(nullable = false)
     private String encryptedPassword;
 
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
     private List<PollEntity> myPolls;
+
+    @ManyToMany(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
+    @JoinTable(name = "users_roles",
+            joinColumns = @JoinColumn(name = "users_id", referencedColumnName ="id" ),
+            inverseJoinColumns = @JoinColumn(name = "roles_id", referencedColumnName = "id"))
+    private Collection<RoleEntity> roles;
+
+    public Collection<RoleEntity> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<RoleEntity> roles) {
+        this.roles = roles;
+    }
+
+    public boolean isBanStatus() {
+        return banStatus;
+    }
+
+    public void setBanStatus(boolean banStatus) {
+        this.banStatus = banStatus;
+    }
 
     public List<PollEntity> getMyPolls() {
         return myPolls;

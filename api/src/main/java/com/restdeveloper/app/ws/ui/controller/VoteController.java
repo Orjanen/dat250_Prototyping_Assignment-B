@@ -9,6 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,6 +27,7 @@ public class VoteController {
     VoteService voteService;
 
     //TODO: Heller hente User fra authorization?
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping(path = "/poll/{pollId}/user/{userId}")
     public VoteRest addVoteByRegisteredUserToPoll(@RequestBody VotingDetailsModel vote, @PathVariable("pollId") String pollId, @PathVariable("userId") String userId){
         LOGGER.debug("Vote-Controller initialized to add votes by registered user");
@@ -35,6 +37,7 @@ public class VoteController {
         return modelMapper.map(savedVote, VoteRest.class);
     }
 
+    @PreAuthorize("#userId == principal.userId")
     @PutMapping(path = "/poll/{pollId}/user/{userId}")
     public VoteRest updateVoteByRegisteredUser(@RequestBody VotingDetailsModel vote, @PathVariable("pollId") String pollId, @PathVariable("userId") String userId){
         LOGGER.debug("Vote-Controller initialized to update votes by registered user");

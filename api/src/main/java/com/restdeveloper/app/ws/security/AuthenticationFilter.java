@@ -3,6 +3,7 @@ package com.restdeveloper.app.ws.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.restdeveloper.app.ws.SpringApplicationContext;
 import com.restdeveloper.app.ws.service.UserService;
+import com.restdeveloper.app.ws.service.implementation.UserPrincipals;
 import com.restdeveloper.app.ws.shared.dto.UserDto;
 import com.restdeveloper.app.ws.ui.model.request.UserLoginRequestModel;
 import io.jsonwebtoken.Jwts;
@@ -54,7 +55,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                                             FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
 
-        String userName = ((User)authResult.getPrincipal()).getUsername();
+        String userName = ((UserPrincipals)authResult.getPrincipal()).getUsername();
 
         String token = Jwts.builder()
                 .setSubject(userName)

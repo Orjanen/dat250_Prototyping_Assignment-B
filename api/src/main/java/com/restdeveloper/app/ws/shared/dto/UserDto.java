@@ -1,6 +1,7 @@
 package com.restdeveloper.app.ws.shared.dto;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 
 public class UserDto implements Serializable {
@@ -14,7 +15,24 @@ public class UserDto implements Serializable {
     private String encryptedPassword;
     private List<PollDto> myPolls;
     private List<VoteDto> myVotes;
+    private Collection<String> roles;
+    private boolean banStatus = false;
 
+    public Collection<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<String> roles) {
+        this.roles = roles;
+    }
+
+    public boolean isBanStatus() {
+        return banStatus;
+    }
+
+    public void setBanStatus(boolean banStatus) {
+        this.banStatus = banStatus;
+    }
 
     public long getId() {
         return id;
