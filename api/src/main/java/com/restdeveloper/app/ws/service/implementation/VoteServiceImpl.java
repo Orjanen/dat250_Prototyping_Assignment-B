@@ -9,11 +9,12 @@ import com.restdeveloper.app.ws.io.repository.VoteRepository;
 import com.restdeveloper.app.ws.service.VoteService;
 import com.restdeveloper.app.ws.shared.UnregisteredVoteForPrivatePollException;
 import com.restdeveloper.app.ws.shared.WebSocketMessageConstants;
-import com.restdeveloper.app.ws.shared.dto.PollDto;
 import com.restdeveloper.app.ws.shared.dto.VoteDto;
 import com.restdeveloper.app.ws.ui.model.request.VotingDetailsModel;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -37,14 +38,19 @@ public class VoteServiceImpl implements VoteService {
     @Autowired
     SimpMessagingTemplate template;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(VoteServiceImpl.class);
 
     ModelMapper modelMapper = new ModelMapper();
 
     @Override
     public void updateVotes(String voteId, VotingDetailsModel votingDetailsModel) {
+        LOGGER.info("Updating votes on vote with vote-ID: {}", voteId);
 
         VoteEntity voteEntity = voteRepository.findByVoteId(voteId);
-        if (voteEntity == null) throw new ResourceNotFoundException("Vote entity not found");
+        if (voteEntity == null) {
+            LOGGER.error("Could not find vote with vote-ID: {}", voteId);
+            throw new ResourceNotFoundException("Could not find vote with vote-ID: " + voteId);
+        }
 
         int vote1 = voteEntity.getOption1Count();
         int vote2 = voteEntity.getOption2Count();
@@ -52,15 +58,21 @@ public class VoteServiceImpl implements VoteService {
         voteEntity.setOption2Count(vote2 + votingDetailsModel.getOption2Count());
 
         voteRepository.save(voteEntity);
+        LOGGER.debug("Done updating vote");
     }
 
     @Override
     public VoteDto updateVote(VoteDto voteDto, String pollId, String userId) {
-        //VoteEntity voteEntity = voteRepository.findByVoteId(voteDto.getVoteId());
+        LOGGER.info("Update vote by user and poll");
+
+        //VoteEntity voteEntity = voteRepository.findByVoteId(voteDto.getVoteId())
         PollEntity poll = pollRepository.findByPollId(pollId);
         UserEntity user = userRepository.findByUserId(userId);
         VoteEntity voteEntity = voteRepository.findByVoterAndPollEntity(user, poll);
-        if(voteEntity == null) throw new ResourceNotFoundException("Vote not found");
+        if (voteEntity == null) {
+            LOGGER.error("Could not find vote");
+            throw new ResourceNotFoundException("Could not find vote");
+        }
 
         voteEntity.setOption1Count(voteDto.getOption1Count());
         voteEntity.setOption2Count(voteDto.getOption2Count());
@@ -70,37 +82,49 @@ public class VoteServiceImpl implements VoteService {
 
         //TODO: WEBSOCKET: Må kanskje oppdatere poll før den sendes til websocket?
 
-        template.convertAndSend("/app/poll/" + poll.getPollId() + "/sub", WebSocketMessageConstants.POLL_UPDATE + "Poll: " + poll.getPollId() + " - 1: " + poll.getOptionOneVotes() + " - 2: " + poll.getOptionTwoVotes());
+        template.convertAndSend("/app/poll/" + poll.getPollId() + "/sub", WebSocketMessageConstants.POLL_UPDATE +
+                                                                          "Poll: " + poll.getPollId() + " - 1: " + poll.getOptionOneVotes() + " - 2: " + poll.getOptionTwoVotes());
 
+        LOGGER.debug("Done");
         return returnVote;
     }
 
     @Override
     public VoteDto addVoteByRegisteredUserToPoll(VoteDto voteDto, String pollId, String userId) {
+        LOGGER.debug("Initializing addVote with registered user...");
         return addVote(voteDto, pollId, userId);
     }
 
     @Override
     public VoteDto addVoteByUnregisteredUserToPoll(VoteDto voteDto, String pollId) {
+        LOGGER.debug("Initializing addVote with unregistered user...");
         return addVote(voteDto, pollId, null);
     }
 
     private VoteDto addVote(VoteDto voteDto, String pollId, String userId) {
+        LOGGER.info("Adding vote on poll with poll-ID: {}", pollId);
+
         VoteEntity newVote = modelMapper.map(voteDto, VoteEntity.class);
         newVote.setVoteId(UUID.randomUUID().toString());
 
         PollEntity poll = pollRepository.findByPollId(pollId);
-        if(poll == null) throw new ResourceNotFoundException("Poll not found");
+        if (poll == null) {
+            LOGGER.error("Could not find a poll with ID: {}", pollId);
+            throw new ResourceNotFoundException("Could not find poll with ID: " + pollId);
+        }
 
-        UserEntity user = null;
-        if (userId == null) {
+        UserEntity user;
+        if (userId == null && poll.isPrivate()) {
             //Private poll can't accept votes not linked to users
-            if(poll.isPrivate()){
-                throw new UnregisteredVoteForPrivatePollException("Unregistered users can't vote in private poll");
-            }
+            LOGGER.error("Unregistered users can't vote on a private poll");
+            throw new UnregisteredVoteForPrivatePollException("Unregistered users can't vote in private poll");
+
         } else {
             user = userRepository.findByUserId(userId);
-            if(user == null) throw new ResourceNotFoundException("User not found");
+            if (user == null) {
+                LOGGER.error("Could not find user with user-ID: {}", userId);
+                throw new ResourceNotFoundException("Could not find user with user-ID: " + userId);
+            }
             newVote.setVoter(user);
         }
 
@@ -108,22 +132,25 @@ public class VoteServiceImpl implements VoteService {
         VoteEntity savedVote = voteRepository.save(newVote);
         VoteDto returnVote = modelMapper.map(savedVote, VoteDto.class);
 
-        //PollDto pollDto = modelMapper.map(poll, PollDto.class);
+        //PollDto pollDto = modelMapper.map(poll, PollDto.class)
 
         template.convertAndSend("/app/poll/" + poll.getPollId() + "/sub",
-                WebSocketMessageConstants.POLL_UPDATE + "Poll: " + poll.getPollId() + " - 1: " + poll.getOptionOneVotes() + " - 2: " + poll.getOptionTwoVotes()
-        );
+                                WebSocketMessageConstants.POLL_UPDATE + "Poll: " + poll.getPollId()
+                                + " - 1: " + poll.getOptionOneVotes() + " - 2: " + poll.getOptionTwoVotes());
+
+        LOGGER.debug("Done adding vote");
         return returnVote;
     }
 
     @Override
     public List<VoteDto> getAllVotesByUser(String userId) {
+        LOGGER.info("Getting all votes by user with user-ID: {}", userId);
 
         UserEntity user = userRepository.findByUserId(userId);
         List<VoteEntity> votes = voteRepository.findAllVotesByVoter(user);
-        List<VoteDto> voteDtos = votes.stream().map(voteEntity -> modelMapper.map(voteEntity, VoteDto.class)).collect(Collectors.toList());
 
-        return voteDtos;
+        LOGGER.debug("Done getting all votes by user");
+        return votes.stream().map(voteEntity -> modelMapper.map(voteEntity, VoteDto.class)).collect(Collectors.toList());
     }
 
 }
