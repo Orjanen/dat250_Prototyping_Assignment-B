@@ -5,6 +5,8 @@ import com.restdeveloper.app.ws.service.VoteService;
 import com.restdeveloper.app.ws.shared.dto.VoteDto;
 import com.restdeveloper.app.ws.ui.model.request.VotingDetailsModel;
 import com.restdeveloper.app.ws.ui.model.response.VoteRest;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +28,9 @@ public class VoteController {
      @Autowired
     VoteService voteService;
 
-    //TODO: Heller hente User fra authorization?
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="authorization",value="${userController.authorizationheader.description}", paramType = "header")
+    })
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping(path = "/poll/{pollId}/user/{userId}")
     public VoteRest addVoteByRegisteredUserToPoll(@RequestBody VotingDetailsModel vote, @PathVariable("pollId") String pollId, @PathVariable("userId") String userId){
@@ -37,6 +41,9 @@ public class VoteController {
         return modelMapper.map(savedVote, VoteRest.class);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="authorization",value="${userController.authorizationheader.description}", paramType = "header")
+    })
     @PreAuthorize("#userId == principal.userId")
     @PutMapping(path = "/poll/{pollId}/user/{userId}")
     public VoteRest updateVoteByRegisteredUser(@RequestBody VotingDetailsModel vote, @PathVariable("pollId") String pollId, @PathVariable("userId") String userId){
