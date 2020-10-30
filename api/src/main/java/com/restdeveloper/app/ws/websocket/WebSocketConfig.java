@@ -1,6 +1,7 @@
 package com.restdeveloper.app.ws.websocket;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.messaging.Message;
@@ -25,6 +26,7 @@ import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
 
 @Component
 @EnableWebSocketMessageBroker
+@Configuration
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override

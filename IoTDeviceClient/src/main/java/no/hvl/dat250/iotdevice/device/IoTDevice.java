@@ -17,13 +17,21 @@ public class IoTDevice {
 
     private boolean currentlyVoting;
 
-    private Collection<DeviceListener> listeners;
+    private Collection<DeviceListener> deviceListeners;
+    private Collection<DeviceSendButtonListener> deviceSendButtonListeners;
 
     public IoTDevice(String publicId) {
         this.publicId = publicId;
-        listeners = new HashSet<>();
+        deviceListeners = new HashSet<>();
+        deviceSendButtonListeners = new HashSet<>();
     }
 
+
+    /*
+    voteForOptionX:
+    don't accept vote if the device is not paired with a poll
+    if this is the first vote cast for a new vote, create a new Vote
+     */
     public void voteForOptionOne() {
         if(currentPoll != null){
             if(currentVote == null){
@@ -34,30 +42,6 @@ public class IoTDevice {
 
     }
 
-    public void registerListener(DeviceListener listener){
-        listeners.add(listener);
-    }
-
-    public void handlePollEnding() {
-        for(DeviceListener listener : listeners){
-            listener.onPollEnd(currentPoll);
-        }
-    }
-
-    public void handlePollUpdate() {
-        for(DeviceListener listener : listeners){
-            listener.onReceivedPollUpdate(currentPoll);
-        }
-
-    }
-
-    public void handleNewPollReceived(){
-        //TODO: Setup new poll
-        for(DeviceListener listener : listeners){
-            listener.onNewPollReceived(currentPoll);
-        }
-    }
-
     public void voteForOptionTwo() {
         if(currentPoll != null){
             if(currentVote == null){
@@ -66,6 +50,59 @@ public class IoTDevice {
             currentVote.voteForOptionTwo();
         }
     }
+
+    public void registerDeviceListener(DeviceListener listener){
+        deviceListeners.add(listener);
+    }
+
+    public void registerDeviceSendButtonListener(DeviceSendButtonListener listener){
+        deviceSendButtonListeners.add(listener);
+    }
+
+    public void handlePollEnding() {
+        for(DeviceListener listener : deviceListeners){
+            listener.onPollEnd(currentPoll);
+        }
+    }
+
+    public void handlePollUpdate() {
+        for(DeviceListener listener : deviceListeners){
+            listener.onReceivedPollUpdate(currentPoll);
+        }
+
+    }
+
+    public void handleNewPollReceived(){
+        //TODO: Setup new poll
+        for(DeviceListener listener : deviceListeners){
+            listener.onNewPollReceived(currentPoll);
+        }
+    }
+
+    public void handleSendButtonPressed(){
+        for(DeviceSendButtonListener listener : deviceSendButtonListeners){
+            listener.onSendButtonPressed(currentVote);
+        }
+
+        resetCurrentVote();
+    }
+
+    public void resetCurrentVote() {
+        currentVote = new Vote(currentPoll.getPollId());
+    }
+
+
+    public boolean noVotesHaveBeenCastLocally(){
+        return currentVote == null || currentVote.getOptionOneVotes() == 0 && currentVote.getOptionTwoVotes() == 0;
+    }
+
+    public void handleNewVoteReceived(Vote vote) {
+        currentPoll.addVote(vote);
+
+        handlePollUpdate();
+    }
+
+
 
     public Vote getCurrentVote() {
         return currentVote;
@@ -92,9 +129,7 @@ public class IoTDevice {
         this.currentlyVoting = currentlyVoting;
     }
 
-    public void resetCurrentVote() {
-        currentVote = new Vote(currentPoll.getPollId());
-    }
+
 
     public String getPublicId() {
         return publicId;
@@ -104,11 +139,7 @@ public class IoTDevice {
         this.publicId = publicId;
     }
 
-    public void handleNewVoteReceived(Vote vote) {
-        currentPoll.addVote(vote);
 
-        handlePollUpdate();
-    }
 
 
     public String getPairedPollId() {

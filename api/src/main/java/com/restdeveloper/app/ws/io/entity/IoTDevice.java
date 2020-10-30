@@ -60,4 +60,16 @@ public class IoTDevice extends Voter {
     public void setPublicDeviceId(String publicDeviceId) {
         this.publicDeviceId = publicDeviceId;
     }
+
+
+    @Override
+    public String getPublicId(){
+        return publicDeviceId;
+    }
+
+    @Override
+    public void setPublicId(String publicId){
+        this.publicDeviceId = publicId;
+    }
+
 }

@@ -7,6 +7,7 @@ import com.restdeveloper.app.ws.shared.dto.VoteDto;
 import com.restdeveloper.app.ws.ui.model.request.VotingDetailsModel;
 import com.restdeveloper.app.ws.ui.model.response.IoTDeviceRest;
 import com.restdeveloper.app.ws.ui.model.response.VoteRest;
+import com.restdeveloper.app.ws.websocket.WebSocketMessageSender;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,9 @@ public class IoTDeviceController {
     // TODO Autowire-problems, because of more than one bean of same type
     @Autowired
     IoTDeviceService deviceService;
+
+    @Autowired
+    WebSocketMessageSender webSocketMessageSender;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IoTDeviceController.class);
 
@@ -61,6 +65,9 @@ public class IoTDeviceController {
 
         VoteDto voteDto = modelMapper.map(vote, VoteDto.class);
         VoteDto updatedTotalVote = deviceService.updateVoteForCurrentPoll(deviceId, voteDto);
+
+        webSocketMessageSender.sendVoteMessageAfterVoteReceived(voteDto.getPollId(), voteDto);
+
         return modelMapper.map(updatedTotalVote, VoteRest.class);
     }
 

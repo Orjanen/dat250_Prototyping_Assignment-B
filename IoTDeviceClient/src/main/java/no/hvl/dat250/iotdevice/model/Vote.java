@@ -30,6 +30,7 @@ public class Vote {
     }
 
 
+
     public String getPollId() {
         return pollId;
     }

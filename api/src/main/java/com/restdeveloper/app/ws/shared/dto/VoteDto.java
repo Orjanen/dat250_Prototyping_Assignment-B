@@ -6,6 +6,8 @@ public class VoteDto {
     private int option1Count;
     private int option2Count;
 
+    private String pollId;
+
     public long getId() {
         return id;
     }
@@ -38,4 +40,12 @@ public class VoteDto {
         this.option2Count = option2Count;
     }
 
+
+    public String getPollId() {
+        return pollId;
+    }
+
+    public void setPollId(String pollId) {
+        this.pollId = pollId;
+    }
 }

@@ -98,8 +98,12 @@ public class IoTDeviceServiceImpl implements IoTDeviceService {
 
         VoteEntity updatedVote = voteRepository.save(voteEntity);
 
-        LOGGER.debug("Done updating votes on current poll");
-        return modelMapper.map(updatedVote, VoteDto.class);
+        VoteDto updatedVoteDto = modelMapper.map(updatedVote, VoteDto.class);
+
+        LOGGER.debug("Done updating votes on current poll - " + updatedVoteDto.getPollId());
+
+        //return modelMapper.map(updatedVote, VoteDto.class);
+        return updatedVoteDto;
     }
 
     @Override

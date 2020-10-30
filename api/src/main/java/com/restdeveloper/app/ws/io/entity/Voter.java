@@ -12,6 +12,8 @@ public abstract class Voter {
     @GeneratedValue
     private Long id;
 
+    private String publicId;
+
     @OneToMany(mappedBy = "voter")
     private List<VoteEntity> myVotes;
 
@@ -29,5 +31,14 @@ public abstract class Voter {
 
     public void setMyVotes(List<VoteEntity> myVotes) {
         this.myVotes = myVotes;
+    }
+
+
+    public String getPublicId() {
+        return publicId;
+    }
+
+    public void setPublicId(String publicId) {
+        this.publicId = publicId;
     }
 }

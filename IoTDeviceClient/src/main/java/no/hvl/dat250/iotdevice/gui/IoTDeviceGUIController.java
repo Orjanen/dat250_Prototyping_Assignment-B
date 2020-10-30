@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
 import no.hvl.dat250.iotdevice.device.DeviceListener;
 import no.hvl.dat250.iotdevice.device.IoTDevice;
 import no.hvl.dat250.iotdevice.model.Poll;
+import no.hvl.dat250.iotdevice.model.Vote;
 
 public class IoTDeviceGUIController implements DeviceListener {
     @FXML public Label PollQuestionLabel;
@@ -22,11 +23,12 @@ public class IoTDeviceGUIController implements DeviceListener {
     public IoTDevice device;
     public void setIoTDevice(IoTDevice device){
         this.device = device;
-        device.registerListener(this);
+        device.registerDeviceListener(this);
     }
 
     private void updateDisplayedVotes(Poll poll){
 
+        //JavaFX only allows GUI updates from its own thread - delay update until the thread is ready to update
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -38,15 +40,26 @@ public class IoTDeviceGUIController implements DeviceListener {
 
     }
 
+    public void updateCurrentUnsentDisplayedVote(Vote vote){
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                InfoLabel.setText("Current device votes (press send to send votes to server):");
+                OptionOneVotesLabel.setText(Integer.toString(vote.getOptionOneVotes()));
+                OptionTwoVotesLabel.setText(Integer.toString(vote.getOptionTwoVotes()));
+            }
+        });
+    }
+
     public void voteForOptionOneButtonPressed(ActionEvent actionEvent) {
         device.voteForOptionOne();
-        updateDisplayedVotes(device.getCurrentPoll());
+        updateCurrentUnsentDisplayedVote(device.getCurrentVote());
 
     }
 
     public void voteForOptionTwoButtonPressed(ActionEvent actionEvent) {
         device.voteForOptionTwo();
-        updateDisplayedVotes(device.getCurrentPoll());
+        updateCurrentUnsentDisplayedVote(device.getCurrentVote());
     }
 
     public void resetVotesButtonPressed(ActionEvent actionEvent) {
@@ -68,6 +81,17 @@ public class IoTDeviceGUIController implements DeviceListener {
 
     public void sendVotesButtonPressed(ActionEvent actionEvent) {
 
+        device.handleSendButtonPressed();
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+               //TODO: Implement confirmation of sent votes
+
+
+                InfoLabel.setText("Total votes in cloud: ");
+            }
+        });
+
     }
 
     @Override
@@ -84,7 +108,10 @@ public class IoTDeviceGUIController implements DeviceListener {
 
     @Override
     public void onReceivedPollUpdate(Poll poll) {
-        resetDisplayedVotesToCurrentPollVotes(poll);
+        //Delay displaying the updated total if the device has unsent votes
+        if(device.noVotesHaveBeenCastLocally()){
+            resetDisplayedVotesToCurrentPollVotes(poll);
+        }
 
     }
 

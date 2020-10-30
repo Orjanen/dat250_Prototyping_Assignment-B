@@ -10,7 +10,6 @@ import java.util.List;
 public class UserEntity extends Voter implements Serializable {
     private static final long serialVersionUID = -3609876517654923756L;
 
-
     @Column(nullable = false)
     private String userId;
 
@@ -103,4 +102,14 @@ public class UserEntity extends Voter implements Serializable {
         this.encryptedPassword = encryptedPassword;
     }
 
+
+    @Override
+    public String getPublicId() {
+        return userId;
+    }
+
+    @Override
+    public void setPublicId(String publicId) {
+        this.userId = publicId;
+    }
 }

@@ -1,6 +1,9 @@
 package no.hvl.dat250.iotdevice;
 
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import no.hvl.dat250.iotdevice.device.DeviceSendButtonListener;
 import no.hvl.dat250.iotdevice.device.IoTDevice;
 import no.hvl.dat250.iotdevice.model.Poll;
 import no.hvl.dat250.iotdevice.model.Vote;
@@ -13,7 +16,7 @@ import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
 
 import java.lang.reflect.Type;
 
-public class IoTDeviceSessionHandler extends StompSessionHandlerAdapter {
+public class IoTDeviceSessionHandler extends StompSessionHandlerAdapter implements DeviceSendButtonListener {
 
 
     private IoTDevice device;
@@ -24,6 +27,7 @@ public class IoTDeviceSessionHandler extends StompSessionHandlerAdapter {
         super();
 
         this.device = device;
+        this.device.registerDeviceSendButtonListener(this);
     }
 
     @Override
@@ -92,5 +96,15 @@ public class IoTDeviceSessionHandler extends StompSessionHandlerAdapter {
     }
 
 
+    @Override
+    public void onSendButtonPressed(Vote vote) {
+        if(pollSub != null){
+            String payload = Integer.toString(vote.getOptionOneVotes()) + MessageConstants.SEPARATOR + Integer.toString(vote.getOptionTwoVotes());
 
+            String voteEndpoint = "/app/device/" + device.getPublicId() + "/vote/ws";
+
+
+            session.send(voteEndpoint, payload);
+        }
+    }
 }

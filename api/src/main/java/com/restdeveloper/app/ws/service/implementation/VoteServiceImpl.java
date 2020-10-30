@@ -3,14 +3,17 @@ package com.restdeveloper.app.ws.service.implementation;
 import com.restdeveloper.app.ws.io.entity.PollEntity;
 import com.restdeveloper.app.ws.io.entity.UserEntity;
 import com.restdeveloper.app.ws.io.entity.VoteEntity;
+import com.restdeveloper.app.ws.io.entity.Voter;
 import com.restdeveloper.app.ws.io.repository.PollRepository;
 import com.restdeveloper.app.ws.io.repository.UserRepository;
 import com.restdeveloper.app.ws.io.repository.VoteRepository;
+import com.restdeveloper.app.ws.io.repository.VoterRepository;
 import com.restdeveloper.app.ws.service.VoteService;
 import com.restdeveloper.app.ws.shared.UnregisteredVoteForPrivatePollException;
 import com.restdeveloper.app.ws.shared.WebSocketMessageConstants;
 import com.restdeveloper.app.ws.shared.dto.VoteDto;
 import com.restdeveloper.app.ws.ui.model.request.VotingDetailsModel;
+import com.restdeveloper.app.ws.websocket.WebSocketMessageSender;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -36,7 +39,12 @@ public class VoteServiceImpl implements VoteService {
     PollRepository pollRepository;
 
     @Autowired
-    SimpMessagingTemplate template;
+    VoterRepository voterRepository;
+
+
+
+    @Autowired
+    WebSocketMessageSender webSocketMessageSender;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VoteServiceImpl.class);
 
@@ -67,8 +75,14 @@ public class VoteServiceImpl implements VoteService {
 
         //VoteEntity voteEntity = voteRepository.findByVoteId(voteDto.getVoteId())
         PollEntity poll = pollRepository.findByPollId(pollId);
-        UserEntity user = userRepository.findByUserId(userId);
-        VoteEntity voteEntity = voteRepository.findByVoterAndPollEntity(user, poll);
+
+
+        //UserEntity user = userRepository.findByUserId(userId);
+        Voter voter = voterRepository.findByPublicId(userId);
+
+
+
+        VoteEntity voteEntity = voteRepository.findByVoterAndPollEntity(voter, poll);
         if (voteEntity == null) {
             LOGGER.error("Could not find vote");
             throw new ResourceNotFoundException("Could not find vote");
@@ -82,18 +96,8 @@ public class VoteServiceImpl implements VoteService {
 
         //TODO: WEBSOCKET: Må kanskje oppdatere poll før den sendes til websocket?
 
+        webSocketMessageSender.sendVoteMessageAfterVoteReceived(poll.getPollId(), returnVote);
 
-        template.convertAndSend("/topic/poll/"
-                + poll.getPollId()
-                + "/vote",
-                WebSocketMessageConstants.POLL_UPDATE
-                        + WebSocketMessageConstants.SEPARATOR
-                        + poll.getPollId()
-                        + WebSocketMessageConstants.SEPARATOR
-                        + poll.getOptionOneVotes()
-                        + WebSocketMessageConstants.SEPARATOR
-                        + poll.getOptionTwoVotes()
-        );
 
         LOGGER.debug("Done");
         return returnVote;
@@ -145,18 +149,8 @@ public class VoteServiceImpl implements VoteService {
 
         LOGGER.debug("Done adding vote");
 
+        webSocketMessageSender.sendVoteMessageAfterVoteReceived(poll.getPollId(), returnVote);
 
-        template.convertAndSend("/topic/poll/"
-                        + poll.getPollId()
-                        + "/vote",
-                WebSocketMessageConstants.POLL_UPDATE
-                        + WebSocketMessageConstants.SEPARATOR
-                        + poll.getPollId()
-                        + WebSocketMessageConstants.SEPARATOR
-                        + returnVote.getOption1Count()
-                        + WebSocketMessageConstants.SEPARATOR
-                        + returnVote.getOption2Count()
-        );
         return returnVote;
     }
 
