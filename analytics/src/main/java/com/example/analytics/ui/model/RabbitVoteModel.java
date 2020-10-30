@@ -40,4 +40,14 @@ public class RabbitVoteModel {
     public void setOptionTwoVotes(int optionTwoVotes) {
         this.optionTwoVotes = optionTwoVotes;
     }
+
+    @Override
+    public String toString() {
+        return "RabbitVoteModel{" +
+               "\ttype='" + type + '\'' +
+               ",\tjpaId='" + jpaId + '\'' +
+               ",\toptionOneVotes=" + optionOneVotes +
+               ",\toptionTwoVotes=" + optionTwoVotes +
+               "\t}";
+    }
 }

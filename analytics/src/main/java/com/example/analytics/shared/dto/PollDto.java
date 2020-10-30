@@ -81,14 +81,14 @@ public class PollDto {
     @Override
     public String toString() {
         return "PollDto{" +
-               "\n\tid='" + id + '\'' +
-               "\n\tjpaId='" + jpaId + '\'' +
-               "\n\tpollName='" + pollName + '\'' +
-               "\n\toptionOne='" + optionOne + '\'' +
-               "\n\toptionTwo='" + optionTwo + '\'' +
-               "\n\toptionOneVotes=" + optionOneVotes +
-               "\n\toptionTwoVotes=" + optionTwoVotes +
-               "\n\tisStillActive=" + isStillActive +
-               "\n}";
+               "\tid='" + id + '\'' +
+               ",\tjpaId='" + jpaId + '\'' +
+               ",\tpollName='" + pollName + '\'' +
+               ",\toptionOne='" + optionOne + '\'' +
+               ",\toptionTwo='" + optionTwo + '\'' +
+               ",\toptionOneVotes=" + optionOneVotes +
+               ",\toptionTwoVotes=" + optionTwoVotes +
+               ",\tisStillActive=" + isStillActive +
+               "\t}";
     }
 }

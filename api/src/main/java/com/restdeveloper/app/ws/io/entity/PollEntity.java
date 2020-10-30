@@ -15,15 +15,12 @@ public class PollEntity implements Serializable {
     private static final long serialVersionUID = 829864162685009192L;
     @Id
     @GeneratedValue
-    @Expose
     private long id;
 
     @Column(nullable = false, length = 30)
-    @Expose
     private String pollId;
 
     @Column(nullable = false, length = 20)
-    @Expose
     private String pollName;
 
     @ManyToOne
@@ -33,19 +30,17 @@ public class PollEntity implements Serializable {
     private List<VoteEntity> votes;
 
 
-    @Expose
     private String optionOne;
-    @Expose
     private String optionTwo;
 
     @Transient
-    @Expose
     private int optionOneVotes;
-    public int getOptionOneVotes(){
+
+    public int getOptionOneVotes() {
         int numberOfVotes = 0;
 
-        if(votes != null && votes.size() > 0){
-            for(VoteEntity v : votes){
+        if (votes != null && !votes.isEmpty()) {
+            for (VoteEntity v : votes) {
                 numberOfVotes += v.getOption1Count();
             }
         }
@@ -56,17 +51,17 @@ public class PollEntity implements Serializable {
     @Transient
     @Expose
     private int optionTwoVotes;
-    public int getOptionTwoVotes(){
+
+    public int getOptionTwoVotes() {
         int numberOfVotes = 0;
-        if(votes != null && votes.size() > 0){
-            for(VoteEntity v : votes){
+        if (votes != null && !votes.isEmpty()) {
+            for (VoteEntity v : votes) {
                 numberOfVotes += v.getOption2Count();
             }
         }
 
         return numberOfVotes;
     }
-
 
 
     private boolean isPrivate;
@@ -79,14 +74,14 @@ public class PollEntity implements Serializable {
 
     @Transient
     private Duration timeRemaining;
-    public Duration getTimeRemaining(){
+
+    public Duration getTimeRemaining() {
         LocalDateTime endTime = startTime.plus(duration);
 
         Duration remaining = Duration.between(LocalDateTime.now(), endTime);
 
         return remaining.isNegative() ? Duration.ofDays(0) : remaining;
     }
-
 
 
     public long getId() {
@@ -121,11 +116,11 @@ public class PollEntity implements Serializable {
         this.creator = creator;
     }
 
-    public List<VoteEntity> getVotes(){
+    public List<VoteEntity> getVotes() {
         return votes;
     }
 
-    public void setVotes(List<VoteEntity> votes){
+    public void setVotes(List<VoteEntity> votes) {
         this.votes = votes;
     }
 

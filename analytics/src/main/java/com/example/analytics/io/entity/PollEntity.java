@@ -81,13 +81,18 @@ public class PollEntity {
         this.isStillActive = stillActive;
     }
 
+
     @Override
     public String toString() {
-        return String.format(
-                "Poll[id=%s, jpaId='%s', pollName='%s', optionOne='%s', optionTwo='%s', " +
-                "optionOneVotes=%s, optionTwoVotes=%s]",
-                id, jpaId, pollName, optionOne, optionTwo, optionOneVotes, optionTwoVotes);
+        return "PollEntity{" +
+               "id='" + id + '\'' +
+               ",\tjpaId='" + jpaId + '\'' +
+               ",\tpollName='" + pollName + '\'' +
+               ",\toptionOne='" + optionOne + '\'' +
+               ",\toptionTwo='" + optionTwo + '\'' +
+               ",\toptionOneVotes=" + optionOneVotes +
+               ",\toptionTwoVotes=" + optionTwoVotes +
+               ",\tisStillActive=" + isStillActive +
+               "\t}";
     }
-
-
 }
