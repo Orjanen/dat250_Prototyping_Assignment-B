@@ -8,6 +8,8 @@ import com.restdeveloper.app.ws.ui.model.request.PollsRequestModel;
 import com.restdeveloper.app.ws.ui.model.response.OperationStatusModel;
 import com.restdeveloper.app.ws.ui.model.response.PollRest;
 import com.restdeveloper.app.ws.ui.model.response.RequestOperationStatus;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +41,7 @@ public class PollController {
     }
 
 
+
     @GetMapping(path = "/{id}")
     public PollRest getPoll(@PathVariable String id) {
         LOGGER.debug("Poll-Controller initialized to get poll by ID");
@@ -49,6 +52,10 @@ public class PollController {
 
         return returnValue;
     }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="authorization",value="${userController.authorizationheader.description}", paramType = "header")
+    })
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping(path = "/user/{userId}")
     public PollRest addNewPollByUser(@PathVariable String userId, @RequestBody PollsRequestModel newPoll) {
@@ -59,6 +66,9 @@ public class PollController {
         return modelMapper.map(savedPoll, PollRest.class);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="authorization",value="${userController.authorizationheader.description}", paramType = "header")
+    })
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping(path = "{id}")
     public OperationStatusModel deletePoll(@PathVariable String id){

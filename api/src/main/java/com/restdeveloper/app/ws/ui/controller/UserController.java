@@ -9,6 +9,8 @@ import com.restdeveloper.app.ws.shared.dto.UserDto;
 import com.restdeveloper.app.ws.shared.dto.VoteDto;
 import com.restdeveloper.app.ws.ui.model.request.UserDetailsRequestModel;
 import com.restdeveloper.app.ws.ui.model.response.*;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +51,9 @@ public class UserController {
         return modelMapper.map(createdUser, UserRest.class);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="authorization",value="${userController.authorizationheader.description}", paramType = "header")
+    })
     @PreAuthorize("hasRole('ROLE_ADMIN') or #id == principal.userId")
     @GetMapping(path = "/{id}")
     public UserRest getUser(@PathVariable String id) {
@@ -58,6 +63,9 @@ public class UserController {
         return modelMapper.map(userDto, UserRest.class);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="authorization",value="${userController.authorizationheader.description}", paramType = "header")
+    })
     @PreAuthorize("hasRole('ROLE_ADMIN') or #id == principal.userId")
     @PutMapping(path = "{id}")
     public UserRest updateUser(@RequestBody UserDetailsRequestModel userDetails, @PathVariable String id) {
@@ -68,6 +76,9 @@ public class UserController {
         return modelMapper.map(updatedUser, UserRest.class);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="authorization",value="${userController.authorizationheader.description}", paramType = "header")
+    })
     @PreAuthorize("hasRole('ROLE_ADMIN') or #id == principal.userId")
     @DeleteMapping(path = "{id}")
     public OperationStatusModel deleteUser(@PathVariable String id) {
@@ -81,6 +92,9 @@ public class UserController {
         return returnValue;
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="authorization",value="${userController.authorizationheader.description}", paramType = "header")
+    })
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping(path = "{id}/ban")
     public OperationStatusModel banUser(@PathVariable String id) {
@@ -94,6 +108,9 @@ public class UserController {
         return returnValue;
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="authorization",value="${userController.authorizationheader.description}", paramType = "header")
+    })
     @PreAuthorize("hasRole('ROLE_ADMIN') or #id == principal.userId")
     @GetMapping(path = "/{id}/polls")
     public List<PollRest> findPollsCreatedByUser(@PathVariable("id") String id) {
@@ -103,6 +120,9 @@ public class UserController {
         return pollDtos.stream().map(pollDto -> modelMapper.map(pollDto, PollRest.class)).collect(Collectors.toList());
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="authorization",value="${userController.authorizationheader.description}", paramType = "header")
+    })
     @PreAuthorize("hasRole('ROLE_ADMIN') or #id == principal.userId")
     @GetMapping(path = "/{id}/votes")
     public List<VoteRest> findAllVotesByUser(@PathVariable("id") String userId) {
