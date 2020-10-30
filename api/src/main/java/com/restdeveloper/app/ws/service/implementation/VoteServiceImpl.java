@@ -70,7 +70,18 @@ public class VoteServiceImpl implements VoteService {
 
         //TODO: WEBSOCKET: Må kanskje oppdatere poll før den sendes til websocket?
 
-        template.convertAndSend("/app/poll/" + poll.getPollId() + "/sub", WebSocketMessageConstants.POLL_UPDATE + "Poll: " + poll.getPollId() + " - 1: " + poll.getOptionOneVotes() + " - 2: " + poll.getOptionTwoVotes());
+
+        template.convertAndSend("/topic/poll/"
+                + poll.getPollId()
+                + "/vote",
+                WebSocketMessageConstants.POLL_UPDATE
+                        + WebSocketMessageConstants.SEPARATOR
+                        + poll.getPollId()
+                        + WebSocketMessageConstants.SEPARATOR
+                        + poll.getOptionOneVotes()
+                        + WebSocketMessageConstants.SEPARATOR
+                        + poll.getOptionTwoVotes()
+        );
 
         return returnVote;
     }
@@ -110,8 +121,22 @@ public class VoteServiceImpl implements VoteService {
 
         //PollDto pollDto = modelMapper.map(poll, PollDto.class);
 
+        /*
         template.convertAndSend("/app/poll/" + poll.getPollId() + "/sub",
                 WebSocketMessageConstants.POLL_UPDATE + "Poll: " + poll.getPollId() + " - 1: " + poll.getOptionOneVotes() + " - 2: " + poll.getOptionTwoVotes()
+        );
+
+         */
+        template.convertAndSend("/topic/poll/"
+                        + poll.getPollId()
+                        + "/vote",
+                WebSocketMessageConstants.POLL_UPDATE
+                        + WebSocketMessageConstants.SEPARATOR
+                        + poll.getPollId()
+                        + WebSocketMessageConstants.SEPARATOR
+                        + returnVote.getOption1Count()
+                        + WebSocketMessageConstants.SEPARATOR
+                        + returnVote.getOption2Count()
         );
         return returnVote;
     }

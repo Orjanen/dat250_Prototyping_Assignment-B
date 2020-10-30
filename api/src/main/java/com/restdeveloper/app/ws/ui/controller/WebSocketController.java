@@ -4,14 +4,11 @@ import com.restdeveloper.app.ws.service.IoTDeviceService;
 import com.restdeveloper.app.ws.service.PollService;
 import com.restdeveloper.app.ws.shared.WebSocketMessageConstants;
 import com.restdeveloper.app.ws.shared.dto.IoTDeviceDto;
-import com.restdeveloper.app.ws.shared.dto.PollDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.transaction.Transactional;
 
@@ -32,19 +29,21 @@ public class WebSocketController {
 
     @SubscribeMapping("poll/{pollId}/sub")
     public String confirmSubscriptionToPoll(@DestinationVariable String pollId){
-        String pollStatus = pollService.getCurrentPollStatus(pollId);
+        //String pollStatus =  WebSocketMessageConstants.POLL_UPDATE + WebSocketMessageConstants.SEPARATOR + pollService.getCurrentPollStatusForWebSocket(pollId);
         //template.convertAndSendToUser(pollStatus);
-        return pollStatus;
+        return "Paired with poll: " + pollId;
     }
 
-    //TODO: Message constants on server side
+    /*
+    When an IoT device connects - return the poll it's paired with
+     */
     @SubscribeMapping("device/{deviceId}")
     public String handleNewDeviceConnection(@DestinationVariable String deviceId){
         IoTDeviceDto deviceDto = ioTDeviceService.getIoTDeviceByPublicDeviceId(deviceId);
         if(deviceDto.getCurrentPoll() == null){
             return WebSocketMessageConstants.NOT_PAIRED;
         } else{
-            return WebSocketMessageConstants.PAIRED_WITH_NEW_CHANNEL + deviceDto.getCurrentPoll().getPollId();
+            return WebSocketMessageConstants.PAIRED_WITH_NEW_CHANNEL + WebSocketMessageConstants.SEPARATOR + pollService.getCurrentPollStatusForWebSocket(deviceDto.getCurrentPoll().getPollId());
         }
 
     }

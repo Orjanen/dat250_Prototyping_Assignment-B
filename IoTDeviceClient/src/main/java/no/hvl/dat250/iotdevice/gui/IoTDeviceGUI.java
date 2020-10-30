@@ -1,38 +1,23 @@
-package no.hvl.dat250.iotdevice;
+package no.hvl.dat250.iotdevice.gui;
 
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import no.hvl.dat250.iotdevice.IoTDeviceSessionHandler;
 import no.hvl.dat250.iotdevice.device.IoTDevice;
-import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.converter.StringMessageConverter;
-import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSessionHandler;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.WebSocketHttpHeaders;
-import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.client.WebSocketClient;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
-import javax.websocket.*;
-import java.io.IOException;
-import java.net.URI;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
 
-/*
-NO LONGER IN USE
-kept in case a need arises to test a command line IoT Device
- */
-
-public class IotWebSocketClient {
-
-
-
-/*
-
-    public static void main(String[] args) {
+public class IoTDeviceGUI extends Application {
+    @Override
+    public void start(Stage stage) throws Exception {
 
         final String webSocketServer = "ws://localhost:8080/ws";
 
@@ -55,19 +40,60 @@ public class IotWebSocketClient {
 
 
 
-        //Don't exit program
-        //TODO: Change to GUI?
-        new Scanner(System.in).nextLine();
 
+
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/IoTDisplay.fxml"));
+        Parent root = loader.load();
+
+        Scene scene = new Scene(root);
+
+
+        stage.setTitle("IoT Device - Poll");
+        stage.setScene(scene);
+        IoTDeviceGUIController controller = loader.getController();
+        controller.setIoTDevice(device);
+        stage.show();
+
+    }
+
+    public static void main(String[] args) {
+        launch(args);
     }
 
 
 
- */
+
+
+
+    /*
+    private final JTextField uriField;
+
+    private final JButton voteOne;
+    private final JButton voteTwo;
+    private final JButton resetVotes;
+    private final JButton sendVotes;
+
+    private final JTextField currentVotes;
+    private final JTextArea textArea;
 
 
 
 
+    public IoTDeviceGUI(String defaultLocation){
+        super("IoT Voting Device");
+        Container container = getContentPane();
+        GridLayout layout = new GridLayout();
+        layout.setColumns(4);
+        layout.setRows(3);
+        container.setLayout(layout);
 
 
+    }
+
+     */
 }
+
+
+
+

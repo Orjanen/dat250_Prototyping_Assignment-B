@@ -7,6 +7,7 @@ import com.restdeveloper.app.ws.io.repository.PollRepository;
 import com.restdeveloper.app.ws.io.repository.UserRepository;
 import com.restdeveloper.app.ws.service.PollService;
 import com.restdeveloper.app.ws.shared.Utils;
+import com.restdeveloper.app.ws.shared.WebSocketMessageConstants;
 import com.restdeveloper.app.ws.shared.dto.PollDto;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.modelmapper.ModelMapper;
@@ -76,14 +77,27 @@ public class PollServiceImpl implements PollService {
         return returnValue;
     }
 
+
     @Override
-    public String getCurrentPollStatus(String pollId) {
+    public String getCurrentPollStatusForWebSocket(String pollId) {
         PollEntity poll = pollRepository.findByPollId(pollId);
         if(poll == null) throw new ResourceNotFoundException("Can't find poll with id: " + pollId);
 
         PollDto pollDto = modelMapper.map(poll, PollDto.class);
 
-        return "Poll: " + pollDto.getPollId() + "\n1: " + pollDto.getOptionOneVotes() + "\n2: " + pollDto.getOptionTwoVotes();
+        return pollDto.getPollId()
+                + WebSocketMessageConstants.SEPARATOR
+                + pollDto.getPollName()
+                + WebSocketMessageConstants.SEPARATOR
+                + pollDto.getOptionOne()
+                + WebSocketMessageConstants.SEPARATOR
+                + pollDto.getOptionTwo()
+                + WebSocketMessageConstants.SEPARATOR
+                + pollDto.getOptionOneVotes()
+                + WebSocketMessageConstants.SEPARATOR
+                + pollDto.getOptionTwoVotes()
+                + WebSocketMessageConstants.SEPARATOR +
+                pollDto.getTimeRemaining();
 
     }
 

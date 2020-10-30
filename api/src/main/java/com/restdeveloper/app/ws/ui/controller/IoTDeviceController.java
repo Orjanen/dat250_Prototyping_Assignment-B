@@ -65,6 +65,7 @@ public class IoTDeviceController {
 
     }
 
+    //TODO: Change to body
     @PostMapping(path = "{deviceId}")
     public IoTDeviceRest registerNewDevice(@PathVariable("deviceId") String deviceId){
 

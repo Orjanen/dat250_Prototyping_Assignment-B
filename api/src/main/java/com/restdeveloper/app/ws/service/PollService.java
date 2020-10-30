@@ -11,5 +11,5 @@ public interface PollService {
     PollDto getPollByPollId(String id);
     List<PollDto> getAllPollsByCreator(String userId);
 
-    String getCurrentPollStatus(String pollId);
+    String getCurrentPollStatusForWebSocket(String pollId);
 }

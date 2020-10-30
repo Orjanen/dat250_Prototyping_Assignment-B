@@ -1,5 +1,10 @@
 package no.hvl.dat250.iotdevice;
 
+
+import no.hvl.dat250.iotdevice.device.IoTDevice;
+import no.hvl.dat250.iotdevice.model.Poll;
+import no.hvl.dat250.iotdevice.model.Vote;
+import no.hvl.dat250.iotdevice.util.Converter;
 import org.springframework.lang.Nullable;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
@@ -11,11 +16,11 @@ import java.lang.reflect.Type;
 public class IoTDeviceSessionHandler extends StompSessionHandlerAdapter {
 
 
-    private IoTVotingDevice device;
+    private IoTDevice device;
     private StompSession session;
     private StompSession.Subscription pollSub;
 
-    public IoTDeviceSessionHandler(IoTVotingDevice device){
+    public IoTDeviceSessionHandler(IoTDevice device){
         super();
 
         this.device = device;
@@ -43,23 +48,32 @@ public class IoTDeviceSessionHandler extends StompSessionHandlerAdapter {
     public void handleFrame(StompHeaders headers, Object payload){
         String message = (String)payload;
 
+        System.out.println("Received: " + message);
 
         if(message.startsWith(MessageConstants.PAIRED_WITH_NEW_CHANNEL)){
-            String channelId = message.substring(MessageConstants.PAIRED_WITH_NEW_CHANNEL.length());
-            pollSub = session.subscribe("/app/poll/" + channelId + "/sub", this);
-            device.setCurrentPollId(channelId);
+            String splitMessage[] = message.split(String.valueOf(MessageConstants.SEPARATOR));
+            String channelId = splitMessage[1];
+            pollSub = session.subscribe("/topic/poll/" + channelId + "/vote", this);
 
+            Poll poll = Converter.convertPollMessageToPoll(message);
+            device.setCurrentPoll(poll);
 
             System.out.println("Subscribed to: " + pollSub.getSubscriptionHeaders());
+
+
+
 
         } else if(message.startsWith(MessageConstants.POLL_ENDED)){
             device.handlePollEnding();
             pollSub.unsubscribe();
             pollSub = null;
         } else if(message.startsWith(MessageConstants.POLL_UPDATE)){
-            device.handlePollUpdate(message);
+            Vote vote = Converter.convertVoteMessageToVote(message);
+
+
+            device.handleNewVoteReceived(vote);
+
         } else {
-            System.out.println("Received: " + message);
         }
 
 
