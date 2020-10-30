@@ -32,23 +32,32 @@ public class IoTDevice {
     don't accept vote if the device is not paired with a poll
     if this is the first vote cast for a new vote, create a new Vote
      */
-    public void voteForOptionOne() {
+    public boolean voteForOptionOne() {
         if(currentPoll != null){
             if(currentVote == null){
                 currentVote = new Vote(currentPoll.getPollId());
             }
-            currentVote.voteForOptionOne();
+            if(!currentPoll.isFinished()){
+                currentVote.voteForOptionOne();
+                return true;
+            }
+
         }
+        return false;
 
     }
 
-    public void voteForOptionTwo() {
+    public boolean voteForOptionTwo() {
         if(currentPoll != null){
             if(currentVote == null){
                 currentVote = new Vote(currentPoll.getPollId());
             }
-            currentVote.voteForOptionTwo();
+            if(!currentPoll.isFinished()){
+                currentVote.voteForOptionTwo();
+                return true;
+            }
         }
+        return false;
     }
 
     public void registerDeviceListener(DeviceListener listener){
@@ -118,6 +127,7 @@ public class IoTDevice {
 
     public void setCurrentPoll(Poll currentPoll) {
         this.currentPoll = currentPoll;
+        this.currentVote = new Vote(currentPoll.getPollId());
         handleNewPollReceived();
     }
 

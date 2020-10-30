@@ -19,6 +19,7 @@ public class PollDto {
 
     private LocalDateTime startTime;
     private Duration duration;
+    private LocalDateTime endTime;
 
     private Duration timeRemaining;
 
@@ -126,5 +127,13 @@ public class PollDto {
 
     public void setTimeRemaining(Duration timeRemaining) {
         this.timeRemaining = timeRemaining;
+    }
+
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 }

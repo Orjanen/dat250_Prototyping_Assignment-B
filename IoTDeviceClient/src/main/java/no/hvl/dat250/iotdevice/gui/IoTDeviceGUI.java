@@ -20,8 +20,10 @@ public class IoTDeviceGUI extends Application {
     public void start(Stage stage) throws Exception {
 
         final String webSocketServer = "ws://localhost:8080/ws";
+        final String IOT_DEVICE_ID = "IOT-3";
 
-        IoTDevice device = new IoTDevice("2");
+
+        IoTDevice device = new IoTDevice(IOT_DEVICE_ID);
 
         WebSocketClient client = new StandardWebSocketClient();
         WebSocketStompClient stompClient = new WebSocketStompClient(client);

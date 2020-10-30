@@ -93,7 +93,8 @@ public class WebSocketController {
         if (deviceDto.getCurrentPoll() == null) {
             return WebSocketMessageConstants.NOT_PAIRED;
         } else{
-            return WebSocketMessageConstants.PAIRED_WITH_NEW_CHANNEL + WebSocketMessageConstants.SEPARATOR + pollService.getCurrentPollStatusForWebSocket(deviceDto.getCurrentPoll().getPollId());
+            PollDto pollDto = pollService.getCurrentPollStatusForWebSocket(deviceDto.getCurrentPoll().getPollId());
+            return WebSocketMessageConstants.PAIRED_WITH_NEW_CHANNEL + WebSocketMessageConstants.SEPARATOR + webSocketMessageSender.generatePollStatusString(pollDto);
         }
 
     }

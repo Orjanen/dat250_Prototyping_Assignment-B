@@ -57,7 +57,8 @@ public class IoTDeviceSessionHandler extends StompSessionHandlerAdapter implemen
         if(message.startsWith(MessageConstants.PAIRED_WITH_NEW_CHANNEL)){
             String splitMessage[] = message.split(String.valueOf(MessageConstants.SEPARATOR));
             String channelId = splitMessage[1];
-            pollSub = session.subscribe("/topic/poll/" + channelId + "/vote", this);
+
+            pollSub = session.subscribe("/topic/poll/" + channelId, this);
 
             Poll poll = Converter.convertPollMessageToPoll(message);
             device.setCurrentPoll(poll);

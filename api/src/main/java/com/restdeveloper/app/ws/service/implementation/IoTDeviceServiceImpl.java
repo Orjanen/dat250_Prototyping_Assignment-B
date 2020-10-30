@@ -66,9 +66,12 @@ public class IoTDeviceServiceImpl implements IoTDeviceService {
     }
 
     @Override
-    public IoTDeviceDto addNewDevice(String deviceId) {
-        LOGGER.info("Adding new IoT-device with device-ID: {}", deviceId);
-        IoTDevice newDevice = new IoTDevice(deviceId);
+    public IoTDeviceDto addNewDevice(IoTDeviceDto ioTDeviceDto) {
+        LOGGER.info("Adding new IoT-device with device-ID: {}", ioTDeviceDto.getPublicDeviceId());
+
+        //Modelmapper won't recognize the public id - resort to creating new entity
+        IoTDevice newDevice = new IoTDevice(ioTDeviceDto.getPublicDeviceId());
+
         IoTDevice savedDevice = deviceRepository.save(newDevice);
 
         IoTDeviceDto deviceDto = modelMapper.map(savedDevice, IoTDeviceDto.class);

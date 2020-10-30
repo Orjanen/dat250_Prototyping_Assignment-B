@@ -1,7 +1,7 @@
 package no.hvl.dat250.iotdevice.model;
 
 import java.time.Duration;
-import java.util.List;
+import java.time.LocalDateTime;
 
 public class Poll {
     private String pollId;
@@ -14,22 +14,34 @@ public class Poll {
     private int optionOneVotes;
     private int optionTwoVotes;
 
-    private Duration timeRemaining;
+    //private Duration timeRemaining;
+    private LocalDateTime endTime;
+    private boolean isFinished;
 
 
-    public Poll(String pollId, String pollName, String optionOne, String optionTwo, int optionOneVotes, int optionTwoVotes, Duration timeRemaining) {
+    public Poll(String pollId, String pollName, String optionOne, String optionTwo, int optionOneVotes, int optionTwoVotes, LocalDateTime endTime) {
         this.pollId = pollId;
         this.pollName = pollName;
         this.optionOne = optionOne;
         this.optionTwo = optionTwo;
         this.optionOneVotes = optionOneVotes;
         this.optionTwoVotes = optionTwoVotes;
-        this.timeRemaining = timeRemaining;
+        this.endTime = endTime;
     }
 
-    public void addVote(Vote vote){
-        this.optionOneVotes += vote.getOptionOneVotes();
-        this.optionTwoVotes += vote.getOptionTwoVotes();
+    public boolean addVote(Vote vote){
+        if(isFinished()){
+            return false;
+        } else{
+            this.optionOneVotes += vote.getOptionOneVotes();
+            this.optionTwoVotes += vote.getOptionTwoVotes();
+            return true;
+        }
+
+    }
+
+    public boolean isFinished(){
+        return getTimeRemaining().isZero();
     }
 
     public String getPollId() {
@@ -88,6 +100,11 @@ public class Poll {
         this.optionTwoVotes = optionTwoVotes;
     }
 
+    public Duration getTimeRemaining(){
+        Duration remaining = Duration.between(LocalDateTime.now(), endTime);
+        return remaining.isNegative() ? Duration.ZERO : remaining;
+    }
+
     @Override
     public String toString() {
         return "Poll{" +
@@ -98,7 +115,7 @@ public class Poll {
                 ", isPrivate=" + isPrivate +
                 ", optionOneVotes=" + optionOneVotes +
                 ", optionTwoVotes=" + optionTwoVotes +
-                ", timeRemaining=" + timeRemaining +
+                ", timeRemaining=" + getTimeRemaining() +
                 '}';
     }
 }

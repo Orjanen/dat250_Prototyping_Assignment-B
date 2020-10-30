@@ -52,14 +52,31 @@ public class IoTDeviceGUIController implements DeviceListener {
     }
 
     public void voteForOptionOneButtonPressed(ActionEvent actionEvent) {
-        device.voteForOptionOne();
-        updateCurrentUnsentDisplayedVote(device.getCurrentVote());
+        if(device.voteForOptionOne()){
+            updateCurrentUnsentDisplayedVote(device.getCurrentVote());
+
+        } else{
+            voteWasRejected();
+        }
 
     }
 
     public void voteForOptionTwoButtonPressed(ActionEvent actionEvent) {
-        device.voteForOptionTwo();
-        updateCurrentUnsentDisplayedVote(device.getCurrentVote());
+        if(device.voteForOptionTwo()){
+            updateCurrentUnsentDisplayedVote(device.getCurrentVote());
+        } else{
+            voteWasRejected();
+        }
+
+    }
+
+    public void voteWasRejected(){
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                InfoLabel.setText("Vote not accepted - Poll has finished or device is not paired with poll");
+            }
+        });
     }
 
     public void resetVotesButtonPressed(ActionEvent actionEvent) {

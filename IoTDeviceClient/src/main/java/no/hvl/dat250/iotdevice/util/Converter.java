@@ -7,6 +7,7 @@ import no.hvl.dat250.iotdevice.model.Poll;
 import no.hvl.dat250.iotdevice.model.Vote;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -26,7 +27,7 @@ public class Converter {
                 pollMessage[4], //OptionTwo
                 Integer.parseInt(pollMessage[5]), // optionOneVotes
                 Integer.parseInt(pollMessage[6]), // optionTwoVotes
-                Duration.parse(pollMessage[7])); // timeRemaining
+                LocalDateTime.parse(pollMessage[7])); // endTime
         return newPoll;
     }
 

@@ -65,12 +65,14 @@ public class PollEntity implements Serializable {
 
 
     private boolean isPrivate;
+    private boolean alertsHaveBeenSent;
 
 
     //TODO: liste med IoTDevice
 
     private LocalDateTime startTime;
     private Duration duration;
+    private LocalDateTime endTime;
 
     @Transient
     private Duration timeRemaining;
@@ -80,7 +82,11 @@ public class PollEntity implements Serializable {
 
         Duration remaining = Duration.between(LocalDateTime.now(), endTime);
 
-        return remaining.isNegative() ? Duration.ofDays(0) : remaining;
+        return remaining.isNegative() ? Duration.ZERO : remaining;
+    }
+
+    public boolean isFinished(){
+        return getTimeRemaining().isZero();
     }
 
 
@@ -170,5 +176,21 @@ public class PollEntity implements Serializable {
 
     public void setDuration(Duration duration) {
         this.duration = duration;
+    }
+
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
+    public boolean isAlertsHaveBeenSent() {
+        return alertsHaveBeenSent;
+    }
+
+    public void setAlertsHaveBeenSent(boolean alertsHaveBeenSent) {
+        this.alertsHaveBeenSent = alertsHaveBeenSent;
     }
 }

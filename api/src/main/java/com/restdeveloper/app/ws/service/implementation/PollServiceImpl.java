@@ -49,6 +49,8 @@ public class PollServiceImpl implements PollService {
         pollEntity.setPollId(utils.generatePollId(8));
 
         pollEntity.setStartTime(LocalDateTime.now());
+        pollEntity.setEndTime(LocalDateTime.now().plus(poll.getDuration()));
+        pollEntity.setAlertsHaveBeenSent(false);
 
         VoteEntity voteEntity = new VoteEntity();
         voteEntity.setVoteId(utils.generateUserId(30));
@@ -105,7 +107,7 @@ public class PollServiceImpl implements PollService {
 
 
     @Override
-    public String getCurrentPollStatusForWebSocket(String pollId) {
+    public PollDto getCurrentPollStatusForWebSocket(String pollId) {
         LOGGER.info("Getting current status of poll with poll-ID: {}", pollId);
 
         PollEntity poll = pollRepository.findByPollId(pollId);
@@ -118,19 +120,7 @@ public class PollServiceImpl implements PollService {
 
         LOGGER.debug("Done getting current status");
 
-        return pollDto.getPollId()
-                + WebSocketMessageConstants.SEPARATOR
-                + pollDto.getPollName()
-                + WebSocketMessageConstants.SEPARATOR
-                + pollDto.getOptionOne()
-                + WebSocketMessageConstants.SEPARATOR
-                + pollDto.getOptionTwo()
-                + WebSocketMessageConstants.SEPARATOR
-                + pollDto.getOptionOneVotes()
-                + WebSocketMessageConstants.SEPARATOR
-                + pollDto.getOptionTwoVotes()
-                + WebSocketMessageConstants.SEPARATOR +
-                pollDto.getTimeRemaining();
+        return pollDto;
 
     }
 

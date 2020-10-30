@@ -11,7 +11,7 @@ public interface IoTDeviceService {
     IoTDeviceDto getIoTDeviceByPublicDeviceId(String publicDeviceId);
     String getPairedPoll(String publicDeviceId);
 
-    IoTDeviceDto addNewDevice(String deviceId);
+    IoTDeviceDto addNewDevice(IoTDeviceDto ioTDeviceDto);
 
     VoteDto updateVoteForCurrentPoll(String deviceId, VoteDto voteDto);
 
