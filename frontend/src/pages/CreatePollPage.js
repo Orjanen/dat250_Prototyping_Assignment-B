@@ -7,12 +7,11 @@ import TextInput from "../shared/Form/TextInput";
 
 const CreatePollPage = (props) => {
 
+
     const handleFinalFormSubmit = async (values) => {
         const userId  = window.localStorage.getItem('userId');
-        values.duration = 100000
         values.isPrivate = false
-
-        console.log(values)
+        values.duration = +values.duration
         try {
             await agent.Poll.create(userId, values).then(res =>{
                 props.history.push(`/poll/${res.pollId}`)
@@ -53,7 +52,7 @@ const CreatePollPage = (props) => {
                         <Field
                             name='duration'
                             placeholder='Duration'
-                            value={'duration'}
+                            //value={'duration'}
                             component={TextInput}
                         />
 
