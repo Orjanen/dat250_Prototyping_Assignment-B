@@ -9,6 +9,10 @@ const CreatePollPage = (props) => {
 
     const handleFinalFormSubmit = async (values) => {
         const userId  = window.localStorage.getItem('userId');
+        values.duration = 100000
+        values.isPrivate = false
+
+        console.log(values)
         try {
             await agent.Poll.create(userId, values).then(res =>{
                 props.history.push(`/poll/${res.pollId}`)
@@ -32,6 +36,24 @@ const CreatePollPage = (props) => {
                             name='pollName'
                             placeholder='Poll Name'
                             value={'name'}
+                            component={TextInput}
+                        />
+                        <Field
+                            name='optionOne'
+                            placeholder='Option 1'
+                            value={'optionOne'}
+                            component={TextInput}
+                        />
+                        <Field
+                            name='optionTwo'
+                            placeholder='Option 2'
+                            value={'optionTwo'}
+                            component={TextInput}
+                        />
+                        <Field
+                            name='duration'
+                            placeholder='Duration'
+                            value={'duration'}
                             component={TextInput}
                         />
 
