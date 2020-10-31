@@ -39,20 +39,6 @@ const VotePage = (props) => {
             })
         }
     }
-    let duration ={
-        hours: 0,
-        minutes: 0,
-        seconds: 0,
-    }
-
-    poll.timeRemaining && (duration.hours = poll.timeRemaining.split('PT')[1].split('H')[0])
-    poll.timeRemaining && (duration.minutes = poll.timeRemaining.split('PT')[1].split('H')[1].split('M')[0])
-    poll.timeRemaining && (duration.seconds = poll.timeRemaining.split('PT')[1].split('H')[1].split('M')[1]
-        .split('.')[0])
-
-    let time  = (duration.hours * (60000 * 60) + duration.minutes * 60000 + duration.seconds * 1000)
-
-    time = new Date().getMilliseconds() + Date.now() +time
 
     return (
         <Segment style={{marginTop: '7em', textAlign: 'center'}} >
@@ -89,8 +75,7 @@ const VotePage = (props) => {
                 </Grid.Column>
                 <Grid.Column>
                     <h3>Vote closes in:</h3>
-                    <CountDownTimer time={time && time}/>
-
+                    <CountDownTimer time={poll.timeRemaining}/>
                 </Grid.Column>
 
             </Grid>
