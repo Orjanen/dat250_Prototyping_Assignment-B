@@ -4,6 +4,7 @@ import {Segment, Button, Checkbox, Grid} from "semantic-ui-react";
 import agent from "../api/agent";
 import IconHeader from "../components/header/IconHeader";
 import CountDownTimer from "../shared/Timer/CountDownTimer";
+import {Link} from "react-router-dom";
 
 const VotePage = (props) => {
 
@@ -86,6 +87,12 @@ const VotePage = (props) => {
                     positive
                     content='Vote'
                 />
+            <Button
+                as={Link}
+                to={`/poll/${poll.pollId}/result`}
+                color='blue'
+                content='Result'
+            />
         </Segment>
     );
 }

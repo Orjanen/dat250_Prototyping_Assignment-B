@@ -11,6 +11,7 @@ import ProfileDetails from "./pages/ProfileDetails";
 import VotePage from "./pages/VotePage";
 import SignupPage from "./pages/SignupPage";
 import PrivateRoute from "./PrivateRoute";
+import ResultPage from "./pages/ResultPage";
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
                             <PrivateRoute path='/homepage/:id' exact component={HomePage}/>
                             <PrivateRoute path='/createnewpoll' exact component={CreatePollPage}/>
                             <Route path='/poll/:pollId' exact component={VotePage}/>
+                            <Route path='/poll/:pollId/result' exact component={ResultPage}/>
                             <PrivateRoute path='/profiledetails' exact component={ProfileDetails}/>
                             <Route path='/signup' exact component={SignupPage}/>
                         </Switch>
