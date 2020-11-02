@@ -3,7 +3,7 @@ import {Segment, Item, Card} from "semantic-ui-react";
 import {Link} from 'react-router-dom'
 import IconHeader from "../components/header/IconHeader";
 
-const HomePage = () => {
+const HomePage = (props) => {
 
     return (
         <Fragment>
@@ -36,6 +36,7 @@ const HomePage = () => {
                     <Item>
                         <Card centered>
                             <Item.Content
+                                as={Link} to={`/mypoll/${props.match.params.id}`}
                                 content='My polls'
                                 verticalAlign='middle'/>
                         </Card>
