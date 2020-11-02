@@ -40,7 +40,12 @@ const Poll = {
     details: (pollId) => requests.get(`/poll/${pollId}`),
 }
 
+const Vote = {
+    VoteAsRegisteredUser: (pollId, userId, body) => requests.post(`/vote/poll/${pollId}/user/${userId}`, body),
+}
+
 export default {
     User,
-    Poll
+    Poll,
+    Vote
 }

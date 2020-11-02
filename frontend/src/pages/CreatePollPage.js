@@ -1,8 +1,10 @@
 import React from 'react';
 import agent from "../api/agent";
+import {Link} from "react-router-dom";
 import {Button, Form, Segment} from "semantic-ui-react";
-import IconHeader from "../components/header/IconHeader";
 import {Field, Form as FinalForm} from "react-final-form";
+
+import IconHeader from "../components/header/IconHeader";
 import TextInput from "../shared/Form/TextInput";
 
 const CreatePollPage = (props) => {
@@ -68,6 +70,8 @@ const CreatePollPage = (props) => {
             />
 
             <Button
+                as={Link}
+                to={`/homepage/${window.localStorage.getItem('userId')}`}
                 floated='right'
                 content='Cancel'
                 color='grey'

@@ -26,18 +26,27 @@ const VotePage = (props) => {
 
     },[props.match.params.pollId])
 
+    console.log()
 
-    const votehandler = () =>{
+    const votehandler = async () =>{
         if (opt1){
-            console.log({
-                optionOne: 1,
-                optionTwo: 0
-            })
+            try {
+                await agent.Vote.VoteAsRegisteredUser(poll.pollId, window.localStorage.getItem('userId'), {
+                    option1Count: 1,
+                    option2Count: 0
+                })
+            }catch (e){
+                console.log(e, 'cant send the vote')
+            }
         }else {
-            console.log({
-                optionOne: 0,
-                optionTwo: 1
-            })
+            try {
+                await agent.Vote.VoteAsRegisteredUser(poll.pollId, window.localStorage.getItem('userId'), {
+                    option1Count: 0,
+                    option2Count: 1
+                })
+            }catch (e){
+                console.log(e, 'cant send the vote')
+            }
         }
     }
 
@@ -81,8 +90,10 @@ const VotePage = (props) => {
 
             </Grid>
                 <Button
+                    as={Link}
+                    to={`/poll/${poll.pollId}/result`}
                     onClick={votehandler}
-                    disabled={!opt1 && !opt2}
+                    disabled={poll.timeRemaining === 'PT0S' || !opt1 && !opt2}
                     style={{marginTop: '2em', textAlign: 'center'}}
                     positive
                     content='Vote'
