@@ -1,8 +1,7 @@
 package no.hvl.dat250.iotdevice;
 
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import no.hvl.dat250.iotdevice.device.DeviceSendButtonListener;
 import no.hvl.dat250.iotdevice.device.IoTDevice;
 import no.hvl.dat250.iotdevice.model.Poll;
@@ -15,6 +14,8 @@ import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
 
 import java.lang.reflect.Type;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class IoTDeviceSessionHandler extends StompSessionHandlerAdapter implements DeviceSendButtonListener {
 
@@ -22,6 +23,13 @@ public class IoTDeviceSessionHandler extends StompSessionHandlerAdapter implemen
     private IoTDevice device;
     private StompSession session;
     private StompSession.Subscription pollSub;
+
+    private static final Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
+        @Override
+        public LocalDateTime deserialize(JsonElement json, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+            return LocalDateTime.parse(json.getAsJsonPrimitive().getAsString());
+        }
+    }).create();
 
     public IoTDeviceSessionHandler(IoTDevice device){
         super();
@@ -52,29 +60,31 @@ public class IoTDeviceSessionHandler extends StompSessionHandlerAdapter implemen
     public void handleFrame(StompHeaders headers, Object payload){
         String message = (String)payload;
 
+
+        JsonObject jsonObject = gson.fromJson(message, JsonObject.class);
+        String context = jsonObject.get("context").getAsString();
+
         System.out.println("Received: " + message);
 
-        if(message.startsWith(MessageConstants.PAIRED_WITH_NEW_CHANNEL)){
-            String splitMessage[] = message.split(String.valueOf(MessageConstants.SEPARATOR));
-            String channelId = splitMessage[1];
 
-            pollSub = session.subscribe("/topic/poll/" + channelId, this);
+        if(context.equals(MessageConstants.PAIRED_WITH_NEW_CHANNEL)){
 
-            Poll poll = Converter.convertPollMessageToPoll(message);
+
+            Poll poll = gson.fromJson(message, Poll.class);
+
+            pollSub = session.subscribe("/topic/poll/" + poll.getPollId(), this);
+
             device.setCurrentPoll(poll);
 
             System.out.println("Subscribed to: " + pollSub.getSubscriptionHeaders());
 
 
-
-
-        } else if(message.startsWith(MessageConstants.POLL_ENDED)){
+        } else if(context.equals(MessageConstants.POLL_ENDED)){
             device.handlePollEnding();
             pollSub.unsubscribe();
             pollSub = null;
-        } else if(message.startsWith(MessageConstants.POLL_UPDATE)){
-            Vote vote = Converter.convertVoteMessageToVote(message);
-
+        } else if(context.equals(MessageConstants.POLL_UPDATE)){
+            Vote vote = gson.fromJson(message, Vote.class);
 
             device.handleNewVoteReceived(vote);
 
@@ -100,6 +110,9 @@ public class IoTDeviceSessionHandler extends StompSessionHandlerAdapter implemen
     @Override
     public void onSendButtonPressed(Vote vote) {
         if(pollSub != null){
+
+
+
             String payload = Integer.toString(vote.getOptionOneVotes()) + MessageConstants.SEPARATOR + Integer.toString(vote.getOptionTwoVotes());
 
             String voteEndpoint = "/app/device/" + device.getPublicId() + "/vote/ws";

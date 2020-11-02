@@ -3,7 +3,9 @@ package com.restdeveloper.app.ws.shared;
 import com.restdeveloper.app.ws.io.entity.PollEntity;
 import com.restdeveloper.app.ws.io.repository.PollRepository;
 import com.restdeveloper.app.ws.service.implementation.PollServiceImpl;
+import com.restdeveloper.app.ws.shared.dto.PollDto;
 import com.restdeveloper.app.ws.websocket.WebSocketMessageSender;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +13,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Configuration
 @EnableScheduling
+@Transactional
 public class PollAlertScheduleHandler {
 
     @Autowired
@@ -24,6 +28,7 @@ public class PollAlertScheduleHandler {
     @Autowired
     WebSocketMessageSender webSocketMessageSender;
 
+    ModelMapper modelMapper = new ModelMapper();
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PollServiceImpl.class);
 
@@ -37,8 +42,8 @@ public class PollAlertScheduleHandler {
         for(PollEntity poll : finishedPolls){
             LOGGER.info("Sending alerts: Poll " + poll.getPollId() + " is finished");
 
-
-            webSocketMessageSender.sendFinishedPollMessage(poll);
+            PollDto pollDto = modelMapper.map(poll, PollDto.class);
+            webSocketMessageSender.sendFinishedPollMessage(pollDto);
 
             //TODO: Send RabbitMQ message
             //TODO: Send dweet.io message

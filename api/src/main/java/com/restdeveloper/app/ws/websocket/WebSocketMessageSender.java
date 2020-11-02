@@ -1,10 +1,12 @@
 package com.restdeveloper.app.ws.websocket;
 
+import com.google.gson.Gson;
 import com.restdeveloper.app.ws.io.entity.PollEntity;
 import com.restdeveloper.app.ws.shared.WebSocketMessageConstants;
 import com.restdeveloper.app.ws.shared.dto.PollDto;
 import com.restdeveloper.app.ws.shared.dto.VoteDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.codec.json.Jackson2JsonEncoder;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
@@ -14,43 +16,27 @@ public class WebSocketMessageSender {
     @Autowired
     SimpMessagingTemplate template;
 
+
+
     public void sendVoteMessageAfterVoteReceived(String pollId, VoteDto returnVote) {
-        template.convertAndSend("/topic/poll/"
-                        + pollId
-                        ,
-                WebSocketMessageConstants.POLL_UPDATE
-                        + WebSocketMessageConstants.SEPARATOR
-                        + pollId
-                        + WebSocketMessageConstants.SEPARATOR
-                        + returnVote.getOption1Count()
-                        + WebSocketMessageConstants.SEPARATOR
-                        + returnVote.getOption2Count()
-        );
+
+        String jsonString = WebSocketMessageConverter.convertVoteToJson(pollId, returnVote, WebSocketMessageConstants.POLL_UPDATE);
+        template.convertAndSend("/topic/poll/" + pollId,
+                jsonString);
     }
 
-    public void sendFinishedPollMessage(PollEntity poll) {
-        template.convertAndSend(
-                "/topic/poll/"
-                + poll.getPollId(),
-                WebSocketMessageConstants.POLL_ENDED
-                + WebSocketMessageConstants.SEPARATOR
-                + poll.getPollId()
-        );
+    public void sendFinishedPollMessage(PollDto poll) {
+        String jsonString = generatePollStatusString(poll, WebSocketMessageConstants.POLL_ENDED);
+
+        template.convertAndSend("/topic/poll/" + poll.getPollId(),
+                jsonString);
+
     }
 
-    public String generatePollStatusString(PollDto pollDto){
-        return pollDto.getPollId()
-                + WebSocketMessageConstants.SEPARATOR
-                + pollDto.getPollName()
-                + WebSocketMessageConstants.SEPARATOR
-                + pollDto.getOptionOne()
-                + WebSocketMessageConstants.SEPARATOR
-                + pollDto.getOptionTwo()
-                + WebSocketMessageConstants.SEPARATOR
-                + pollDto.getOptionOneVotes()
-                + WebSocketMessageConstants.SEPARATOR
-                + pollDto.getOptionTwoVotes()
-                + WebSocketMessageConstants.SEPARATOR +
-                pollDto.getEndTime();
+    public String generatePollStatusString(PollDto pollDto, String messageContext){
+
+        String jsonString = WebSocketMessageConverter.convertPollToJson(pollDto, messageContext);
+        return jsonString;
+
     }
 }
