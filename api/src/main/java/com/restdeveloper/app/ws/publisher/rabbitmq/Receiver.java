@@ -8,7 +8,7 @@ public class Receiver {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Receiver.class);
 
-    @RabbitListener(queues = "#{autoDeleteQueue.name}")
+    @RabbitListener(queues = "#{apiQueue.name}")
     public void receive(String message) {
         String messageInSmallPrint = message.replace("\n", "");
         LOGGER.debug("Api-Receiver got message: {}", messageInSmallPrint);

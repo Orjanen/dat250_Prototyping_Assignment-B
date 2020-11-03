@@ -13,13 +13,23 @@ public class RabbitConfig {
     }
 
     @Bean
-    public Queue autoDeleteQueue() {
-        return new AnonymousQueue();
+    public Queue analyticsQueue() {
+        return new Queue("analyticsQueue",true, false, false);
     }
 
     @Bean
-    public Binding binding(FanoutExchange fanout, Queue autoDeleteQueue) {
-        return BindingBuilder.bind(autoDeleteQueue).to(fanout);
+    public Queue apiQueue() {
+        return new Queue("apiQueue",true, false, false);
+    }
+
+    @Bean
+    public Binding analyticsBinding(FanoutExchange fanout, Queue analyticsQueue) {
+        return BindingBuilder.bind(analyticsQueue).to(fanout);
+    }
+
+    @Bean
+    public Binding apiBinding(FanoutExchange fanout, Queue apiQueue) {
+        return BindingBuilder.bind(apiQueue).to(fanout);
     }
 
     @Bean

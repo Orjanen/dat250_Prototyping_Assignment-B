@@ -16,7 +16,7 @@ public class Receiver {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Receiver.class);
 
-    @RabbitListener(queues = "#{autoDeleteQueue.name}")
+    @RabbitListener(queues = "#{analyticsQueue.name}")
     public void receive(String message) {
         String messageInSmallPrint = message.replace("\n", "");
         LOGGER.info("Analytics-Receiver got message: {}", messageInSmallPrint);
