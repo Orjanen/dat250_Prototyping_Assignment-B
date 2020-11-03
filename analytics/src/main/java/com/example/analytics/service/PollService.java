@@ -35,7 +35,6 @@ public class PollService {
         LOGGER.info("Getting poll with ID: {}", id);
         PollEntity pollEntity = pollRepository.findById(id).orElse(null);
         if (pollEntity == null) {
-            LOGGER.error("Could not find a poll with ID: {}", id);
             throw new ResourceNotFoundException("Could not find poll with ID: " + id);
         }
 
@@ -44,7 +43,7 @@ public class PollService {
     }
 
     public PollDto createPoll(PollDto pollDto) {
-        LOGGER.info("Creating a poll: {}", pollDto);
+        LOGGER.info("Creating poll: {}", pollDto);
 
         PollEntity pollEntity = new PollEntity();
         pollEntity.setJpaId(pollDto.getJpaId());
@@ -53,18 +52,37 @@ public class PollService {
         pollEntity.setOptionTwo(pollDto.getOptionTwo());
         pollEntity.setOptionOneVotes(0);
         pollEntity.setOptionTwoVotes(0);
-        pollEntity.setStillActive(true);
+        pollEntity.setStillActive(pollDto.isStillActive());
 
         PollEntity storedPollDetails = pollRepository.save(pollEntity);
         LOGGER.debug("Done creating a poll: {}", pollDto);
         return modelMapper.map(storedPollDetails, PollDto.class);
     }
 
+    public PollDto updatePoll(PollDto pollDto) {
+        LOGGER.info("Updating poll: {}", pollDto);
+        String jpaId = pollDto.getJpaId();
+
+        try {
+            PollEntity pollEntity = modelMapper.map(getPollByJpaId(jpaId), PollEntity.class);
+
+            pollEntity.setOptionOneVotes(pollDto.getOptionOneVotes());
+            pollEntity.setOptionTwoVotes(pollDto.getOptionTwoVotes());
+            pollEntity.setStillActive(pollDto.isStillActive());
+
+            PollEntity storedPollDetails = pollRepository.save(pollEntity);
+            LOGGER.debug("Done creating a poll: {}", pollDto);
+            return modelMapper.map(storedPollDetails, PollDto.class);
+        } catch (Exception e) {
+            LOGGER.info("Could not update non-existing poll. Creating new poll instead");
+            return createPoll(pollDto);
+        }
+    }
+
     public PollDto getPollByJpaId(String jpaId) {
         LOGGER.info("Getting poll with JPA-ID: {}", jpaId);
         PollEntity pollEntity = pollRepository.findByJpaId(jpaId);
         if (pollEntity == null) {
-            LOGGER.error("Could not find poll with jpaID: {}", jpaId);
             throw new ResourceNotFoundException("Could not find poll with jpaID: " + jpaId);
         }
 
@@ -75,18 +93,19 @@ public class PollService {
     public PollDto updatePollVotes(PollDto newVotes, String jpaId) {
         LOGGER.info("Starting poll-update with JPA-ID {}, and vote: {}", jpaId, newVotes);
 
-        PollEntity pollToUpdate = modelMapper.map(getPollByJpaId(jpaId), PollEntity.class);
-        if (pollToUpdate == null) {
-            LOGGER.error("Could not update with jpaID: {}", jpaId);
-            throw new ResourceNotFoundException("Could not update with jpaID: " + jpaId);
+        try {
+            PollEntity pollToUpdate = modelMapper.map(getPollByJpaId(jpaId), PollEntity.class);
+
+            pollToUpdate.setOptionOneVotes(pollToUpdate.getOptionOneVotes() + newVotes.getOptionOneVotes());
+            pollToUpdate.setOptionTwoVotes(pollToUpdate.getOptionTwoVotes() + newVotes.getOptionTwoVotes());
+            pollToUpdate.setStillActive(newVotes.isStillActive());
+
+            PollEntity storedPollDetails = pollRepository.save(pollToUpdate);
+            LOGGER.debug("Done updating poll with JPA-ID: {}", jpaId);
+            return modelMapper.map(storedPollDetails, PollDto.class);
+        } catch (Exception e) {
+            throw new ResourceNotFoundException("Could not update poll with jpaID: " + jpaId);
         }
-
-        pollToUpdate.setOptionOneVotes(pollToUpdate.getOptionOneVotes() + newVotes.getOptionOneVotes());
-        pollToUpdate.setOptionTwoVotes(pollToUpdate.getOptionTwoVotes() + newVotes.getOptionTwoVotes());
-
-        PollEntity storedPollDetails = pollRepository.save(pollToUpdate);
-        LOGGER.debug("Done updating poll with JPA-ID: {}", jpaId);
-        return modelMapper.map(storedPollDetails, PollDto.class);
     }
 
 }
