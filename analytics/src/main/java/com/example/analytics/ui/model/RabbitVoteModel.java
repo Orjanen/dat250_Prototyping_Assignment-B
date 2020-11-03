@@ -7,7 +7,7 @@ public class RabbitVoteModel {
     private String jpaId;
     private int optionOneVotes;
     private int optionTwoVotes;
-
+    private boolean isStillActive;
 
     public String getType() {
         return type;
@@ -39,6 +39,14 @@ public class RabbitVoteModel {
 
     public void setOptionTwoVotes(int optionTwoVotes) {
         this.optionTwoVotes = optionTwoVotes;
+    }
+
+    public boolean isStillActive() {
+        return isStillActive;
+    }
+
+    public void setStillActive(boolean stillActive) {
+        isStillActive = stillActive;
     }
 
     @Override

@@ -7,6 +7,9 @@ public class RabbitPollModel {
     private String pollName;
     private String optionOne;
     private String optionTwo;
+    private int optionOneVotes;
+    private int optionTwoVotes;
+    private boolean isStillActive;
 
     public String getType() {
         return type;
@@ -46,6 +49,30 @@ public class RabbitPollModel {
 
     public void setOptionTwo(String optionTwo) {
         this.optionTwo = optionTwo;
+    }
+
+    public int getOptionOneVotes() {
+        return optionOneVotes;
+    }
+
+    public void setOptionOneVotes(int optionOneVotes) {
+        this.optionOneVotes = optionOneVotes;
+    }
+
+    public int getOptionTwoVotes() {
+        return optionTwoVotes;
+    }
+
+    public void setOptionTwoVotes(int optionTwoVotes) {
+        this.optionTwoVotes = optionTwoVotes;
+    }
+
+    public boolean isStillActive() {
+        return isStillActive;
+    }
+
+    public void setStillActive(boolean stillActive) {
+        isStillActive = stillActive;
     }
 
     @Override
