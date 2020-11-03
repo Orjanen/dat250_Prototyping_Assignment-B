@@ -1,14 +1,24 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import { PieChart } from 'react-minimal-pie-chart';
 import {Button, Grid, Segment} from "semantic-ui-react";
 import IconHeader from "../components/header/IconHeader";
 import agent from "../api/agent";
 import {Link} from "react-router-dom";
+import Stomp from "stomp-websocket";
 
 
 
 const ResultPage = (props) => {
+
     const [poll, setPoll] = useState({});
+    const [optionOne, setOptionOne] = useState(0)
+    const [optionTwo, setOptionTwo] = useState(0)
+
+    const updateVotes = useCallback((opt1, opt2) => {
+        setOptionOne(oldOptionOneVotes => oldOptionOneVotes + opt1)
+        setOptionTwo(oldOptionTwoVotes => oldOptionTwoVotes + opt2)
+    }, [])
+
 
     useEffect( () =>{
         const getPoll = async (id) =>{
@@ -24,14 +34,53 @@ const ResultPage = (props) => {
 
     },[props.match.params.pollId])
 
-    let optionOneVotes = poll.optionOneVotes;
-    let optionTwoVotes = poll.optionTwoVotes;
+
+
+
+    useEffect(() => {
+
+        if(poll.pollId === undefined) return
+        console.log(window.localStorage.getItem("token"))
+
+        //On first run: set votes to the poll's total votes
+        updateVotes(poll.optionOneVotes, poll.optionTwoVotes)
+
+        let connection = new WebSocket("ws://localhost:8080/ws/websocket")
+        let ws = Stomp.over(connection);
+
+        let headers = {
+
+            "Authorization": window.localStorage.getItem("token")
+        }
+        console.log(headers)
+
+        ws.connect(headers, function (frame) {
+
+            ws.subscribe("/topic/poll/" +poll.pollId,
+                (message) => {
+
+                    const vote = JSON.parse(message.body)
+
+                    updateVotes(vote.optionOneVotes, vote.optionTwoVotes)
+                }
+
+            )
+        }, )
+
+    }, [poll, updateVotes])
+
+
+    let optionOneVotes = optionOne;
+    let optionTwoVotes = optionTwo;
 
     const data =
         [
         { title: 'optionOne', value: optionOneVotes, color: '#2ddbc6'},
         { title: 'optionTwo', value: optionTwoVotes, color: '#d4373d' }
     ]
+
+
+
     return (
         <Segment style={{marginTop: '7em', textAlign: 'center'}} >
             <IconHeader
@@ -46,11 +95,11 @@ const ResultPage = (props) => {
                             <h2>{poll.pollName}</h2>
                             <div>
                                 <h3>
-                                    {`${poll.optionOne}: ${poll.optionOneVotes}`}
+                                    {`${poll.optionOne}: ${optionOne}`}
                                 </h3>
                             </div>
                             <div>
-                                <h3>{`${poll.optionTwo}: ${poll.optionTwoVotes}`}</h3>
+                                <h3>{`${poll.optionTwo}: ${optionTwo}`}</h3>
                             </div>
                         </div>
                     </div>

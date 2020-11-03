@@ -1,17 +1,14 @@
 package com.restdeveloper.app.ws.service.implementation;
 
-import com.restdeveloper.app.ws.io.entity.PollEntity;
-import com.restdeveloper.app.ws.io.entity.UserEntity;
-import com.restdeveloper.app.ws.io.entity.VoteEntity;
-import com.restdeveloper.app.ws.io.entity.Voter;
+import com.restdeveloper.app.ws.io.entity.*;
 import com.restdeveloper.app.ws.io.repository.PollRepository;
 import com.restdeveloper.app.ws.io.repository.UserRepository;
 import com.restdeveloper.app.ws.io.repository.VoteRepository;
 import com.restdeveloper.app.ws.io.repository.VoterRepository;
 import com.restdeveloper.app.ws.service.VoteService;
-import com.restdeveloper.app.ws.shared.UnregisteredVoteForPrivatePollException;
-import com.restdeveloper.app.ws.shared.WebSocketMessageConstants;
+import com.restdeveloper.app.ws.shared.exceptions.UnregisteredVoteForPrivatePollException;
 import com.restdeveloper.app.ws.shared.dto.VoteDto;
+import com.restdeveloper.app.ws.shared.exceptions.VoteCastForFinishedPollException;
 import com.restdeveloper.app.ws.ui.model.request.VotingDetailsModel;
 import com.restdeveloper.app.ws.websocket.WebSocketMessageSender;
 import org.apache.velocity.exception.ResourceNotFoundException;
@@ -19,7 +16,6 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -50,6 +46,7 @@ public class VoteServiceImpl implements VoteService {
 
     ModelMapper modelMapper = new ModelMapper();
 
+    //TODO: Remove? No longer in use
     @Override
     public void updateVotes(String voteId, VotingDetailsModel votingDetailsModel) {
         LOGGER.info("Updating votes on vote with vote-ID: {}", voteId);
@@ -86,6 +83,10 @@ public class VoteServiceImpl implements VoteService {
         if (voteEntity == null) {
             LOGGER.error("Could not find vote");
             throw new ResourceNotFoundException("Could not find vote");
+        }
+
+        if(voteEntity.getPollEntity().isFinished()){
+            throw new VoteCastForFinishedPollException("Poll is finished, not accepting new votes!");
         }
 
         voteEntity.setOption1Count(voteDto.getOption1Count());
@@ -126,20 +127,34 @@ public class VoteServiceImpl implements VoteService {
             LOGGER.error("Could not find a poll with ID: {}", pollId);
             throw new ResourceNotFoundException("Could not find poll with ID: " + pollId);
         }
+        if(poll.isFinished()){
+            LOGGER.info("Refusing to accept new vote to finished poll: {}", pollId);
+            throw new VoteCastForFinishedPollException("Poll is finished, not accepting new votes!");
+        }
 
-        UserEntity user;
-        if (userId == null && poll.isPrivate()) {
-            //Private poll can't accept votes not linked to users
-            LOGGER.error("Unregistered users can't vote on a private poll");
-            throw new UnregisteredVoteForPrivatePollException("Unregistered users can't vote in private poll");
+        Voter voter;
 
-        } else {
-            user = userRepository.findByUserId(userId);
-            if (user == null) {
+        if(userId == null){
+            if(poll.isPrivate()){
+                throw new UnregisteredVoteForPrivatePollException("Unregistered users can't vote in private poll");
+            } else{
+                //Poll is not private, vote is being cast by unregistered Voter -> Create new Guest
+                Guest guest = new Guest();
+                guest.setUuid(UUID.randomUUID());
+
+                voter = guest;
+
+                newVote.setVoter(voter);
+                voterRepository.save(voter);
+            }
+
+        } else { //userId is not null - attempted vote by given user
+            voter = userRepository.findByUserId(userId);
+            if (voter == null) {
                 LOGGER.error("Could not find user with user-ID: {}", userId);
                 throw new ResourceNotFoundException("Could not find user with user-ID: " + userId);
             }
-            newVote.setVoter(user);
+            newVote.setVoter(voter);
         }
 
         newVote.setPollEntity(poll);

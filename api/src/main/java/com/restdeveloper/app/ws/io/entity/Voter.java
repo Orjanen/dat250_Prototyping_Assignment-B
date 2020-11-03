@@ -34,11 +34,7 @@ public abstract class Voter {
     }
 
 
-    public String getPublicId() {
-        return publicId;
-    }
+    abstract String getPublicId();
+    abstract void setPublicId(String publicId);
 
-    public void setPublicId(String publicId) {
-        this.publicId = publicId;
-    }
 }
