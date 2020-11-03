@@ -72,7 +72,7 @@ public class JsonHandler {
 
         RabbitPollModel pollModel = Converter.convertToPollModel(message);
         PollDto receivedPoll = modelMapper.map(pollModel, PollDto.class);
-        pollService.createPoll(receivedPoll);
+        pollService.updatePoll(receivedPoll);
 
         LOGGER.debug("Poll-handling done");
     }
