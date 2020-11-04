@@ -16,9 +16,9 @@ public class Runner {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Runner.class);
 
-    public void run(String s) {
+    public void run(String message) {
         LOGGER.info("Runner initialized. Sending message...");
-        template.convertAndSend(fanout.getName(), "", s);
+        template.convertAndSend(fanout.getName(), "", message);
         LOGGER.debug("Runner done");
     }
 
