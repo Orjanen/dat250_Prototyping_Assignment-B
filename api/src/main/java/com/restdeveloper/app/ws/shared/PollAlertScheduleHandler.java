@@ -2,7 +2,6 @@ package com.restdeveloper.app.ws.shared;
 
 import com.restdeveloper.app.ws.io.entity.PollEntity;
 import com.restdeveloper.app.ws.io.repository.PollRepository;
-import com.restdeveloper.app.ws.service.implementation.PollServiceImpl;
 import com.restdeveloper.app.ws.shared.dto.PollDto;
 import com.restdeveloper.app.ws.websocket.WebSocketMessageSender;
 import org.modelmapper.ModelMapper;
@@ -30,7 +29,7 @@ public class PollAlertScheduleHandler {
 
     ModelMapper modelMapper = new ModelMapper();
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PollServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PollAlertScheduleHandler.class);
 
     //300 000 milliseconds = every 5 minutes
     @Scheduled(fixedRate = 300000)
@@ -40,7 +39,7 @@ public class PollAlertScheduleHandler {
         List<PollEntity> finishedPolls = pollRepository.findAllByEndTimeBeforeAndAlertsHaveBeenSentFalse(LocalDateTime.now());
 
         for(PollEntity poll : finishedPolls){
-            LOGGER.info("Sending alerts: Poll " + poll.getPollId() + " is finished");
+            LOGGER.info("Sending alerts: Poll {} is finished", poll.getPollId());
 
             PollDto pollDto = modelMapper.map(poll, PollDto.class);
             webSocketMessageSender.sendFinishedPollMessage(pollDto);
