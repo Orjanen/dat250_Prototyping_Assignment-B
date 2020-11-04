@@ -34,7 +34,7 @@ public final class Converter {
         json.addProperty("optionTwo", poll.getOptionTwo());
         json.addProperty("optionOneVotes", poll.getOptionOneVotes());
         json.addProperty("optionTwoVotes", poll.getOptionTwoVotes());
-        json.addProperty("isStillActive", poll.isFinished());
+        json.addProperty("isStillActive", !poll.isFinished());
 
         LOGGER.debug("Done converting");
         return gson.toJson(json);
@@ -48,7 +48,7 @@ public final class Converter {
         json.addProperty("jpaId", vote.getPollEntity().getPollId());
         json.addProperty("optionOneVotes", vote.getOption1Count());
         json.addProperty("optionTwoVotes", vote.getOption2Count());
-        json.addProperty("isStillActive", vote.getPollEntity().isFinished());
+        json.addProperty("isStillActive", !vote.getPollEntity().isFinished());
 
         LOGGER.debug("Done converting");
         return gson.toJson(json);
