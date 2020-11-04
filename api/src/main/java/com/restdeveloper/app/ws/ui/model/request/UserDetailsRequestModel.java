@@ -1,12 +1,23 @@
 package com.restdeveloper.app.ws.ui.model.request;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 //class that must match the json payload
 public class UserDetailsRequestModel {
+
+    @NotNull(message = "User must have a first name!")
     private String firstName;
+
+    @NotNull(message = "User must have a last name!")
     private String lastName;
+
+    @Email(message = "Invalid email address!")
     private String email;
+
+    @NotNull(message = "User must have a password!")
     private String password;
     private List<PollsRequestModel> myPolls;
 

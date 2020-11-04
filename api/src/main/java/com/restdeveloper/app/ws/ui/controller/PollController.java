@@ -18,8 +18,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import javax.validation.Valid;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("poll")
@@ -67,7 +71,17 @@ public class PollController {
     })
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping(path = "/user/{userId}")
-    public ResponseEntity<PollRest> addNewPollByUser(@PathVariable String userId, @RequestBody PollsRequestModel newPoll) {
+    public ResponseEntity<PollRest> addNewPollByUser(@PathVariable String userId, @Valid @RequestBody PollsRequestModel newPoll, BindingResult bindingResult) {
+
+        if(bindingResult.hasErrors()){
+
+            //Cannot return JSON, response message contains String
+            String errorMessage = "Request errors: " + bindingResult.getErrorCount() + " : " + bindingResult.getAllErrors().stream().map(be -> be.getDefaultMessage()).collect(Collectors.toList()).toString();
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    errorMessage
+                    );
+        }
+
         LOGGER.debug("Poll-Controller initialized to add new poll by user");
 
         PollDto pollDto = modelMapper.map(newPoll, PollDto.class);

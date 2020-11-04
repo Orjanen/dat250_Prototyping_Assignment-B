@@ -19,9 +19,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -46,7 +48,17 @@ public class UserController {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping
-    public ResponseEntity<UserRest> createUser(@RequestBody UserDetailsRequestModel userDetails) {
+    public ResponseEntity<UserRest> createUser(@Valid @RequestBody UserDetailsRequestModel userDetails, BindingResult bindingResult) {
+
+        if(bindingResult.hasErrors()){
+
+            //Cannot return JSON, response message contains String
+            String errorMessage = "Request errors: " + bindingResult.getErrorCount() + " : " + bindingResult.getAllErrors().stream().map(be -> be.getDefaultMessage()).collect(Collectors.toList()).toString();
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    errorMessage
+            );
+        }
+
         LOGGER.debug("User-Controller initialized to create user");
 
         UserDto userDto = modelMapper.map(userDetails, UserDto.class);
