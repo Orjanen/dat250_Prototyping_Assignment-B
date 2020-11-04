@@ -40,7 +40,7 @@ public class WebSocketController {
     ModelMapper modelMapper = new ModelMapper();
 
 
-    // TODO Autowire-problem: Missing bean
+
     @Autowired
     SimpMessagingTemplate template;
 

@@ -10,6 +10,7 @@ import com.restdeveloper.app.ws.io.repository.VoteRepository;
 import com.restdeveloper.app.ws.service.IoTDeviceService;
 import com.restdeveloper.app.ws.service.VoteService;
 import com.restdeveloper.app.ws.shared.dto.IoTDeviceDto;
+import com.restdeveloper.app.ws.shared.dto.PollDto;
 import com.restdeveloper.app.ws.shared.dto.VoteDto;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.modelmapper.ModelMapper;
@@ -49,19 +50,25 @@ public class IoTDeviceServiceImpl implements IoTDeviceService {
     public IoTDeviceDto getIoTDeviceByPublicDeviceId(String publicDeviceId) {
         LOGGER.info("Getting IoT-device with public device-ID: {}", publicDeviceId);
         IoTDevice device = deviceRepository.findByPublicDeviceId(publicDeviceId);
+        if(device == null) throw new ResourceNotFoundException("IoT device with public device-ID: " + publicDeviceId +  " could not be found!");
 
         LOGGER.debug("Done getting IoT-device");
         return modelMapper.map(device, IoTDeviceDto.class);
     }
 
     @Override
-    public String getPairedPoll(String publicDeviceId) {
+    public PollDto getPairedPoll(String publicDeviceId) {
         LOGGER.info("Getting poll, paired with IoT-device with public device-ID: {}", publicDeviceId);
         IoTDevice device = deviceRepository.findByPublicDeviceId(publicDeviceId);
+        if(device == null) throw new ResourceNotFoundException("IoT device with public device-ID: " + publicDeviceId +  " could not be found!");
+
         PollEntity pollEntity = device.getCurrentPoll();
+        if(pollEntity == null) throw new ResourceNotFoundException("IoT device with public device-ID: " + publicDeviceId +  " is not paired with a poll!");
 
         LOGGER.debug("Done getting poll");
-        return pollEntity != null ? pollEntity.getPollId() : null;
+
+
+        return modelMapper.map(pollEntity, PollDto.class);
 
     }
 
@@ -90,11 +97,11 @@ public class IoTDeviceServiceImpl implements IoTDeviceService {
             throw new ResourceNotFoundException("Could not find a registered device with device-ID: " + deviceId);
         }
 
-        VoteEntity voteEntity = voteRepository.findByVoterAndPollEntity(device, device.getCurrentPoll());
-        if (voteEntity == null) {
-            LOGGER.error("Could not find vote on device-ID: {}", deviceId);
-            throw new ResourceNotFoundException("Could not find vote on device-ID: " + deviceId);
+        if(device.getCurrentPoll() == null){
+            throw new IllegalStateException("Device with device-ID : " + deviceId + " is not paired with a poll!");
         }
+
+        VoteEntity voteEntity = findVoteForDeviceAndPoll(device, device.getCurrentPoll());
 
         voteEntity.addVotesToOption1(voteDto.getOption1Count());
         voteEntity.addVotesToOption2(voteDto.getOption2Count());
@@ -127,13 +134,7 @@ public class IoTDeviceServiceImpl implements IoTDeviceService {
         device.pairDeviceWithPoll(pollEntity);
 
         //TODO: Change if implementation is changed to not allow changing away from un-finished poll
-        VoteEntity vote = voteRepository.findByVoterAndPollEntity(device, pollEntity);
-        if (vote == null) {
-            vote = new VoteEntity();
-            vote.setPollEntity(pollEntity);
-            vote.setVoter(device);
-            voteRepository.save(vote);
-        }
+        VoteEntity vote = findVoteForDeviceAndPoll(device, pollEntity);
 
         deviceRepository.save(device);
 
@@ -144,6 +145,19 @@ public class IoTDeviceServiceImpl implements IoTDeviceService {
 
         LOGGER.debug("Done pairing poll with IoT-device");
         return updatedDevice;
+    }
+
+    private VoteEntity findVoteForDeviceAndPoll(IoTDevice device, PollEntity pollEntity){
+        VoteEntity vote = voteRepository.findByVoterAndPollEntity(device, pollEntity);
+
+        if (vote == null) {
+            vote = new VoteEntity();
+            vote.setPollEntity(pollEntity);
+            vote.setVoter(device);
+            voteRepository.save(vote);
+        }
+
+        return vote;
     }
 
 }

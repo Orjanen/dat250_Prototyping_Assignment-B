@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.restdeveloper.app.ws.io.entity.PollEntity;
 import com.restdeveloper.app.ws.io.entity.VoteEntity;
+import com.restdeveloper.app.ws.shared.WebSocketMessageConstants;
 import com.restdeveloper.app.ws.shared.dto.PollDto;
 import com.restdeveloper.app.ws.shared.dto.VoteDto;
 
@@ -50,4 +51,6 @@ public class WebSocketMessageConverter {
 
         return gson.toJson(json);
     }
+
+
 }

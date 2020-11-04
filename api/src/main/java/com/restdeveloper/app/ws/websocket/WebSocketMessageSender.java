@@ -39,4 +39,9 @@ public class WebSocketMessageSender {
         return jsonString;
 
     }
+
+    public void notifyDeviceAboutPairedPoll(String deviceId, PollDto pollDto) {
+        String jsonString = generatePollStatusString(pollDto, WebSocketMessageConstants.PAIRED_WITH_NEW_CHANNEL);
+        template.convertAndSend("/app/device/" + deviceId + "/", jsonString);
+    }
 }

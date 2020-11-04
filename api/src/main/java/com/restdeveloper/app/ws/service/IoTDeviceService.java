@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface IoTDeviceService {
     IoTDeviceDto getIoTDeviceByPublicDeviceId(String publicDeviceId);
-    String getPairedPoll(String publicDeviceId);
+    PollDto getPairedPoll(String publicDeviceId);
 
     IoTDeviceDto addNewDevice(IoTDeviceDto ioTDeviceDto);
 

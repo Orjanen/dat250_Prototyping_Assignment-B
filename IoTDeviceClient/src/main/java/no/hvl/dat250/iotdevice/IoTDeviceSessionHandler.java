@@ -69,7 +69,7 @@ public class IoTDeviceSessionHandler extends StompSessionHandlerAdapter implemen
 
         if(context.equals(MessageConstants.PAIRED_WITH_NEW_CHANNEL)){
 
-
+            //TODO: Confirm pairing on device?
             Poll poll = gson.fromJson(message, Poll.class);
 
             pollSub = session.subscribe("/topic/poll/" + poll.getPollId(), this);

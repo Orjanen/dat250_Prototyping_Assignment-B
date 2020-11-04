@@ -10,12 +10,16 @@ import com.restdeveloper.app.ws.ui.model.response.PollRest;
 import com.restdeveloper.app.ws.ui.model.response.RequestOperationStatus;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
+import org.apache.velocity.exception.ResourceNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("poll")
@@ -43,14 +47,19 @@ public class PollController {
 
 
     @GetMapping(path = "/{id}")
-    public PollRest getPoll(@PathVariable String id) {
+    public ResponseEntity<PollRest> getPoll(@PathVariable String id) {
         LOGGER.debug("Poll-Controller initialized to get poll by ID");
 
-        PollRest returnValue;
-        PollDto pollDto = pollService.getPollByPollId(id);
-        returnValue = modelMapper.map(pollDto, PollRest.class);
+        PollDto pollDto;
+        try{
+            pollDto = pollService.getPollByPollId(id);
 
-        return returnValue;
+        } catch (ResourceNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+
+
+        return ResponseEntity.accepted().body(modelMapper.map(pollDto, PollRest.class));
     }
 
     @ApiImplicitParams({
@@ -58,12 +67,20 @@ public class PollController {
     })
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping(path = "/user/{userId}")
-    public PollRest addNewPollByUser(@PathVariable String userId, @RequestBody PollsRequestModel newPoll) {
+    public ResponseEntity<PollRest> addNewPollByUser(@PathVariable String userId, @RequestBody PollsRequestModel newPoll) {
         LOGGER.debug("Poll-Controller initialized to add new poll by user");
 
         PollDto pollDto = modelMapper.map(newPoll, PollDto.class);
-        PollDto savedPoll = pollService.createPoll(pollDto, userId);
-        return modelMapper.map(savedPoll, PollRest.class);
+
+        PollDto savedPoll;
+        try{
+            savedPoll = pollService.createPoll(pollDto, userId);
+
+        } catch(ResourceNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+
+        return ResponseEntity.accepted().body(modelMapper.map(savedPoll, PollRest.class));
     }
 
     @ApiImplicitParams({

@@ -52,9 +52,10 @@ public class PollServiceImpl implements PollService {
         pollEntity.setEndTime(LocalDateTime.now().plus(poll.getDuration()));
         pollEntity.setAlertsHaveBeenSent(false);
 
-        VoteEntity voteEntity = new VoteEntity();
-        voteEntity.setVoteId(utils.generateUserId(30));
-        voteEntity.setPollEntity(pollEntity);
+        //Code still remaining from iteration 1 where users had one vote?
+        //VoteEntity voteEntity = new VoteEntity();
+        //voteEntity.setVoteId(utils.generateUserId(30));
+        //voteEntity.setPollEntity(pollEntity);
         //pollEntity.setVoteEntity(voteEntity)
 
         PollEntity storedPollDetails = pollRepository.save(pollEntity);
@@ -85,6 +86,8 @@ public class PollServiceImpl implements PollService {
         LOGGER.info("Getting all polls created by user with user-ID: {}", userId);
 
         UserEntity user = userRepository.findByUserId(userId);
+        if(user == null) throw new ResourceNotFoundException("Could not find user: " + userId);
+
         List<PollEntity> polls = pollRepository.findAllPollsByCreator(user);
         List<PollDto> returnValue =
                 polls.stream().map(poll -> modelMapper.map(poll, PollDto.class)).collect(Collectors.toList());
