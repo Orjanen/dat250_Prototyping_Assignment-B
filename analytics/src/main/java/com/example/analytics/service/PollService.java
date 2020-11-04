@@ -63,19 +63,24 @@ public class PollService {
         LOGGER.info("Updating poll: {}", pollDto);
         String jpaId = pollDto.getJpaId();
 
+
+        PollEntity pollEntity = modelMapper.map(getPollByJpaId(jpaId), PollEntity.class);
+
+        pollEntity.setOptionOneVotes(pollDto.getOptionOneVotes());
+        pollEntity.setOptionTwoVotes(pollDto.getOptionTwoVotes());
+        pollEntity.setStillActive(pollDto.isStillActive());
+
+        PollEntity storedPollDetails = pollRepository.save(pollEntity);
+        LOGGER.debug("Done creating a poll: {}", pollDto);
+        return modelMapper.map(storedPollDetails, PollDto.class);
+    }
+
+    public boolean jpaIdExists(String jpaId) {
         try {
-            PollEntity pollEntity = modelMapper.map(getPollByJpaId(jpaId), PollEntity.class);
-
-            pollEntity.setOptionOneVotes(pollDto.getOptionOneVotes());
-            pollEntity.setOptionTwoVotes(pollDto.getOptionTwoVotes());
-            pollEntity.setStillActive(pollDto.isStillActive());
-
-            PollEntity storedPollDetails = pollRepository.save(pollEntity);
-            LOGGER.debug("Done creating a poll: {}", pollDto);
-            return modelMapper.map(storedPollDetails, PollDto.class);
-        } catch (Exception e) {
-            LOGGER.info("Could not update non-existing poll. Creating new poll instead");
-            return createPoll(pollDto);
+            getPollByJpaId(jpaId);
+            return true;
+        } catch (Exception ignored) {
+            return false;
         }
     }
 
