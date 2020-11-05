@@ -1,19 +1,22 @@
-import React from 'react';
+import React, {useState} from 'react';
 import agent from "../api/agent";
 import {Link} from "react-router-dom";
 import {Button, Form, Segment} from "semantic-ui-react";
 import {Field, Form as FinalForm} from "react-final-form";
+import DateTimePicker from 'react-datetime-picker';
 
 import IconHeader from "../components/header/IconHeader";
 import TextInput from "../shared/Form/TextInput";
 
 const CreatePollPage = (props) => {
 
+    const [value, onChange] = useState(new Date());
+
 
     const handleFinalFormSubmit = async (values) => {
         const userId  = window.localStorage.getItem('userId');
         values.isPrivate = false
-        values.duration = +values.duration
+        values.duration = Math.abs((value - Date.now())/1000)
         try {
             await agent.Poll.create(userId, values).then(res =>{
                 props.history.push(`/poll/${res.pollId}`)
@@ -51,12 +54,6 @@ const CreatePollPage = (props) => {
                             value={'optionTwo'}
                             component={TextInput}
                         />
-                        <Field
-                            name='duration'
-                            placeholder='Duration'
-                            //value={'duration'}
-                            component={TextInput}
-                        />
 
                         <Button
                             positive
@@ -68,6 +65,12 @@ const CreatePollPage = (props) => {
                     </Form>
                 )}
             />
+                <span>Pick a closing time for the poll:   </span>
+                <DateTimePicker
+                    onChange={onChange}
+                    value={value}
+                />
+
 
             <Button
                 as={Link}

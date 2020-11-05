@@ -10,6 +10,7 @@
     "final-form": "^4.20.1",
     "react": "^16.13.1",
     "react-countdown": "^2.3.1",
+    "react-datetime-picker": "^3.0.4",
     "react-dom": "^16.13.1",
     "react-final-form": "^6.5.1",
     "react-minimal-pie-chart": "^8.0.1",
