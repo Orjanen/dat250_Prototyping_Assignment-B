@@ -7,10 +7,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 
 public class UserPrincipals implements UserDetails {
 
@@ -31,18 +29,18 @@ public class UserPrincipals implements UserDetails {
         Collection<AuthorityEntity> authorityEntities = new HashSet<>();
         //get user roles
         Collection<RoleEntity> roles = userEntity.getRoles();
-        if(roles == null) {
+        if (roles == null) {
             return authorities;
         }
 
-        roles.forEach((role ->{
+        roles.forEach((role -> {
             authorities.add(new SimpleGrantedAuthority(role.getName()));
             authorityEntities.addAll(role.getAuthorities());
-        } ));
+        }));
 
-        authorityEntities.forEach((authorityEntity) ->{
-            authorities.add(new SimpleGrantedAuthority(authorityEntity.getName()));
-        });
+        authorityEntities.forEach(authorityEntity ->
+            authorities.add(new SimpleGrantedAuthority(authorityEntity.getName()))
+        );
 
         return authorities;
     }

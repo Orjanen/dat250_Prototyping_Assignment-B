@@ -78,14 +78,14 @@ public class PollEntity implements Serializable {
     private Duration timeRemaining;
 
     public Duration getTimeRemaining() {
-        LocalDateTime endTime = startTime.plus(duration);
+        LocalDateTime currentEndTime = startTime.plus(duration);
 
-        Duration remaining = Duration.between(LocalDateTime.now(), endTime);
+        Duration remaining = Duration.between(LocalDateTime.now(), currentEndTime);
 
         return remaining.isNegative() ? Duration.ZERO : remaining;
     }
 
-    public boolean isFinished(){
+    public boolean isFinished() {
         return getTimeRemaining().isZero();
     }
 

@@ -15,15 +15,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationSwaggerLoginController {
     @ApiOperation("User Login")
     @ApiResponses(value = {
-          @ApiResponse(code= 200,
-          message = "Response Headers",
-          responseHeaders = {
-                  @ResponseHeader(name = "authorization", description = "Bearer <JWT value>", response = String.class),
-                  @ResponseHeader(name = "userId", description = "<Public user id value", response = String.class)
-          })
+            @ApiResponse(code = 200,
+                    message = "Response Headers",
+                    responseHeaders = {
+                            @ResponseHeader(name = "authorization", description = "Bearer <JWT value>", response =
+                                    String.class),
+                            @ResponseHeader(name = "userId", description = "<Public user id value", response =
+                                    String.class)
+                    })
     })
     @PostMapping("/login")
-    public void fakeLogin(@RequestBody LoginRequestModel loginRequestModel){
-        throw  new IllegalStateException("This methode is implemented by Spring Security, do not use");
+    public void fakeLogin(@RequestBody LoginRequestModel loginRequestModel) {
+        throw new IllegalStateException("This methode is implemented by Spring Security, do not use");
     }
 }

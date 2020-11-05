@@ -32,7 +32,6 @@ public class PollDto {
     }
 
 
-
     public String getPollName() {
         return pollName;
     }
@@ -61,6 +60,7 @@ public class PollDto {
     public List<VoteDto> getVotes() {
         return votes;
     }
+
     public void setVotes(List<VoteDto> votes) {
         this.votes = votes;
     }

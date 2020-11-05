@@ -4,13 +4,12 @@ import com.restdeveloper.app.ws.service.IoTDeviceService;
 import com.restdeveloper.app.ws.service.PollService;
 import com.restdeveloper.app.ws.shared.WebSocketMessageConstants;
 import com.restdeveloper.app.ws.shared.dto.IoTDeviceDto;
+import com.restdeveloper.app.ws.shared.dto.PollDto;
 import com.restdeveloper.app.ws.shared.dto.VoteDto;
-import com.restdeveloper.app.ws.ui.model.request.VotingDetailsModel;
 import com.restdeveloper.app.ws.websocket.WebSocketMessageSender;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.restdeveloper.app.ws.shared.dto.PollDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -18,8 +17,6 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.transaction.Transactional;
 
@@ -40,7 +37,6 @@ public class WebSocketController {
     ModelMapper modelMapper = new ModelMapper();
 
 
-
     @Autowired
     SimpMessagingTemplate template;
 
@@ -48,11 +44,11 @@ public class WebSocketController {
 
 
     @SubscribeMapping("poll/{pollId}/sub")
-    public String confirmSubscriptionToPoll(@DestinationVariable String pollId){
+    public String confirmSubscriptionToPoll(@DestinationVariable String pollId) {
         PollDto poll = pollService.getPollByPollId(pollId);
 
         //TODO: Implement handling of non-existing poll
-        if(poll == null){
+        if (poll == null) {
             return "Poll " + pollId + " does not exists";
         }
         LOGGER.debug("WebSocket-Controller initialized to confirm subscription to poll");
@@ -61,7 +57,8 @@ public class WebSocketController {
     }
 
     @MessageMapping("device/{deviceId}/vote/ws")
-    public void receiveWebSocketVoteFromIotDevice(@DestinationVariable("deviceId") String deviceId, @Payload String message){
+    public void receiveWebSocketVoteFromIotDevice(@DestinationVariable("deviceId") String deviceId,
+                                                  @Payload String message) {
 
 
         String[] splitMessage = message.split(String.valueOf(WebSocketMessageConstants.SEPARATOR));
@@ -81,7 +78,6 @@ public class WebSocketController {
     //TODO: Handle websocket votes from React users
 
 
-
     /*
     When an IoT device connects - return the poll it's paired with
      */
@@ -92,11 +88,13 @@ public class WebSocketController {
         IoTDeviceDto deviceDto = ioTDeviceService.getIoTDeviceByPublicDeviceId(deviceId);
         if (deviceDto.getCurrentPoll() == null) {
             return WebSocketMessageConstants.NOT_PAIRED;
-        } else{
+        } else {
             PollDto pollDto = pollService.getCurrentPollStatusForWebSocket(deviceDto.getCurrentPoll().getPollId());
-            return webSocketMessageSender.generatePollStatusString(pollDto, WebSocketMessageConstants.PAIRED_WITH_NEW_CHANNEL);
+            return webSocketMessageSender.generatePollStatusString(pollDto,
+                                                                   WebSocketMessageConstants.PAIRED_WITH_NEW_CHANNEL);
 
-            //return WebSocketMessageConstants.PAIRED_WITH_NEW_CHANNEL + WebSocketMessageConstants.SEPARATOR + webSocketMessageSender.generatePollStatusString(pollDto);
+            //return WebSocketMessageConstants.PAIRED_WITH_NEW_CHANNEL + WebSocketMessageConstants.SEPARATOR +
+            // webSocketMessageSender.generatePollStatusString(pollDto);
         }
 
     }

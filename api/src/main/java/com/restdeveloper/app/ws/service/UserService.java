@@ -9,10 +9,15 @@ import java.util.List;
 @Service
 public interface UserService extends UserDetailsService {
     UserDto createUser(UserDto user);
+
     UserDto getUserByUserId(String id);
+
     UserDto getUser(String email);
+
     void deleteUser(String userId);
-    UserDto updateUser(String id,UserDto user);
+
+    UserDto updateUser(String id, UserDto user);
+
     void banUser(String userId);
 
     List<UserDto> getAllUsers();

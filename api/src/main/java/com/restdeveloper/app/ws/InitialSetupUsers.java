@@ -34,33 +34,35 @@ public class InitialSetupUsers {
 
     @EventListener
     @Transactional
-    public void onApplicationEvent(ApplicationReadyEvent event){
+    public void onApplicationEvent(ApplicationReadyEvent event) {
+        final String ADMIN = "admin";
 
         AuthorityEntity readAuthority = createAuthority("READ_AUTHORITY");
         AuthorityEntity writeAuthority = createAuthority("WRITE_AUTHORITY");
         AuthorityEntity deleteAuthority = createAuthority("DELETE_AUTHORITY");
 
         createRole(Roles.ROLE_USER.name(), Arrays.asList(readAuthority, writeAuthority));
-        RoleEntity roleAdmin = createRole(Roles.ROLE_ADMIN.name(), Arrays.asList(readAuthority, writeAuthority, deleteAuthority));
+        RoleEntity roleAdmin = createRole(Roles.ROLE_ADMIN.name(), Arrays.asList(readAuthority, writeAuthority,
+                                                                                 deleteAuthority));
 
         if (roleAdmin == null) return;
         if (userRepository.findByEmail("admin@admin.com") != null) return;
         UserEntity adminUser = new UserEntity();
-        adminUser.setFirstName("admin");
-        adminUser.setLastName("admin");
+        adminUser.setFirstName(ADMIN);
+        adminUser.setLastName(ADMIN);
         adminUser.setEmail("admin@admin.com");
         adminUser.setUserId(utils.generateUserId(30));
-        adminUser.setEncryptedPassword(bCryptPasswordEncoder.encode("admin"));
+        adminUser.setEncryptedPassword(bCryptPasswordEncoder.encode(ADMIN));
         adminUser.setRoles(Arrays.asList(roleAdmin));
 
         userRepository.save(adminUser);
     }
 
     @Transactional
-    AuthorityEntity createAuthority(String name){
+    AuthorityEntity createAuthority(String name) {
 
         AuthorityEntity authority = authorityRepository.findByName(name);
-        if (authority == null){
+        if (authority == null) {
             authority = new AuthorityEntity(name);
             authorityRepository.save(authority);
         }
@@ -69,10 +71,10 @@ public class InitialSetupUsers {
     }
 
     @Transactional
-    RoleEntity createRole(String name, Collection<AuthorityEntity> authorities){
+    RoleEntity createRole(String name, Collection<AuthorityEntity> authorities) {
 
         RoleEntity role = roleRepository.findByName(name);
-        if (role == null){
+        if (role == null) {
             role = new RoleEntity(name);
             role.setAuthorities(authorities);
             roleRepository.save(role);

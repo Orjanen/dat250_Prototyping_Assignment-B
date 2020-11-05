@@ -1,6 +1,5 @@
 package com.restdeveloper.app.ws.service;
 
-import com.restdeveloper.app.ws.io.entity.IoTDevice;
 import com.restdeveloper.app.ws.shared.dto.IoTDeviceDto;
 import com.restdeveloper.app.ws.shared.dto.PollDto;
 import com.restdeveloper.app.ws.shared.dto.VoteDto;
@@ -11,6 +10,7 @@ import java.util.List;
 @Service
 public interface IoTDeviceService {
     IoTDeviceDto getIoTDeviceByPublicDeviceId(String publicDeviceId);
+
     PollDto getPairedPoll(String publicDeviceId);
 
     IoTDeviceDto addNewDevice(IoTDeviceDto ioTDeviceDto);

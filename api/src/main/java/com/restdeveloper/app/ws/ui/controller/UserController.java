@@ -1,6 +1,5 @@
 package com.restdeveloper.app.ws.ui.controller;
 
-import com.restdeveloper.app.ws.io.entity.UserEntity;
 import com.restdeveloper.app.ws.service.PollService;
 import com.restdeveloper.app.ws.service.UserService;
 import com.restdeveloper.app.ws.service.VoteService;
@@ -49,14 +48,16 @@ public class UserController {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping
-    public ResponseEntity<UserRest> createUser(@Valid @RequestBody UserDetailsRequestModel userDetails, BindingResult bindingResult) {
+    public ResponseEntity<UserRest> createUser(@Valid @RequestBody UserDetailsRequestModel userDetails,
+                                               BindingResult bindingResult) {
 
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
 
             //Cannot return JSON, response message contains String
-            String errorMessage = "Request errors: " + bindingResult.getErrorCount() + " : " + bindingResult.getAllErrors().stream().map(be -> be.getDefaultMessage()).collect(Collectors.toList()).toString();
+            String errorMessage =
+                    "Request errors: " + bindingResult.getErrorCount() + " : " + bindingResult.getAllErrors().stream().map(be -> be.getDefaultMessage()).collect(Collectors.toList()).toString();
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    errorMessage
+                                              errorMessage
             );
         }
 
@@ -70,7 +71,8 @@ public class UserController {
     }
 
     @ApiImplicitParams({
-            @ApiImplicitParam(name="authorization",value="${userController.authorizationheader.description}", paramType = "header", dataTypeClass = String.class)
+            @ApiImplicitParam(name = "authorization", value = "${userController.authorizationheader.description}",
+                    paramType = "header", dataTypeClass = String.class)
     })
     @PreAuthorize("hasRole('ROLE_ADMIN') or #id == principal.userId")
     @GetMapping(path = "/{id}")
@@ -78,37 +80,40 @@ public class UserController {
         LOGGER.debug("User-Controller initialized to get user bu ID");
 
         UserDto userDto;
-        try{
+        try {
             userDto = userService.getUserByUserId(id);
 
-        } catch(ResourceNotFoundException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,e.getMessage());
+        } catch (ResourceNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
         return ResponseEntity.accepted().body(modelMapper.map(userDto, UserRest.class));
     }
 
     @ApiImplicitParams({
-            @ApiImplicitParam(name="authorization",value="${userController.authorizationheader.description}", paramType = "header", dataTypeClass = String.class)
+            @ApiImplicitParam(name = "authorization", value = "${userController.authorizationheader.description}",
+                    paramType = "header", dataTypeClass = String.class)
     })
     @PreAuthorize("hasRole('ROLE_ADMIN') or #id == principal.userId")
     @PutMapping(path = "{id}")
-    public ResponseEntity<UserRest> updateUser(@RequestBody UserDetailsRequestModel userDetails, @PathVariable String id) {
+    public ResponseEntity<UserRest> updateUser(@RequestBody UserDetailsRequestModel userDetails,
+                                               @PathVariable String id) {
         LOGGER.debug("User-Controller initialized to update user");
 
         UserDto userDto = modelMapper.map(userDetails, UserDto.class);
 
         UserDto updatedUser;
-        try{
+        try {
             updatedUser = userService.updateUser(id, userDto);
 
-        } catch(ResourceNotFoundException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,e.getMessage());
+        } catch (ResourceNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
         return ResponseEntity.accepted().body(modelMapper.map(updatedUser, UserRest.class));
     }
 
     @ApiImplicitParams({
-            @ApiImplicitParam(name="authorization",value="${userController.authorizationheader.description}", paramType = "header", dataTypeClass = String.class)
+            @ApiImplicitParam(name = "authorization", value = "${userController.authorizationheader.description}",
+                    paramType = "header", dataTypeClass = String.class)
     })
     @PreAuthorize("hasRole('ROLE_ADMIN') or #id == principal.userId")
     @DeleteMapping(path = "{id}")
@@ -124,7 +129,8 @@ public class UserController {
     }
 
     @ApiImplicitParams({
-            @ApiImplicitParam(name="authorization",value="${userController.authorizationheader.description}", paramType = "header", dataTypeClass = String.class)
+            @ApiImplicitParam(name = "authorization", value = "${userController.authorizationheader.description}",
+                    paramType = "header", dataTypeClass = String.class)
     })
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping(path = "{id}/ban")
@@ -140,7 +146,8 @@ public class UserController {
     }
 
     @ApiImplicitParams({
-            @ApiImplicitParam(name="authorization",value="${userController.authorizationheader.description}", paramType = "header", dataTypeClass = String.class)
+            @ApiImplicitParam(name = "authorization", value = "${userController.authorizationheader.description}",
+                    paramType = "header", dataTypeClass = String.class)
     })
     @PreAuthorize("hasRole('ROLE_ADMIN') or #id == principal.userId")
     @GetMapping(path = "/{id}/polls")
@@ -148,18 +155,20 @@ public class UserController {
         LOGGER.debug("User-Controller initialized to get all polls created by user");
 
         List<PollDto> pollDtos;
-        try{
+        try {
             pollDtos = pollService.getAllPollsByCreator(id);
 
-        } catch(ResourceNotFoundException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,e.getMessage());
+        } catch (ResourceNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
 
-        return ResponseEntity.accepted().body(pollDtos.stream().map(pollDto -> modelMapper.map(pollDto, PollRest.class)).collect(Collectors.toList()));
+        return ResponseEntity.accepted().body(pollDtos.stream().map(pollDto -> modelMapper.map(pollDto,
+                                                                                               PollRest.class)).collect(Collectors.toList()));
     }
 
     @ApiImplicitParams({
-            @ApiImplicitParam(name="authorization",value="${userController.authorizationheader.description}", paramType = "header", dataTypeClass = String.class)
+            @ApiImplicitParam(name = "authorization", value = "${userController.authorizationheader.description}",
+                    paramType = "header", dataTypeClass = String.class)
     })
     @PreAuthorize("hasRole('ROLE_ADMIN') or #id == principal.userId")
     @GetMapping(path = "/{id}/votes")
@@ -167,22 +176,24 @@ public class UserController {
         LOGGER.debug("User-Controller initialized to get all votes by user");
 
         List<VoteDto> voteDtos;
-        try{
+        try {
             voteDtos = voteService.getAllVotesByUser(userId);
 
-        } catch(ResourceNotFoundException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,e.getMessage());
+        } catch (ResourceNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
 
-        return ResponseEntity.accepted().body(voteDtos.stream().map(voteDto -> modelMapper.map(voteDto, VoteRest.class)).collect(Collectors.toList()));
+        return ResponseEntity.accepted().body(voteDtos.stream().map(voteDto -> modelMapper.map(voteDto,
+                                                                                               VoteRest.class)).collect(Collectors.toList()));
     }
 
     @ApiImplicitParams({
-            @ApiImplicitParam(name="authorization",value="${userController.authorizationheader.description}", paramType = "header", dataTypeClass = String.class)
+            @ApiImplicitParam(name = "authorization", value = "${userController.authorizationheader.description}",
+                    paramType = "header", dataTypeClass = String.class)
     })
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping(path="/")
-    public ResponseEntity<List<UserRest>> getAllUsers(){
+    @GetMapping(path = "/")
+    public ResponseEntity<List<UserRest>> getAllUsers() {
         List<UserDto> userDtos = userService.getAllUsers();
         return ResponseEntity.accepted().body(userDtos.stream().map(userDto -> modelMapper.map(userDto, UserRest.class)).collect(Collectors.toList()));
     }

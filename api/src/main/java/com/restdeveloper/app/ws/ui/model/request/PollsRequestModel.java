@@ -10,7 +10,7 @@ public class PollsRequestModel {
 
 
     @NotNull(message = "Poll must have a question!")
-    @Size(min=3, message = "Poll question must be more than 3 characters!")
+    @Size(min = 3, message = "Poll question must be more than 3 characters!")
     private String pollName;
 
     @NotNull(message = "Poll must have two options to vote for!")

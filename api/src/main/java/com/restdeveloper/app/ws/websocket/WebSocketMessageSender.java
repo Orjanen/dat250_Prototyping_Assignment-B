@@ -1,12 +1,9 @@
 package com.restdeveloper.app.ws.websocket;
 
-import com.google.gson.Gson;
-import com.restdeveloper.app.ws.io.entity.PollEntity;
 import com.restdeveloper.app.ws.shared.WebSocketMessageConstants;
 import com.restdeveloper.app.ws.shared.dto.PollDto;
 import com.restdeveloper.app.ws.shared.dto.VoteDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.codec.json.Jackson2JsonEncoder;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
@@ -17,27 +14,25 @@ public class WebSocketMessageSender {
     SimpMessagingTemplate template;
 
 
-
     public void sendVoteMessageAfterVoteReceived(String pollId, VoteDto returnVote) {
 
-        String jsonString = WebSocketMessageConverter.convertVoteToJson(pollId, returnVote, WebSocketMessageConstants.POLL_UPDATE);
+        String jsonString = WebSocketMessageConverter.convertVoteToJson(pollId, returnVote,
+                                                                        WebSocketMessageConstants.POLL_UPDATE);
         template.convertAndSend("/topic/poll/" + pollId,
-                jsonString);
+                                jsonString);
     }
 
     public void sendFinishedPollMessage(PollDto poll) {
         String jsonString = generatePollStatusString(poll, WebSocketMessageConstants.POLL_ENDED);
 
         template.convertAndSend("/topic/poll/" + poll.getPollId(),
-                jsonString);
+                                jsonString);
 
     }
 
-    public String generatePollStatusString(PollDto pollDto, String messageContext){
+    public String generatePollStatusString(PollDto pollDto, String messageContext) {
 
-        String jsonString = WebSocketMessageConverter.convertPollToJson(pollDto, messageContext);
-        return jsonString;
-
+        return WebSocketMessageConverter.convertPollToJson(pollDto, messageContext);
     }
 
     public void notifyDeviceAboutPairedPoll(String deviceId, PollDto pollDto) {

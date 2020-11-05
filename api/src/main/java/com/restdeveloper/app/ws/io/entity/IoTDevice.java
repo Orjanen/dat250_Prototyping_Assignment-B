@@ -1,6 +1,9 @@
 package com.restdeveloper.app.ws.io.entity;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class IoTDevice extends Voter {
@@ -13,7 +16,6 @@ public class IoTDevice extends Voter {
     private PollEntity currentPoll;
 
 
-
     private String publicDeviceId;
 
     public IoTDevice(String publicDeviceId) {
@@ -24,23 +26,24 @@ public class IoTDevice extends Voter {
 
     }
 
-    public boolean pairDeviceWithPoll(PollEntity pollEntity){
+    public boolean pairDeviceWithPoll(PollEntity pollEntity) {
         //TODO: false if already paired
         currentPoll = pollEntity;
         return true;
     }
 
 
-    public void resetDevice(){
+    public void resetDevice() {
         currentPoll = null;
     }
 
 
-
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }
@@ -63,12 +66,12 @@ public class IoTDevice extends Voter {
 
 
     @Override
-    public String getPublicId(){
-        return publicDeviceId;
+    public String getPublicId() {
+        return getPublicDeviceId();
     }
 
     @Override
-    public void setPublicId(String publicId){
+    public void setPublicId(String publicId) {
         this.publicDeviceId = publicId;
     }
 

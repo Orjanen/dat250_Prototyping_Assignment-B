@@ -27,7 +27,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserRepository userRepository;
 
-    public WebSecurity(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder, UserRepository userRepository, PollService pollService) {
+    public WebSecurity(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder,
+                       UserRepository userRepository, PollService pollService) {
         this.userDetailsService = userService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.userRepository = userRepository;
@@ -35,7 +36,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    protected void configure(HttpSecurity http) throws Exception{
+    protected void configure(HttpSecurity http) throws Exception {
 
 
         http.cors().and().csrf().disable().authorizeRequests()
@@ -56,32 +57,31 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
     }
 
-    public boolean pollIsPublic(String pollId){
+    public boolean pollIsPublic(String pollId) {
         return !pollService.pollIsPrivate(pollId);
     }
 
     @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception{
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
     }
 
-    public  AuthenticationFilter getAuthenticationFilter() throws Exception{
+    public AuthenticationFilter getAuthenticationFilter() throws Exception {
         final AuthenticationFilter filter = new AuthenticationFilter(authenticationManager());
         filter.setFilterProcessesUrl("/user/login");
         return filter;
     }
 
     @Bean
-    CorsConfigurationSource corsConfigurationSource()
-    {
+    CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        //configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        //configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"))
 
         // Temp fix to allow IoT device websocket connection
         // TODO: Find better implementation
-        //configuration.setAllowedOrigins(Arrays.asList("*"));
+        //configuration.setAllowedOrigins(Arrays.asList("*"))
 
-        configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
         configuration.setExposedHeaders(Arrays.asList("Authorization", "UserId", "Authorities"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration.applyPermitDefaultValues());

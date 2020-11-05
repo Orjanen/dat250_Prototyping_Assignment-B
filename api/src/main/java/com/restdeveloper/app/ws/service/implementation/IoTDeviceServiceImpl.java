@@ -42,6 +42,7 @@ public class IoTDeviceServiceImpl implements IoTDeviceService {
     VoteService voteService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IoTDeviceServiceImpl.class);
+    private static final String IOT_DEVICE = "IoT device with public device-ID: ";
 
     ModelMapper modelMapper = new ModelMapper();
 
@@ -53,7 +54,8 @@ public class IoTDeviceServiceImpl implements IoTDeviceService {
     public IoTDeviceDto getIoTDeviceByPublicDeviceId(String publicDeviceId) {
         LOGGER.info("Getting IoT-device with public device-ID: {}", publicDeviceId);
         IoTDevice device = deviceRepository.findByPublicDeviceId(publicDeviceId);
-        if(device == null) throw new ResourceNotFoundException("IoT device with public device-ID: " + publicDeviceId +  " could not be found!");
+        if (device == null)
+            throw new ResourceNotFoundException(IOT_DEVICE + publicDeviceId + " could not be found!");
 
         LOGGER.debug("Done getting IoT-device");
         return modelMapper.map(device, IoTDeviceDto.class);
@@ -63,10 +65,12 @@ public class IoTDeviceServiceImpl implements IoTDeviceService {
     public PollDto getPairedPoll(String publicDeviceId) {
         LOGGER.info("Getting poll, paired with IoT-device with public device-ID: {}", publicDeviceId);
         IoTDevice device = deviceRepository.findByPublicDeviceId(publicDeviceId);
-        if(device == null) throw new ResourceNotFoundException("IoT device with public device-ID: " + publicDeviceId +  " could not be found!");
+        if (device == null)
+            throw new ResourceNotFoundException(IOT_DEVICE + publicDeviceId + " could not be found!");
 
         PollEntity pollEntity = device.getCurrentPoll();
-        if(pollEntity == null) throw new ResourceNotFoundException("IoT device with public device-ID: " + publicDeviceId +  " is not paired with a poll!");
+        if (pollEntity == null)
+            throw new ResourceNotFoundException(IOT_DEVICE + publicDeviceId + " is not paired with a poll!");
 
         LOGGER.debug("Done getting poll");
 
@@ -100,7 +104,7 @@ public class IoTDeviceServiceImpl implements IoTDeviceService {
             throw new ResourceNotFoundException("Could not find a registered device with device-ID: " + deviceId);
         }
 
-        if(device.getCurrentPoll() == null){
+        if (device.getCurrentPoll() == null) {
             throw new IllegalStateException("Device with device-ID : " + deviceId + " is not paired with a poll!");
         }
 
@@ -113,9 +117,9 @@ public class IoTDeviceServiceImpl implements IoTDeviceService {
 
         VoteDto updatedVoteDto = modelMapper.map(updatedVote, VoteDto.class);
 
-        LOGGER.debug("Done updating votes on current poll - " + updatedVoteDto.getPollId());
+        LOGGER.debug("Done updating votes on current poll - {}", updatedVoteDto.getPollId());
 
-        //return modelMapper.map(updatedVote, VoteDto.class);
+        //return modelMapper.map(updatedVote, VoteDto.class)
         return updatedVoteDto;
     }
 
@@ -158,7 +162,7 @@ public class IoTDeviceServiceImpl implements IoTDeviceService {
 
     }
 
-    private VoteEntity findVoteForDeviceAndPoll(IoTDevice device, PollEntity pollEntity){
+    private VoteEntity findVoteForDeviceAndPoll(IoTDevice device, PollEntity pollEntity) {
         VoteEntity vote = voteRepository.findByVoterAndPollEntity(device, pollEntity);
 
         if (vote == null) {

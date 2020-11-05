@@ -50,16 +50,15 @@ public class PollController {
     }
 
 
-
     @GetMapping(path = "/{id}")
     public ResponseEntity<PollRest> getPoll(@PathVariable String id) {
         LOGGER.debug("Poll-Controller initialized to get poll by ID");
 
         PollDto pollDto;
-        try{
+        try {
             pollDto = pollService.getPollByPollId(id);
 
-        } catch (ResourceNotFoundException e){
+        } catch (ResourceNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
 
@@ -68,19 +67,23 @@ public class PollController {
     }
 
     @ApiImplicitParams({
-            @ApiImplicitParam(name="authorization",value="${userController.authorizationheader.description}", paramType = "header", dataTypeClass = String.class)
+            @ApiImplicitParam(name = "authorization", value = "${userController.authorizationheader.description}",
+                    paramType = "header", dataTypeClass = String.class)
     })
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping(path = "/user/{userId}")
-    public ResponseEntity<PollRest> addNewPollByUser(@PathVariable String userId, @Valid @RequestBody PollsRequestModel newPoll, BindingResult bindingResult) {
+    public ResponseEntity<PollRest> addNewPollByUser(@PathVariable String userId,
+                                                     @Valid @RequestBody PollsRequestModel newPoll,
+                                                     BindingResult bindingResult) {
 
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
 
             //Cannot return JSON, response message contains String
-            String errorMessage = "Request errors: " + bindingResult.getErrorCount() + " : " + bindingResult.getAllErrors().stream().map(be -> be.getDefaultMessage()).collect(Collectors.toList()).toString();
+            String errorMessage =
+                    "Request errors: " + bindingResult.getErrorCount() + " : " + bindingResult.getAllErrors().stream().map(be -> be.getDefaultMessage()).collect(Collectors.toList()).toString();
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    errorMessage
-                    );
+                                              errorMessage
+            );
         }
 
         LOGGER.debug("Poll-Controller initialized to add new poll by user");
@@ -88,10 +91,10 @@ public class PollController {
         PollDto pollDto = modelMapper.map(newPoll, PollDto.class);
 
         PollDto savedPoll;
-        try{
+        try {
             savedPoll = pollService.createPoll(pollDto, userId);
 
-        } catch(ResourceNotFoundException e){
+        } catch (ResourceNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
 
@@ -99,11 +102,12 @@ public class PollController {
     }
 
     @ApiImplicitParams({
-            @ApiImplicitParam(name="authorization",value="${userController.authorizationheader.description}", paramType = "header", dataTypeClass = String.class)
+            @ApiImplicitParam(name = "authorization", value = "${userController.authorizationheader.description}",
+                    paramType = "header", dataTypeClass = String.class)
     })
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping(path = "{id}")
-    public OperationStatusModel deletePoll(@PathVariable String id){
+    public OperationStatusModel deletePoll(@PathVariable String id) {
         LOGGER.debug("Poll-Controller initialized to delete poll by ID");
         OperationStatusModel returnValue = new OperationStatusModel();
         returnValue.setOperationName(RequestOperationName.DELETE.name());
@@ -113,11 +117,12 @@ public class PollController {
     }
 
     @ApiImplicitParams({
-            @ApiImplicitParam(name="authorization",value="${userController.authorizationheader.description}", paramType = "header", dataTypeClass = String.class)
+            @ApiImplicitParam(name = "authorization", value = "${userController.authorizationheader.description}",
+                    paramType = "header", dataTypeClass = String.class)
     })
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping(path = "/")
-    public ResponseEntity<List<PollRest>> getAllPolls(){
+    public ResponseEntity<List<PollRest>> getAllPolls() {
         List<PollDto> pollDtos = pollService.getAllPolls();
         return ResponseEntity.accepted().body(pollDtos.stream().map(pollDto -> modelMapper.map(pollDto, PollRest.class)).collect(Collectors.toList()));
     }

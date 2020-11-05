@@ -6,8 +6,8 @@ import com.restdeveloper.app.ws.io.repository.UserRepository;
 import com.restdeveloper.app.ws.io.repository.VoteRepository;
 import com.restdeveloper.app.ws.io.repository.VoterRepository;
 import com.restdeveloper.app.ws.service.VoteService;
-import com.restdeveloper.app.ws.shared.exceptions.UnregisteredVoteForPrivatePollException;
 import com.restdeveloper.app.ws.shared.dto.VoteDto;
+import com.restdeveloper.app.ws.shared.exceptions.UnregisteredVoteForPrivatePollException;
 import com.restdeveloper.app.ws.shared.exceptions.VoteCastForFinishedPollException;
 import com.restdeveloper.app.ws.ui.model.request.VotingDetailsModel;
 import com.restdeveloper.app.ws.websocket.WebSocketMessageSender;
@@ -36,7 +36,6 @@ public class VoteServiceImpl implements VoteService {
 
     @Autowired
     VoterRepository voterRepository;
-
 
 
     @Autowired
@@ -74,9 +73,8 @@ public class VoteServiceImpl implements VoteService {
         PollEntity poll = pollRepository.findByPollId(pollId);
 
 
-        //UserEntity user = userRepository.findByUserId(userId);
+        //UserEntity user = userRepository.findByUserId(userId)
         Voter voter = voterRepository.findByPublicId(userId);
-
 
 
         VoteEntity voteEntity = voteRepository.findByVoterAndPollEntity(voter, poll);
@@ -85,7 +83,7 @@ public class VoteServiceImpl implements VoteService {
             throw new ResourceNotFoundException("Could not find vote");
         }
 
-        if(voteEntity.getPollEntity().isFinished()){
+        if (voteEntity.getPollEntity().isFinished()) {
             throw new VoteCastForFinishedPollException("Poll is finished, not accepting new votes!");
         }
 
@@ -127,17 +125,17 @@ public class VoteServiceImpl implements VoteService {
             LOGGER.error("Could not find a poll with ID: {}", pollId);
             throw new ResourceNotFoundException("Could not find poll with ID: " + pollId);
         }
-        if(poll.isFinished()){
+        if (poll.isFinished()) {
             LOGGER.info("Refusing to accept new vote to finished poll: {}", pollId);
             throw new VoteCastForFinishedPollException("Poll is finished, not accepting new votes!");
         }
 
         Voter voter;
 
-        if(userId == null){
-            if(poll.isPrivate()){
+        if (userId == null) {
+            if (poll.isPrivate()) {
                 throw new UnregisteredVoteForPrivatePollException("Unregistered users can't vote in private poll");
-            } else{
+            } else {
                 //Poll is not private, vote is being cast by unregistered Voter -> Create new Guest
                 Guest guest = new Guest();
                 guest.setUuid(UUID.randomUUID());

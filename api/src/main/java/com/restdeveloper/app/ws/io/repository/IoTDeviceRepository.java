@@ -10,9 +10,10 @@ import java.util.List;
 @Repository
 public interface IoTDeviceRepository extends CrudRepository<IoTDevice, Long> {
     IoTDevice findByPublicDeviceId(String id);
-    List<IoTDevice> findAllByCurrentPollIsNull();
-    List<IoTDevice> findAllByCurrentPoll(PollEntity poll);
 
+    List<IoTDevice> findAllByCurrentPollIsNull();
+
+    List<IoTDevice> findAllByCurrentPoll(PollEntity poll);
 
 
 }

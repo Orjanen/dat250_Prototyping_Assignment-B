@@ -31,30 +31,32 @@ public class VoteController {
     @Autowired
     PollService pollService;
 
-     @Autowired
+    @Autowired
     VoteService voteService;
 
     @ApiImplicitParams({
-            @ApiImplicitParam(name="authorization",value="${userController.authorizationheader.description}", paramType = "header", dataTypeClass = String.class)
+            @ApiImplicitParam(name = "authorization", value = "${userController.authorizationheader.description}",
+                    paramType = "header", dataTypeClass = String.class)
     })
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping(path = "/poll/{pollId}/user/{userId}")
-    public ResponseEntity<VoteRest> addVoteByRegisteredUserToPoll(@RequestBody VotingDetailsModel vote, @PathVariable("pollId") String pollId, @PathVariable("userId") String userId){
+    public ResponseEntity<VoteRest> addVoteByRegisteredUserToPoll(@RequestBody VotingDetailsModel vote,
+                                                                  @PathVariable("pollId") String pollId,
+                                                                  @PathVariable("userId") String userId) {
         LOGGER.debug("Vote-Controller initialized to add votes by registered user");
 
         VoteDto voteDto = modelMapper.map(vote, VoteDto.class);
         VoteDto savedVote;
 
 
-
-
-        try{
+        try {
             savedVote = voteService.addVoteByRegisteredUserToPoll(voteDto, pollId, userId);
 
-        } catch(ResourceNotFoundException e){
+        } catch (ResourceNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch(VoteCastForFinishedPollException e){
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Poll is finished, not accepting new votes!");
+        } catch (VoteCastForFinishedPollException e) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Poll is finished, not accepting new " +
+                                                                               "votes!");
         }
 
         return ResponseEntity.accepted().body(modelMapper.map(savedVote, VoteRest.class));
@@ -62,21 +64,23 @@ public class VoteController {
     }
 
     @ApiImplicitParams({
-            @ApiImplicitParam(name="authorization",value="${userController.authorizationheader.description}", paramType = "header", dataTypeClass = String.class)
+            @ApiImplicitParam(name = "authorization", value = "${userController.authorizationheader.description}",
+                    paramType = "header", dataTypeClass = String.class)
     })
     @PreAuthorize("#userId == principal.userId")
     @PutMapping(path = "/poll/{pollId}/user/{userId}")
-    public ResponseEntity<VoteRest> updateVoteByRegisteredUser(@RequestBody VotingDetailsModel vote, @PathVariable("pollId") String pollId, @PathVariable("userId") String userId){
+    public ResponseEntity<VoteRest> updateVoteByRegisteredUser(@RequestBody VotingDetailsModel vote, @PathVariable(
+            "pollId") String pollId, @PathVariable("userId") String userId) {
         LOGGER.debug("Vote-Controller initialized to update votes by registered user");
 
         VoteDto voteDto = modelMapper.map(vote, VoteDto.class);
 
         VoteDto updatedVote;
-        try{
+        try {
             updatedVote = voteService.updateVote(voteDto, pollId, userId);
-        } catch(ResourceNotFoundException e){
+        } catch (ResourceNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch(VoteCastForFinishedPollException e){
+        } catch (VoteCastForFinishedPollException e) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
         }
 
@@ -84,20 +88,22 @@ public class VoteController {
     }
 
     @PostMapping(path = "/poll/{pollId}")
-    public ResponseEntity<VoteRest> addVoteByUnregisteredUserToPoll(@RequestBody VotingDetailsModel vote, @PathVariable("pollId") String pollId){
+    public ResponseEntity<VoteRest> addVoteByUnregisteredUserToPoll(@RequestBody VotingDetailsModel vote,
+                                                                    @PathVariable("pollId") String pollId) {
         LOGGER.debug("Vote-Controller initialized to add votes by unregistered user");
 
         VoteDto voteDto = modelMapper.map(vote, VoteDto.class);
 
         VoteDto savedVote;
-        try{
+        try {
             savedVote = voteService.addVoteByUnregisteredUserToPoll(voteDto, pollId);
 
-        } catch(ResourceNotFoundException e){
-           throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch(VoteCastForFinishedPollException e){
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Poll is finished, not accepting new votes!");
-        } catch(UnregisteredVoteForPrivatePollException e){
+        } catch (ResourceNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (VoteCastForFinishedPollException e) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Poll is finished, not accepting new " +
+                                                                               "votes!");
+        } catch (UnregisteredVoteForPrivatePollException e) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Poll requires registered voters!");
         }
 

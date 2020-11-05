@@ -1,9 +1,6 @@
 package com.restdeveloper.app.ws.ui.model.websocket;
 
-import com.restdeveloper.app.ws.ui.model.response.VoteRest;
-
 import java.time.Duration;
-import java.util.List;
 
 public class PollMessage {
     private String pollId;

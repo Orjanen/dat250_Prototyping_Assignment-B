@@ -12,6 +12,8 @@ import java.util.List;
 @Repository
 public interface VoteRepository extends CrudRepository<VoteEntity, Long> {
     VoteEntity findByVoteId(String id);
+
     public List<VoteEntity> findAllVotesByVoter(UserEntity user);
+
     VoteEntity findByVoterAndPollEntity(Voter voter, PollEntity pollEntity);
 }

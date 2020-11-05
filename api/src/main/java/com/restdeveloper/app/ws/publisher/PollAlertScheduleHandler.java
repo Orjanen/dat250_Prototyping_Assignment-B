@@ -4,8 +4,8 @@ import com.restdeveloper.app.ws.io.entity.IoTDevice;
 import com.restdeveloper.app.ws.io.entity.PollEntity;
 import com.restdeveloper.app.ws.io.repository.IoTDeviceRepository;
 import com.restdeveloper.app.ws.io.repository.PollRepository;
-import com.restdeveloper.app.ws.publisher.dweetIO.DweetIOAlerter;
-import com.restdeveloper.app.ws.publisher.dweetIO.DweetStatusConstants;
+import com.restdeveloper.app.ws.publisher.dweet_io.DweetIOAlerter;
+import com.restdeveloper.app.ws.publisher.dweet_io.DweetStatusConstants;
 import com.restdeveloper.app.ws.shared.dto.PollDto;
 import com.restdeveloper.app.ws.websocket.WebSocketMessageSender;
 import org.modelmapper.ModelMapper;
@@ -44,13 +44,13 @@ public class PollAlertScheduleHandler {
     //300 000 milliseconds = every 5 minutes
     @Scheduled(fixedRate = 2000)
     //@Scheduled(fixedRate = 30000) //30 000 = 30 seconds
-    public void sendAlertsForFinishedPolls(){
+    public void sendAlertsForFinishedPolls() {
         //Get all polls from database where end time is before now, and its alerts have not yet been sent
-        List<PollEntity> finishedPolls = pollRepository.findAllByEndTimeBeforeAndAlertsHaveBeenSentFalse(LocalDateTime.now());
+        List<PollEntity> finishedPolls =
+                pollRepository.findAllByEndTimeBeforeAndAlertsHaveBeenSentFalse(LocalDateTime.now());
 
-        for(PollEntity poll : finishedPolls){
+        for (PollEntity poll : finishedPolls) {
             LOGGER.info("Poll {} is finished | Sending alerts and unpairing IoTDevices", poll.getPollId());
-
 
 
             //Alert IoTDevices about their poll having ended
@@ -69,9 +69,9 @@ public class PollAlertScheduleHandler {
 
     }
 
-    private void performPollEndedActions(PollEntity poll){
+    private void performPollEndedActions(PollEntity poll) {
         List<IoTDevice> pairedDevices = deviceRepository.findAllByCurrentPoll(poll);
-        for(IoTDevice device : pairedDevices){
+        for (IoTDevice device : pairedDevices) {
             device.resetDevice();
             deviceRepository.save(device);
         }

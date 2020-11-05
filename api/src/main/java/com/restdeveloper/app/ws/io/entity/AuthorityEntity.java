@@ -22,6 +22,7 @@ public class AuthorityEntity implements Serializable {
     public AuthorityEntity(String name) {
         this.name = name;
     }
+
     public AuthorityEntity() {
     }
 

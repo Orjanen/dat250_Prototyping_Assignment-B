@@ -105,7 +105,7 @@ public class UserEntity extends Voter implements Serializable {
 
     @Override
     public String getPublicId() {
-        return userId;
+        return getUserId();
     }
 
     @Override

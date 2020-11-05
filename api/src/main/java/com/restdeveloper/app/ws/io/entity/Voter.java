@@ -35,6 +35,7 @@ public abstract class Voter {
 
 
     abstract String getPublicId();
+
     abstract void setPublicId(String publicId);
 
 }

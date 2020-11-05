@@ -1,7 +1,6 @@
 package com.restdeveloper.app.ws.ui.controller;
 
 
-import com.restdeveloper.app.ws.io.entity.IoTDevice;
 import com.restdeveloper.app.ws.service.IoTDeviceService;
 import com.restdeveloper.app.ws.shared.WebSocketMessageConstants;
 import com.restdeveloper.app.ws.shared.dto.IoTDeviceDto;
@@ -50,10 +49,10 @@ public class IoTDeviceController {
         LOGGER.debug("IoT-Controller initialized to get IoT-device by public device-ID");
 
         IoTDeviceDto deviceDto;
-        try{
+        try {
             deviceDto = ioTDeviceService.getIoTDeviceByPublicDeviceId(publicDeviceId);
 
-        } catch(ResourceNotFoundException e){
+        } catch (ResourceNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
         return ResponseEntity.accepted().body(modelMapper.map(deviceDto, IoTDeviceRest.class));
@@ -64,21 +63,22 @@ public class IoTDeviceController {
         LOGGER.debug("IoT-Controller initialized to get paired poll");
 
         IoTDeviceDto device;
-        try{
+        try {
             device = ioTDeviceService.getIoTDeviceByPublicDeviceId(deviceId);
-        } catch(ResourceNotFoundException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, WebSocketMessageConstants.NOT_REGISTERED + WebSocketMessageConstants.SEPARATOR + e.getMessage());
+        } catch (ResourceNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                              WebSocketMessageConstants.NOT_REGISTERED + WebSocketMessageConstants.SEPARATOR + e.getMessage());
         }
 
 
         PollDto pollDto;
-        try{
+        try {
             pollDto = ioTDeviceService.getPairedPoll(deviceId);
 
-        } catch(ResourceNotFoundException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, WebSocketMessageConstants.NOT_PAIRED + WebSocketMessageConstants.SEPARATOR + e.getMessage());
+        } catch (ResourceNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                              WebSocketMessageConstants.NOT_PAIRED + WebSocketMessageConstants.SEPARATOR + e.getMessage());
         }
-
 
 
         return ResponseEntity.accepted().body(modelMapper.map(pollDto, PollRest.class));
@@ -87,19 +87,21 @@ public class IoTDeviceController {
     }
 
     @PutMapping(path = "/{deviceId}/vote")
-    public ResponseEntity<VoteRest> updateVoteForCurrentPoll(@PathVariable String deviceId, @RequestBody VotingDetailsModel vote) {
+    public ResponseEntity<VoteRest> updateVoteForCurrentPoll(@PathVariable String deviceId,
+                                                             @RequestBody VotingDetailsModel vote) {
         LOGGER.debug("IoT-Controller initialized to update vote for current poll");
 
         VoteDto voteDto = modelMapper.map(vote, VoteDto.class);
 
         VoteDto updatedTotalVote;
 
-        try{
+        try {
             updatedTotalVote = ioTDeviceService.updateVoteForCurrentPoll(deviceId, voteDto);
 
-        } catch(IllegalStateException e){
+        } catch (IllegalStateException e) {
             //Device has not been paired yet
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, WebSocketMessageConstants.NOT_PAIRED + WebSocketMessageConstants.SEPARATOR + e.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                              WebSocketMessageConstants.NOT_PAIRED + WebSocketMessageConstants.SEPARATOR + e.getMessage());
 
         }
 
@@ -110,16 +112,16 @@ public class IoTDeviceController {
 
     @PutMapping(path = "{deviceId}/poll/{pollId}")
     public ResponseEntity<IoTDeviceRest> setNewCurrentPoll(@PathVariable("deviceId") String deviceId,
-                                           @PathVariable("pollId") String pollId) {
+                                                           @PathVariable("pollId") String pollId) {
         LOGGER.debug("IoT-Controller initialized to set new current poll");
 
         //TODO: Don't allow changing polls until the last one is done?
         IoTDeviceDto deviceDto;
-        try{
+        try {
             deviceDto = ioTDeviceService.setPairedPoll(deviceId, pollId);
 
-        } catch(ResourceNotFoundException e){
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (ResourceNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
 
         LOGGER.info("IoT-Device: {} has been paired with poll: {}", deviceId, pollId);
@@ -141,7 +143,7 @@ public class IoTDeviceController {
     }
 
     @GetMapping("/unpaired")
-    public List<IoTDeviceRest> getAllUnpairedDevices(){
+    public List<IoTDeviceRest> getAllUnpairedDevices() {
         LOGGER.debug("IoT-Controller initialized to get all devices not paired with a poll");
 
         List<IoTDeviceDto> unpairedDevices = ioTDeviceService.getAllUnpairedDevices();

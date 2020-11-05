@@ -4,8 +4,8 @@ import com.restdeveloper.app.ws.io.entity.PollEntity;
 import com.restdeveloper.app.ws.io.entity.UserEntity;
 import com.restdeveloper.app.ws.io.repository.PollRepository;
 import com.restdeveloper.app.ws.io.repository.UserRepository;
-import com.restdeveloper.app.ws.publisher.dweetIO.DweetIOAlerter;
-import com.restdeveloper.app.ws.publisher.dweetIO.DweetStatusConstants;
+import com.restdeveloper.app.ws.publisher.dweet_io.DweetIOAlerter;
+import com.restdeveloper.app.ws.publisher.dweet_io.DweetStatusConstants;
 import com.restdeveloper.app.ws.service.PollService;
 import com.restdeveloper.app.ws.shared.Utils;
 import com.restdeveloper.app.ws.shared.dto.PollDto;
@@ -57,9 +57,9 @@ public class PollServiceImpl implements PollService {
         pollEntity.setAlertsHaveBeenSent(false);
 
         //Code still remaining from iteration 1 where users had one vote?
-        //VoteEntity voteEntity = new VoteEntity();
-        //voteEntity.setVoteId(utils.generateUserId(30));
-        //voteEntity.setPollEntity(pollEntity);
+        //VoteEntity voteEntity = new VoteEntity()
+        //voteEntity.setVoteId(utils.generateUserId(30))
+        //voteEntity.setPollEntity(pollEntity)
         //pollEntity.setVoteEntity(voteEntity)
 
         PollEntity storedPollDetails = pollRepository.save(pollEntity);
@@ -91,7 +91,7 @@ public class PollServiceImpl implements PollService {
         LOGGER.info("Getting all polls created by user with user-ID: {}", userId);
 
         UserEntity user = userRepository.findByUserId(userId);
-        if(user == null) throw new ResourceNotFoundException("Could not find user: " + userId);
+        if (user == null) throw new ResourceNotFoundException("Could not find user: " + userId);
 
         List<PollEntity> polls = pollRepository.findAllPollsByCreator(user);
         List<PollDto> returnValue =
@@ -111,7 +111,6 @@ public class PollServiceImpl implements PollService {
         pollRepository.delete(pollEntity);
         LOGGER.debug("Done deleting poll");
     }
-
 
 
     @Override
@@ -144,9 +143,9 @@ public class PollServiceImpl implements PollService {
     @Override
     public boolean pollIsPrivate(String pollId) {
         boolean isPrivate = false;
-        try{
+        try {
             isPrivate = pollRepository.findByPollId(pollId).isPrivate();
-        } catch(NullPointerException e){
+        } catch (NullPointerException e) {
             return false;
         }
         return isPrivate;

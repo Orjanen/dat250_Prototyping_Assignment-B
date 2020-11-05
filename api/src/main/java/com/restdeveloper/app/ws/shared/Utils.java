@@ -8,18 +8,19 @@ import java.util.Random;
 @Service
 public class Utils {
 
-    private final Random RANDOM = new SecureRandom();
+    private static final Random RANDOM = new SecureRandom();
 
-    private final String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwqyz";
+    private static final String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwqyz";
 
-    private final String NUMBERS = "0123456789";
+    private static final String NUMBERS = "0123456789";
 
-    public String generateUserId(int length){
+    public String generateUserId(int length) {
         return generateRandomString(length);
     }
+
     //TODO Make this Generate a number
-    public String generatePollId(int length){
-       return generateRandomNumberSting(length);
+    public String generatePollId(int length) {
+        return generateRandomNumberSting(length);
     }
 
     private String generateRandomNumberSting(int length) {

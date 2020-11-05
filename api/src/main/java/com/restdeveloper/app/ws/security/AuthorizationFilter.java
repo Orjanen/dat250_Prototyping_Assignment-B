@@ -4,7 +4,6 @@ import com.restdeveloper.app.ws.io.entity.UserEntity;
 import com.restdeveloper.app.ws.io.repository.UserRepository;
 import com.restdeveloper.app.ws.service.implementation.UserPrincipals;
 import io.jsonwebtoken.Jwts;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,7 +14,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class AuthorizationFilter extends BasicAuthenticationFilter {
 
@@ -33,20 +31,21 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
 
         String header = request.getHeader(SecurityConstants.HEADER_STRING);
 
-        if (header == null || !header.startsWith(SecurityConstants.TOKEN_PREFIX)){
-            chain.doFilter(request,response);
+        if (header == null || !header.startsWith(SecurityConstants.TOKEN_PREFIX)) {
+            chain.doFilter(request, response);
             return;
-        };
+        }
+
 
         UsernamePasswordAuthenticationToken authenticationToken = getAuthentication(request);
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-        chain.doFilter(request,response);
+        chain.doFilter(request, response);
     }
 
-    private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request){
+    private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
         String token = request.getHeader(SecurityConstants.HEADER_STRING);
 
-        if (token != null){
+        if (token != null) {
             token = token.replace(SecurityConstants.TOKEN_PREFIX, "");
 
             String user = Jwts.parser()
@@ -55,7 +54,7 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
                     .getBody()
                     .getSubject();
 
-            if (user != null){
+            if (user != null) {
                 UserEntity userEntity = userRepository.findByEmail(user);
                 if (userEntity == null) return null;
                 UserPrincipals userPrincipals = new UserPrincipals(userEntity);

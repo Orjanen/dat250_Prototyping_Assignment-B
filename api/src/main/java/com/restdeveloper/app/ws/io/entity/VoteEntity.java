@@ -86,10 +86,11 @@ public class VoteEntity implements Serializable {
 
     @Transient
     public String pollId;
-    public String getPollId(){
+
+    public String getPollId() {
         return pollEntity.getPollId();
     }
-    public void setPollId(String pollId) {};
 
+    public void setPollId(String pollId) {}
 
 }

@@ -4,8 +4,6 @@ public class IoTDeviceRequestModel {
     private String publicDeviceId;
 
 
-
-
     public String getPublicDeviceId() {
         return publicDeviceId;
     }

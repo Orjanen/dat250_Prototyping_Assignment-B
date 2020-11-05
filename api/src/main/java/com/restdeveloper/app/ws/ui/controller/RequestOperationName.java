@@ -1,5 +1,5 @@
 package com.restdeveloper.app.ws.ui.controller;
 
-public enum  RequestOperationName {
+public enum RequestOperationName {
     DELETE, BAN
 }

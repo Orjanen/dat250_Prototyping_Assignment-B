@@ -11,7 +11,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -20,6 +19,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -32,9 +32,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request,
-                                                HttpServletResponse response) throws AuthenticationException {
-
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
         try {
             UserLoginRequestModel creds = new ObjectMapper()
                     .readValue(request.getInputStream(), UserLoginRequestModel.class);
@@ -44,9 +42,9 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                             creds.getEmail(),
                             creds.getPassword(),
                             new ArrayList<>())
-            );
-        }catch (IOException e){
-            throw new RuntimeException(e);
+                                                     );
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
         }
     }
 
@@ -56,8 +54,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                                             FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
 
-        String userName = ((UserPrincipals)authResult.getPrincipal()).getUsername();
-        Collection<? extends GrantedAuthority> auth = ((UserPrincipals)authResult.getPrincipal()).getAuthorities();
+        String userName = ((UserPrincipals) authResult.getPrincipal()).getUsername();
+        Collection<? extends GrantedAuthority> auth = ((UserPrincipals) authResult.getPrincipal()).getAuthorities();
         String token = Jwts.builder()
                 .setSubject(userName)
                 .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))

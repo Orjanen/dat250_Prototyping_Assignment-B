@@ -1,6 +1,9 @@
 package com.restdeveloper.app.ws.publisher.rabbitmq;
 
-import org.springframework.amqp.core.*;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.FanoutExchange;
+import org.springframework.amqp.core.Queue;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,12 +17,12 @@ public class RabbitConfig {
 
     @Bean
     public Queue analyticsQueue() {
-        return new Queue("analyticsQueue",true, false, false);
+        return new Queue("analyticsQueue", true, false, false);
     }
 
     @Bean
     public Queue apiQueue() {
-        return new Queue("apiQueue",true, false, false);
+        return new Queue("apiQueue", true, false, false);
     }
 
     @Bean
