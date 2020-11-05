@@ -19,7 +19,7 @@ public class IoTDeviceGUI extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-        final String webSocketServer = "ws://localhost:8080/ws";
+        final String webSocketServer = "ws://localhost:8080/ws/websocket";
         final String IOT_DEVICE_ID = "IOT-3";
 
 
@@ -35,10 +35,12 @@ public class IoTDeviceGUI extends Application {
         StompSessionHandler sessionHandler = new IoTDeviceSessionHandler(device);
 
         WebSocketHttpHeaders headers = new WebSocketHttpHeaders();
-        headers.add("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0VXR2aWtsZXIxMjNAdGVzdGxhbmQuY29tIiwiZXhwIjoxNjA0NDAxMDAwfQ.Lx3wR6HsXsQoFVpvH6nm34gSV_7yDrfHcRh-3EE1U5wsBy0dckmKdXajlqkJEchVmvKbc5GvbBtsaEp0tcYSMA");
+        //headers.add("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0VXR2aWtsZXIxMjNAdGVzdGxhbmQuY29tIiwiZXhwIjoxNjA0NDAxMDAwfQ.Lx3wR6HsXsQoFVpvH6nm34gSV_7yDrfHcRh-3EE1U5wsBy0dckmKdXajlqkJEchVmvKbc5GvbBtsaEp0tcYSMA");
         //headers.add("IoTDeviceId", "1");
 
-        stompClient.connect(webSocketServer, headers, sessionHandler);
+        //stompClient.connect(webSocketServer, headers, sessionHandler);
+        stompClient.connect(webSocketServer, sessionHandler);
+
 
 
 

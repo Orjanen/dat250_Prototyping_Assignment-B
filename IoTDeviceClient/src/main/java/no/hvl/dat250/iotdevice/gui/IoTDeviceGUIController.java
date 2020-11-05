@@ -1,9 +1,13 @@
 package no.hvl.dat250.iotdevice.gui;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.util.Duration;
 import no.hvl.dat250.iotdevice.device.DeviceListener;
 import no.hvl.dat250.iotdevice.device.IoTDevice;
 import no.hvl.dat250.iotdevice.model.Poll;
@@ -16,6 +20,7 @@ public class IoTDeviceGUIController implements DeviceListener {
     @FXML public Label OptionTwoLabel;
     @FXML public Label OptionOneVotesLabel;
     @FXML public Label OptionTwoVotesLabel;
+    @FXML public Label countdownLabel;
 
 
 
@@ -25,6 +30,8 @@ public class IoTDeviceGUIController implements DeviceListener {
         this.device = device;
         device.registerDeviceListener(this);
     }
+
+
 
     private void updateDisplayedVotes(Poll poll){
 
@@ -132,6 +139,8 @@ public class IoTDeviceGUIController implements DeviceListener {
 
     }
 
+    KeyFrame countdownKeyFrame;
+
     @Override
     public void onNewPollReceived(Poll poll) {
         Platform.runLater(new Runnable() {
@@ -142,6 +151,43 @@ public class IoTDeviceGUIController implements DeviceListener {
         });
 
         resetDisplayedVotesToCurrentPollVotes(poll);
+        //Duration remaining = new Duration(poll.getTimeRemaining().toSeconds());
+
+        java.time.Duration remaining = poll.getTimeRemaining();
+
+
+
+        long totalSecondsRemaining = poll.getTimeRemaining().getSeconds();
+        String daysString;
+        String hoursString;
+        String minutesString;
+        String secondsString;
+
+
+        countdownKeyFrame = new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                if(!poll.getTimeRemaining().isZero()){
+                    long remainingDays = poll.getTimeRemaining().toDaysPart();
+                    int remainingHours = poll.getTimeRemaining().toHoursPart();
+                    int remainingMinutes = poll.getTimeRemaining().toMinutesPart();
+                    int remainingSeconds = poll.getTimeRemaining().toSecondsPart();
+
+                    String countdownText = String.format("D: %d | H: %d | M: %d | S: %d", remainingDays, remainingHours, remainingMinutes, remainingSeconds);
+                    countdownLabel.setText(countdownText);
+                }
+
+
+
+
+
+
+            }
+        });
+        Timeline timeline = new Timeline(countdownKeyFrame);
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
 
     }
 }
