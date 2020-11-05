@@ -5,10 +5,12 @@ import {Link, NavLink} from "react-router-dom";
 const NavBar = (props) => {
 
     const loginUser = window.localStorage.getItem('token')
+    const role = window.localStorage.getItem('role')
 
     const logout = ()=>{
         window.localStorage.removeItem('token')
         window.localStorage.removeItem('userId')
+        window.localStorage.removeItem('role')
     }
 
     return (
@@ -39,9 +41,14 @@ const NavBar = (props) => {
                            />
                            <Dropdown.Item
                                as={Link}
-                               to='/profiledetails'
+                               to={`/profiledetails/${window.localStorage.getItem('userId')}`}
                                text='Edit profile'
                            />
+                           {role === 'ROLE_ADMIN' && <Dropdown.Item
+                               as={Link}
+                               to={`/admin`}
+                               text='Admin Page'
+                           />}
                            <Dropdown.Item
                                as={Link}
                                to='/'
