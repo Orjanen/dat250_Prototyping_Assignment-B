@@ -43,7 +43,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**", "/ws/**")
                 .permitAll()
-                .antMatchers("/poll/{pollId}/**")
+                .antMatchers("/poll/{pollId}/**", "/vote/poll/{pollId}/**")
                 .access("@webSecurity.pollIsPublic(#pollId) or hasRole('USER')")
                 //.antMatchers(HttpMethod.DELETE, "/user/**").hasRole("ADMIN")
                 .anyRequest()
