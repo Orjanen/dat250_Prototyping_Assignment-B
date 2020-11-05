@@ -16,11 +16,10 @@ const CreatePollPage = (props) => {
     const changePrivacy = () =>{
         setIsPrivate(!isPrivate)
     }
-
-
     const handleFinalFormSubmit = async (values) => {
+
         const userId  = window.localStorage.getItem('userId');
-        values.isPrivate = isPrivate
+        values.private = isPrivate
         values.duration = Math.abs((value - Date.now())/1000)
         try {
             await agent.Poll.create(userId, values).then(res =>{

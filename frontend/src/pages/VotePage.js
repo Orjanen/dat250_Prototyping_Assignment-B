@@ -1,10 +1,11 @@
-import React, {useEffect, useState} from 'react';
-import {Segment, Button, Checkbox, Grid} from "semantic-ui-react";
+import React, {Fragment, useEffect, useState} from 'react';
+import {Button, Checkbox, Grid, Segment, Modal} from "semantic-ui-react";
 
 import agent from "../api/agent";
 import IconHeader from "../components/header/IconHeader";
 import CountDownTimer from "../shared/Timer/CountDownTimer";
-import {Link} from "react-router-dom";
+import {Link, withRouter} from "react-router-dom";
+import LoginPage from "./LoginPage";
 
 const VotePage = (props) => {
 
@@ -12,83 +13,104 @@ const VotePage = (props) => {
     const [opt1, setOpt1] = useState(false)
     const [opt2, setOpt2] = useState(false)
 
-    useEffect( () =>{
-        const getPoll = async (id) =>{
+    const logedIn = (window.localStorage.getItem('token') !== null)
+
+    useEffect(() => {
+        const getPoll = async (id) => {
             try {
-                await  agent.Poll.details(id).then(response => {
+                await agent.Poll.details(id).then(response => {
                     setPoll(response)
                 })
-            }catch (e){
+            } catch (e) {
                 console.log('Some thing went wrong')
             }
         }
         getPoll(props.match.params.pollId)
 
-    },[props.match.params.pollId])
+    }, [props.match.params.pollId])
 
-    console.log()
 
-    const votehandler = async () =>{
-        if (opt1){
+    const votehandler = async () => {
+        if (opt1) {
             try {
                 await agent.Vote.VoteAsRegisteredUser(poll.pollId, window.localStorage.getItem('userId'), {
                     option1Count: 1,
                     option2Count: 0
                 })
-            }catch (e){
+            } catch (e) {
                 console.log(e, 'cant send the vote')
             }
-        }else {
+        } else {
             try {
                 await agent.Vote.VoteAsRegisteredUser(poll.pollId, window.localStorage.getItem('userId'), {
                     option1Count: 0,
                     option2Count: 1
                 })
-            }catch (e){
+            } catch (e) {
                 console.log(e, 'cant send the vote')
             }
         }
     }
 
-    return (
-        <Segment style={{marginTop: '7em', textAlign: 'center'}} >
-            <IconHeader
-                icon='pie graph'
-                mainText='Vote'
-            />
-            <Grid columns={4} textAlign='center'>
-                <Grid.Column>
-                    <div >
-                        <h2>{poll.pollName}</h2>
-                        <div>
-                            <h3>
-                                {poll.optionOne}
-                                <Checkbox
-                                    disabled={opt2}
-                                    style={{marginLeft: '20px'}}
-                                    checked={opt1}
-                                    onChange={(e, data) => setOpt1(data.checked)}
-                                />
-                            </h3>
-                        </div>
-                        <div>
-                            <h3>{poll.optionTwo}
-                                <Checkbox
-                                    disabled={opt1}
-                                    style={{marginLeft: '20px'}}
-                                    checked={opt2}
-                                    onChange={(e, data) => setOpt2(data.checked)}
-                                />
-                            </h3>
-                        </div>
-                    </div>
-                </Grid.Column>
-                <Grid.Column>
-                    <h3>Vote closes in:</h3>
-                    <CountDownTimer time={poll.timeRemaining}/>
-                </Grid.Column>
+    const loginMassage = (
+        <Fragment>
+            <Segment style={{marginTop: '7em', textAlign: 'center'}}>
+                <h2 style={{color: "red", textAlign: "center"}}>
+                    You need to be logged in to see this poll
+                </h2>
+            </Segment>
+        </Fragment>
+    )
 
-            </Grid>
+    const show = poll.private && logedIn
+
+    const modalLogin = (
+        <Modal
+            open={!show}
+        >
+            <LoginPage isOnPollPage={true} pollId={props.match.params.pollId}/>
+        </Modal>
+    )
+
+    return (
+        <Fragment>
+            {show ? <Segment style={{marginTop: '7em', textAlign: 'center'}}>
+                <IconHeader
+                    icon='pie graph'
+                    mainText='Vote'
+                />
+                <Grid columns={4} textAlign='center'>
+                    <Grid.Column>
+                        <div>
+                            <h2>{poll.pollName}</h2>
+                            <div>
+                                <h3>
+                                    {poll.optionOne}
+                                    <Checkbox
+                                        disabled={opt2}
+                                        style={{marginLeft: '20px'}}
+                                        checked={opt1}
+                                        onChange={(e, data) => setOpt1(data.checked)}
+                                    />
+                                </h3>
+                            </div>
+                            <div>
+                                <h3>{poll.optionTwo}
+                                    <Checkbox
+                                        disabled={opt1}
+                                        style={{marginLeft: '20px'}}
+                                        checked={opt2}
+                                        onChange={(e, data) => setOpt2(data.checked)}
+                                    />
+                                </h3>
+                            </div>
+                        </div>
+                    </Grid.Column>
+                    <Grid.Column>
+                        <h3>Vote closes in:</h3>
+                        <CountDownTimer time={poll.timeRemaining}/>
+                    </Grid.Column>
+                </Grid>
                 <Button
                     as={Link}
                     to={`/poll/${poll.pollId}/result`}
@@ -98,14 +120,16 @@ const VotePage = (props) => {
                     positive
                     content='Vote'
                 />
-            <Button
-                as={Link}
-                to={`/poll/${poll.pollId}/result`}
-                color='blue'
-                content='Result'
-            />
-        </Segment>
+                <Button
+                    as={Link}
+                    to={`/poll/${poll.pollId}/result`}
+                    color='blue'
+                    content='Result'
+                />
+            </Segment> : loginMassage}
+            {modalLogin}
+        </Fragment>
     );
 }
 
-export default VotePage;
+export default withRouter(VotePage);

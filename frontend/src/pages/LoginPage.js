@@ -1,7 +1,7 @@
 import React, {Fragment} from 'react';
 import {Segment,Button, Form, Label} from "semantic-ui-react";
 import IconHeader from "../components/header/IconHeader";
-import {Link} from "react-router-dom";
+import {Link, withRouter} from "react-router-dom";
 import {Field, Form as FinalForm} from "react-final-form";
 import TextInput from "../shared/Form/TextInput";
 import agent from "../api/agent";
@@ -9,14 +9,17 @@ import agent from "../api/agent";
 
 const LoginPage = (props) => {
 
-
     const handleFinalFormSubmit = async (values) => {
         try {
             await agent.User.login(values)
         }catch (e){
             console.log(e + 'Login failed')
         }
-        props.history.push(`/homepage/${window.localStorage.getItem('userId')}`)
+            if (props.isOnPollPage){
+                window.location.reload()
+            }else {
+                props.history.push(`/homepage/${window.localStorage.getItem('userId')}`)
+            }
     }
 
     return (
@@ -67,4 +70,4 @@ const LoginPage = (props) => {
     );
 }
 
-export default LoginPage;
+export default withRouter(LoginPage);

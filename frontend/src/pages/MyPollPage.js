@@ -24,7 +24,6 @@ const MyPollPage = (props) => {
 
     },[props.match.params.id])
 
-    console.log(user)
     return (
         <Segment style={{marginTop: '7em'}}>
             <div style={{textAlign: "center"}}>

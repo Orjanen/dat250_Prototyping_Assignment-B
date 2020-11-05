@@ -1,10 +1,11 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState, Fragment} from 'react';
 import { PieChart } from 'react-minimal-pie-chart';
-import {Button, Grid, Segment} from "semantic-ui-react";
+import {Button, Grid, Modal, Segment} from "semantic-ui-react";
 import IconHeader from "../components/header/IconHeader";
 import agent from "../api/agent";
 import {Link} from "react-router-dom";
 import Stomp from "stomp-websocket";
+import LoginPage from "./LoginPage";
 
 
 
@@ -13,6 +14,7 @@ const ResultPage = (props) => {
     const [poll, setPoll] = useState({});
     const [optionOne, setOptionOne] = useState(0)
     const [optionTwo, setOptionTwo] = useState(0)
+    const logedIn = (window.localStorage.getItem('token') !== null)
 
     const updateVotes = useCallback((opt1, opt2) => {
         setOptionOne(oldOptionOneVotes => oldOptionOneVotes + opt1)
@@ -79,62 +81,83 @@ const ResultPage = (props) => {
         { title: 'optionTwo', value: optionTwoVotes, color: '#d4373d' }
     ]
 
+    const show = poll.private && logedIn
+
+    const modalLogin = (
+        <Modal
+            open={!show}
+        >
+            <LoginPage isOnPollPage={true} pollId={props.match.params.pollId}/>
+        </Modal>
+    )
+
+    const loginMassage = (
+            <Segment style={{marginTop: '7em', textAlign: 'center'}}>
+                <h2 style={{color: "red", textAlign: "center"}}>
+                    You need to be logged in to see this poll
+                </h2>
+            </Segment>
+
+    )
 
 
     return (
-        <Segment style={{marginTop: '7em', textAlign: 'center'}} >
-            <IconHeader
-                icon='chart bar outline'
-                mainText='Result'
-                subText={`for pollId ${poll.pollId}`}
-            />
-            <Grid columns={4} textAlign='center'>
-                <Grid.Column >
-                    <div style={{marginTop: '2em'}} >
-                        <div >
-                            <h2>{poll.pollName}</h2>
+        <Fragment>
+            {show ? <Segment style={{marginTop: '7em', textAlign: 'center'}}>
+                <IconHeader
+                    icon='chart bar outline'
+                    mainText='Result'
+                    subText={`for pollId ${poll.pollId}`}
+                />
+                <Grid columns={4} textAlign='center'>
+                    <Grid.Column>
+                        <div style={{marginTop: '2em'}}>
                             <div>
-                                <h3>
-                                    {`${poll.optionOne}: ${optionOne}`}
-                                </h3>
-                            </div>
-                            <div>
-                                <h3>{`${poll.optionTwo}: ${optionTwo}`}</h3>
+                                <h2>{poll.pollName}</h2>
+                                <div>
+                                    <h3>
+                                        {`${poll.optionOne}: ${optionOne}`}
+                                    </h3>
+                                </div>
+                                <div>
+                                    <h3>{`${poll.optionTwo}: ${optionTwo}`}</h3>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </Grid.Column>
-                <Grid.Column >
-                    <div >
-                        <PieChart
-                            data={data}
-                            label={({ dataEntry }) => dataEntry.value}
-                            labelStyle={(index) => ({
-                                fontSize: '5px',
-                                fontFamily: 'sans-serif',
-                            })}
+                    </Grid.Column>
+                    <Grid.Column>
+                        <div>
+                            <PieChart
+                                data={data}
+                                label={({dataEntry}) => dataEntry.value}
+                                labelStyle={(index) => ({
+                                    fontSize: '5px',
+                                    fontFamily: 'sans-serif',
+                                })}
 
-                        />
+                            />
                         </div>
-                </Grid.Column>
-            </Grid>
+                    </Grid.Column>
+                </Grid>
 
-            <Button
-                as={Link}
-                to={`/poll/${poll.pollId}`}
-                color='blue'
-                content='Vote Page'
-            />
-            {window.localStorage.getItem('token') &&
-            <Button
-                as={Link}
-                to={`/homepage/${window.localStorage.getItem('userId')}`}
-                color='green'
-                content='Home Page'
-            />
-            }
+                <Button
+                    as={Link}
+                    to={`/poll/${poll.pollId}`}
+                    color='blue'
+                    content='Vote Page'
+                />
+                {window.localStorage.getItem('token') &&
+                <Button
+                    as={Link}
+                    to={`/homepage/${window.localStorage.getItem('userId')}`}
+                    color='green'
+                    content='Home Page'
+                />
+                }
 
-        </Segment>
+            </Segment> : loginMassage}
+            {modalLogin}
+        </Fragment>
     );
 }
 
