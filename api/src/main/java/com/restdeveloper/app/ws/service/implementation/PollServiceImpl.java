@@ -2,12 +2,12 @@ package com.restdeveloper.app.ws.service.implementation;
 
 import com.restdeveloper.app.ws.io.entity.PollEntity;
 import com.restdeveloper.app.ws.io.entity.UserEntity;
-import com.restdeveloper.app.ws.io.entity.VoteEntity;
 import com.restdeveloper.app.ws.io.repository.PollRepository;
 import com.restdeveloper.app.ws.io.repository.UserRepository;
+import com.restdeveloper.app.ws.publisher.dweetIO.DweetIOAlerter;
+import com.restdeveloper.app.ws.publisher.dweetIO.DweetStatusConstants;
 import com.restdeveloper.app.ws.service.PollService;
 import com.restdeveloper.app.ws.shared.Utils;
-import com.restdeveloper.app.ws.shared.WebSocketMessageConstants;
 import com.restdeveloper.app.ws.shared.dto.PollDto;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.modelmapper.ModelMapper;
@@ -29,6 +29,9 @@ public class PollServiceImpl implements PollService {
     PollRepository pollRepository;
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    DweetIOAlerter dweetIOAlerter;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PollServiceImpl.class);
 
@@ -62,6 +65,7 @@ public class PollServiceImpl implements PollService {
         PollDto returnValue = modelMapper.map(storedPollDetails, PollDto.class);
 
         LOGGER.debug("Done creating poll");
+        dweetIOAlerter.notifyDweetAboutPoll(pollEntity, DweetStatusConstants.POLL_STARTED);
         return returnValue;
     }
 

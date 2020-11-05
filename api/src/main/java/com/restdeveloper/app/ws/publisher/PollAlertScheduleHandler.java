@@ -1,9 +1,11 @@
-package com.restdeveloper.app.ws.shared;
+package com.restdeveloper.app.ws.publisher;
 
 import com.restdeveloper.app.ws.io.entity.IoTDevice;
 import com.restdeveloper.app.ws.io.entity.PollEntity;
 import com.restdeveloper.app.ws.io.repository.IoTDeviceRepository;
 import com.restdeveloper.app.ws.io.repository.PollRepository;
+import com.restdeveloper.app.ws.publisher.dweetIO.DweetIOAlerter;
+import com.restdeveloper.app.ws.publisher.dweetIO.DweetStatusConstants;
 import com.restdeveloper.app.ws.shared.dto.PollDto;
 import com.restdeveloper.app.ws.websocket.WebSocketMessageSender;
 import org.modelmapper.ModelMapper;
@@ -32,12 +34,15 @@ public class PollAlertScheduleHandler {
     @Autowired
     WebSocketMessageSender webSocketMessageSender;
 
+    @Autowired
+    DweetIOAlerter dweetIOAlerter;
+
     ModelMapper modelMapper = new ModelMapper();
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PollAlertScheduleHandler.class);
 
     //300 000 milliseconds = every 5 minutes
-    @Scheduled(fixedRate = 300000)
+    @Scheduled(fixedRate = 2000)
     //@Scheduled(fixedRate = 30000) //30 000 = 30 seconds
     public void sendAlertsForFinishedPolls(){
         //Get all polls from database where end time is before now, and its alerts have not yet been sent
@@ -54,7 +59,8 @@ public class PollAlertScheduleHandler {
 
             performPollEndedActions(poll);
 
-            //TODO: Send dweet.io message
+
+            dweetIOAlerter.notifyDweetAboutPoll(poll, DweetStatusConstants.POLL_ENDED);
 
             poll.setAlertsHaveBeenSent(true);
             pollRepository.save(poll);
