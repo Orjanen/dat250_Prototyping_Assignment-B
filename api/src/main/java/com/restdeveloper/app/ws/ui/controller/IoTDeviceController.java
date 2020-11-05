@@ -1,6 +1,7 @@
 package com.restdeveloper.app.ws.ui.controller;
 
 
+import com.restdeveloper.app.ws.io.entity.IoTDevice;
 import com.restdeveloper.app.ws.service.IoTDeviceService;
 import com.restdeveloper.app.ws.shared.WebSocketMessageConstants;
 import com.restdeveloper.app.ws.shared.dto.IoTDeviceDto;
@@ -21,6 +22,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("device")
@@ -134,6 +138,15 @@ public class IoTDeviceController {
 
         IoTDeviceDto deviceDto = ioTDeviceService.addNewDevice(ioTDeviceDto);
         return modelMapper.map(deviceDto, IoTDeviceRest.class);
+    }
+
+    @GetMapping("/unpaired")
+    public List<IoTDeviceRest> getAllUnpairedDevices(){
+        LOGGER.debug("IoT-Controller initialized to get all devices not paired with a poll");
+
+        List<IoTDeviceDto> unpairedDevices = ioTDeviceService.getAllUnpairedDevices();
+
+        return unpairedDevices.stream().map(device -> modelMapper.map(device, IoTDeviceRest.class)).collect(Collectors.toList());
     }
 
 }
