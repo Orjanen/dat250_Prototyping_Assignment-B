@@ -16,10 +16,12 @@ axios.interceptors.request.use(
 axios.interceptors.response.use((config) => {
     const token = config.headers.authorization;
     const role = config.headers.authorities;
-    if (role.includes('ROLE_USER')){
-        window.localStorage.setItem('role', 'ROLE_USER')
-    } else{
+    if (role && role.includes('ROLE_ADMIN')){
         window.localStorage.setItem('role', 'ROLE_ADMIN')
+    }
+
+    if (role && role.includes('ROLE_USER')){
+        window.localStorage.setItem('role', 'ROLE_USER')
     }
 
     if (token){

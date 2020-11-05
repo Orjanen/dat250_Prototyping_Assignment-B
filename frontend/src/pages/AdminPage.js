@@ -16,7 +16,7 @@ const AdminPage = () => {
             <List divided verticalAlign='middle'>
                 <List.Item>
                     <List.Content floated='right'>
-                        <Button>Ban</Button>
+                        <Button color='red'>Ban</Button>
                     </List.Content>
                     <List.Content>Lena</List.Content>
                 </List.Item>

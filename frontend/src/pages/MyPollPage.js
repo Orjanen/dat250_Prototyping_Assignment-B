@@ -6,6 +6,8 @@ import agent from "../api/agent";
 
 const MyPollPage = (props) => {
 
+
+
     const [user, setUser] = useState({})
 
     useEffect( () =>{
@@ -22,6 +24,7 @@ const MyPollPage = (props) => {
 
     },[props.match.params.id])
 
+    console.log(user)
     return (
         <Segment style={{marginTop: '7em'}}>
             <div style={{textAlign: "center"}}>
