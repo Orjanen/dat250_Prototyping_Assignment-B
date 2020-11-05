@@ -143,7 +143,13 @@ public class PollServiceImpl implements PollService {
 
     @Override
     public boolean pollIsPrivate(String pollId) {
-        return pollRepository.findByPollId(pollId).isPrivate();
+        boolean isPrivate = false;
+        try{
+            isPrivate = pollRepository.findByPollId(pollId).isPrivate();
+        } catch(NullPointerException e){
+            return false;
+        }
+        return isPrivate;
     }
 
 }
