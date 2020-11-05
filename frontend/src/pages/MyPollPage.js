@@ -35,9 +35,6 @@ const MyPollPage = (props) => {
                     <List.Item>
                         <List.Content floated='right'>
                             <Button primary
-                                    onClick={() =>{props.history.push(`/poll/${poll.pollId}/edit`)}}
-                            >Edit</Button>
-                            <Button secondary
                                     onClick={() =>{props.history.push(`/poll/${poll.pollId}/result`)}}
                             >Result</Button>
                             <Button basic
