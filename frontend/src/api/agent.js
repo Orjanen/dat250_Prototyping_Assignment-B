@@ -32,7 +32,9 @@ const requests = {
 const User = {
     create: (user) => requests.post('/user', user),
     details: (id) => requests.get(`/user/${id}`),
-    login: (body) => requests.post('/user/login', body)
+    login: (body) => requests.post('/user/login', body),
+    update: (body, userId) => requests.put(`user/${userId}`, body),
+
 }
 
 const Poll = {

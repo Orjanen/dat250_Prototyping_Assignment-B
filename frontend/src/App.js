@@ -31,7 +31,7 @@ const App = () => {
                             <Route path='/poll/:pollId' exact component={VotePage}/>
                             <PrivateRoute path='/mypoll/:id' exact component={MyPollPage}/>
                             <Route path='/poll/:pollId/result' exact component={ResultPage}/>
-                            <PrivateRoute path='/profiledetails' exact component={ProfileDetails}/>
+                            <PrivateRoute path='/profiledetails/:id' exact component={ProfileDetails}/>
                             <Route path='/signup' exact component={SignupPage}/>
                         </Switch>
                     </Container>
