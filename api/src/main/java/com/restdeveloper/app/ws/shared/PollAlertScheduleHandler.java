@@ -1,6 +1,8 @@
 package com.restdeveloper.app.ws.shared;
 
+import com.restdeveloper.app.ws.io.entity.IoTDevice;
 import com.restdeveloper.app.ws.io.entity.PollEntity;
+import com.restdeveloper.app.ws.io.repository.IoTDeviceRepository;
 import com.restdeveloper.app.ws.io.repository.PollRepository;
 import com.restdeveloper.app.ws.shared.dto.PollDto;
 import com.restdeveloper.app.ws.websocket.WebSocketMessageSender;
@@ -25,6 +27,9 @@ public class PollAlertScheduleHandler {
     PollRepository pollRepository;
 
     @Autowired
+    IoTDeviceRepository deviceRepository;
+
+    @Autowired
     WebSocketMessageSender webSocketMessageSender;
 
     ModelMapper modelMapper = new ModelMapper();
@@ -39,12 +44,16 @@ public class PollAlertScheduleHandler {
         List<PollEntity> finishedPolls = pollRepository.findAllByEndTimeBeforeAndAlertsHaveBeenSentFalse(LocalDateTime.now());
 
         for(PollEntity poll : finishedPolls){
-            LOGGER.info("Sending alerts: Poll {} is finished", poll.getPollId());
+            LOGGER.info("Poll {} is finished | Sending alerts and unpairing IoTDevices", poll.getPollId());
 
+
+
+            //Alert IoTDevices about their poll having ended
             PollDto pollDto = modelMapper.map(poll, PollDto.class);
             webSocketMessageSender.sendFinishedPollMessage(pollDto);
 
-            //TODO: Send RabbitMQ message
+            performPollEndedActions(poll);
+
             //TODO: Send dweet.io message
 
             poll.setAlertsHaveBeenSent(true);
@@ -52,6 +61,14 @@ public class PollAlertScheduleHandler {
 
         }
 
+    }
+
+    private void performPollEndedActions(PollEntity poll){
+        List<IoTDevice> pairedDevices = deviceRepository.findAllByCurrentPoll(poll);
+        for(IoTDevice device : pairedDevices){
+            device.resetDevice();
+            deviceRepository.save(device);
+        }
     }
 
 }
