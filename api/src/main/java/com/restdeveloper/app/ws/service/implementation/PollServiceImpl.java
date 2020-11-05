@@ -141,4 +141,9 @@ public class PollServiceImpl implements PollService {
         return pollDtos;
     }
 
+    @Override
+    public boolean pollIsPrivate(String pollId) {
+        return pollRepository.findByPollId(pollId).isPrivate();
+    }
+
 }

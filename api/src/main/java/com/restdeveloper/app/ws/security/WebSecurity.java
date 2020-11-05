@@ -1,6 +1,7 @@
 package com.restdeveloper.app.ws.security;
 
 import com.restdeveloper.app.ws.io.repository.UserRepository;
+import com.restdeveloper.app.ws.service.PollService;
 import com.restdeveloper.app.ws.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -22,13 +23,15 @@ import java.util.Arrays;
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 
     private final UserService userDetailsService;
+    private final PollService pollService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserRepository userRepository;
 
-    public WebSecurity(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder, UserRepository userRepository) {
+    public WebSecurity(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder, UserRepository userRepository, PollService pollService) {
         this.userDetailsService = userService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.userRepository = userRepository;
+        this.pollService = pollService;
     }
 
     @Override
@@ -40,6 +43,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**", "/ws/**")
                 .permitAll()
+                .antMatchers("/poll/{pollId}/**")
+                .access("@webSecurity.pollIsPublic(#pollId) or hasRole('USER')")
                 //.antMatchers(HttpMethod.DELETE, "/user/**").hasRole("ADMIN")
                 .anyRequest()
                 .authenticated()
@@ -49,6 +54,10 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
+    }
+
+    public boolean pollIsPublic(String pollId){
+        return !pollService.pollIsPrivate(pollId);
     }
 
     @Override

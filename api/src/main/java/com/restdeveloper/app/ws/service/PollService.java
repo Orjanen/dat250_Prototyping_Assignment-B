@@ -14,4 +14,6 @@ public interface PollService {
     PollDto getCurrentPollStatusForWebSocket(String pollId);
 
     List<PollDto> getAllPolls();
+
+    boolean pollIsPrivate(String pollId);
 }
