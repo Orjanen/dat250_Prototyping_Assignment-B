@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -109,6 +110,16 @@ public class PollController {
         pollService.deletePoll(id);
         returnValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
         return returnValue;
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="authorization",value="${userController.authorizationheader.description}", paramType = "header", dataTypeClass = String.class)
+    })
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping(path = "/")
+    public ResponseEntity<List<PollRest>> getAllPolls(){
+        List<PollDto> pollDtos = pollService.getAllPolls();
+        return ResponseEntity.accepted().body(pollDtos.stream().map(pollDto -> modelMapper.map(pollDto, PollRest.class)).collect(Collectors.toList()));
     }
 
 }

@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -129,6 +130,15 @@ public class PollServiceImpl implements PollService {
 
         return pollDto;
 
+    }
+
+    @Override
+    public List<PollDto> getAllPolls() {
+
+        List<PollDto> pollDtos = new ArrayList<>();
+        pollRepository.findAll().forEach(pollEntity -> pollDtos.add(modelMapper.map(pollEntity, PollDto.class)));
+
+        return pollDtos;
     }
 
 }

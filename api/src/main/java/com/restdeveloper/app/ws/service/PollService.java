@@ -12,4 +12,6 @@ public interface PollService {
     List<PollDto> getAllPollsByCreator(String userId);
     void deletePoll(String pollId);
     PollDto getCurrentPollStatusForWebSocket(String pollId);
+
+    List<PollDto> getAllPolls();
 }

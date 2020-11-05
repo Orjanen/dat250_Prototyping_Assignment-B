@@ -18,8 +18,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -153,6 +155,14 @@ public class UserServiceImpl implements UserService {
         userRepository.save(userEntity);
 
         LOGGER.debug("Done banning user");
+    }
+
+    @Override
+    public List<UserDto> getAllUsers() {
+
+        List<UserDto> users = new ArrayList<>();
+        userRepository.findAll().forEach(userEntity -> users.add(modelMapper.map(userEntity, UserDto.class)));
+        return users;
     }
 
     @Override
