@@ -27,7 +27,7 @@ const HomePage = (props) => {
                     <Item>
                         <Card centered>
                             <Item.Content
-                                as={Link} to='/profiledetails'
+                                as={Link} to={`/profiledetails/${props.match.params.id}`}
                                 content='Edit user details'
                                 verticalAlign='middle'/>
                         </Card>

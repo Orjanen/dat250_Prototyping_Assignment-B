@@ -15,6 +15,15 @@ axios.interceptors.request.use(
 
 axios.interceptors.response.use((config) => {
     const token = config.headers.authorization;
+    const role = config.headers.authorities;
+    if (role && role.includes('ROLE_ADMIN')){
+        window.localStorage.setItem('role', 'ROLE_ADMIN')
+    }
+
+    if (role && role.includes('ROLE_USER')){
+        window.localStorage.setItem('role', 'ROLE_USER')
+    }
+
     if (token){
         window.localStorage.setItem('token', token)
         window.localStorage.setItem('userId', config.headers.userid)
@@ -32,7 +41,9 @@ const requests = {
 const User = {
     create: (user) => requests.post('/user', user),
     details: (id) => requests.get(`/user/${id}`),
-    login: (body) => requests.post('/user/login', body)
+    login: (body) => requests.post('/user/login', body),
+    update: (body, userId) => requests.put(`user/${userId}`, body),
+
 }
 
 const Poll = {

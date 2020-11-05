@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import agent from "../api/agent";
 import {Link} from "react-router-dom";
-import {Button, Form, Segment} from "semantic-ui-react";
+import {Button, Form, Segment, Checkbox} from "semantic-ui-react";
 import {Field, Form as FinalForm} from "react-final-form";
 import DateTimePicker from 'react-datetime-picker';
 
@@ -11,11 +11,16 @@ import TextInput from "../shared/Form/TextInput";
 const CreatePollPage = (props) => {
 
     const [value, onChange] = useState(new Date());
+    const [isPrivate, setIsPrivate] = useState(false)
+
+    const changePrivacy = () =>{
+        setIsPrivate(!isPrivate)
+    }
 
 
     const handleFinalFormSubmit = async (values) => {
         const userId  = window.localStorage.getItem('userId');
-        values.isPrivate = false
+        values.isPrivate = isPrivate
         values.duration = Math.abs((value - Date.now())/1000)
         try {
             await agent.Poll.create(userId, values).then(res =>{
@@ -70,6 +75,10 @@ const CreatePollPage = (props) => {
                     onChange={onChange}
                     value={value}
                 />
+                <Checkbox
+                    onClick={() => changePrivacy()}
+                    style={{marginLeft: '40px'}}
+                    label='Make the poll private'></Checkbox>
 
 
             <Button

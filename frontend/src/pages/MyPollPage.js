@@ -6,6 +6,8 @@ import agent from "../api/agent";
 
 const MyPollPage = (props) => {
 
+
+
     const [user, setUser] = useState({})
 
     useEffect( () =>{
@@ -22,6 +24,7 @@ const MyPollPage = (props) => {
 
     },[props.match.params.id])
 
+    console.log(user)
     return (
         <Segment style={{marginTop: '7em'}}>
             <div style={{textAlign: "center"}}>
@@ -35,9 +38,6 @@ const MyPollPage = (props) => {
                     <List.Item>
                         <List.Content floated='right'>
                             <Button primary
-                                    onClick={() =>{props.history.push(`/poll/${poll.pollId}/edit`)}}
-                            >Edit</Button>
-                            <Button secondary
                                     onClick={() =>{props.history.push(`/poll/${poll.pollId}/result`)}}
                             >Result</Button>
                             <Button basic

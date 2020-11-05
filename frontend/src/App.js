@@ -14,8 +14,13 @@ import PrivateRoute from "./PrivateRoute";
 import ResultPage from "./pages/ResultPage";
 import MyPollPage from "./pages/MyPollPage";
 import PollDetails from "./pages/pollDetails";
+import AdminRoute from "./AdminRoute";
+import AdminPage from "./pages/AdminPage";
 
 const App = () => {
+    const user = {
+        firstName: 'admin'
+    }
   return (
         <Fragment>
             <NavBar/>
@@ -31,7 +36,8 @@ const App = () => {
                             <Route path='/poll/:pollId' exact component={VotePage}/>
                             <PrivateRoute path='/mypoll/:id' exact component={MyPollPage}/>
                             <Route path='/poll/:pollId/result' exact component={ResultPage}/>
-                            <PrivateRoute path='/profiledetails' exact component={ProfileDetails}/>
+                            <PrivateRoute path='/profiledetails/:id' exact component={ProfileDetails}/>
+                            <AdminRoute path='/admin' exact component={AdminPage} user={user}/>
                             <Route path='/signup' exact component={SignupPage}/>
                         </Switch>
                     </Container>
