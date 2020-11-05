@@ -19,6 +19,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class IoTDeviceServiceImpl implements IoTDeviceService {
 
@@ -145,6 +148,14 @@ public class IoTDeviceServiceImpl implements IoTDeviceService {
 
         LOGGER.debug("Done pairing poll with IoT-device");
         return updatedDevice;
+    }
+
+    @Override
+    public List<IoTDeviceDto> getAllUnpairedDevices() {
+
+        List<IoTDevice> devices = deviceRepository.findAllByCurrentPollIsNull();
+        return devices.stream().map(device -> modelMapper.map(device, IoTDeviceDto.class)).collect(Collectors.toList());
+
     }
 
     private VoteEntity findVoteForDeviceAndPoll(IoTDevice device, PollEntity pollEntity){
