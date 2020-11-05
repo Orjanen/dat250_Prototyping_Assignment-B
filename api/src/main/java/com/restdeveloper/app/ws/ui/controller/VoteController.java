@@ -35,7 +35,7 @@ public class VoteController {
     VoteService voteService;
 
     @ApiImplicitParams({
-            @ApiImplicitParam(name="authorization",value="${userController.authorizationheader.description}", paramType = "header")
+            @ApiImplicitParam(name="authorization",value="${userController.authorizationheader.description}", paramType = "header", dataTypeClass = String.class)
     })
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping(path = "/poll/{pollId}/user/{userId}")
@@ -62,7 +62,7 @@ public class VoteController {
     }
 
     @ApiImplicitParams({
-            @ApiImplicitParam(name="authorization",value="${userController.authorizationheader.description}", paramType = "header")
+            @ApiImplicitParam(name="authorization",value="${userController.authorizationheader.description}", paramType = "header", dataTypeClass = String.class)
     })
     @PreAuthorize("#userId == principal.userId")
     @PutMapping(path = "/poll/{pollId}/user/{userId}")

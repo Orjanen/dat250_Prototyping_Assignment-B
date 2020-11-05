@@ -67,7 +67,7 @@ public class PollController {
     }
 
     @ApiImplicitParams({
-            @ApiImplicitParam(name="authorization",value="${userController.authorizationheader.description}", paramType = "header")
+            @ApiImplicitParam(name="authorization",value="${userController.authorizationheader.description}", paramType = "header", dataTypeClass = String.class)
     })
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping(path = "/user/{userId}")
@@ -98,7 +98,7 @@ public class PollController {
     }
 
     @ApiImplicitParams({
-            @ApiImplicitParam(name="authorization",value="${userController.authorizationheader.description}", paramType = "header")
+            @ApiImplicitParam(name="authorization",value="${userController.authorizationheader.description}", paramType = "header", dataTypeClass = String.class)
     })
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping(path = "{id}")
