@@ -15,6 +15,8 @@ const VotePage = (props) => {
 
     const logedIn = (window.localStorage.getItem('token') !== null)
 
+    console.log(logedIn)
+
     useEffect(() => {
         const getPoll = async (id) => {
             try {
@@ -29,23 +31,45 @@ const VotePage = (props) => {
 
     }, [props.match.params.pollId])
 
+    const option1 = {
+        option1Count: 1,
+        option2Count: 0
+    }
+
+    const option2 = {
+        option1Count: 0,
+        option2Count: 1
+    }
+
 
     const votehandler = async () => {
+        console.log('votehandler was called')
         if (opt1) {
             try {
-                await agent.Vote.VoteAsRegisteredUser(poll.pollId, window.localStorage.getItem('userId'), {
-                    option1Count: 1,
-                    option2Count: 0
-                })
+                await agent.Vote.VoteAsRegisteredUser(poll.pollId, window.localStorage.getItem('userId'), option1)
             } catch (e) {
                 console.log(e, 'cant send the vote')
             }
         } else {
             try {
-                await agent.Vote.VoteAsRegisteredUser(poll.pollId, window.localStorage.getItem('userId'), {
-                    option1Count: 0,
-                    option2Count: 1
-                })
+                await agent.Vote.VoteAsRegisteredUser(poll.pollId, window.localStorage.getItem('userId'), option2)
+            } catch (e) {
+                console.log(e, 'cant send the vote')
+            }
+        }
+    }
+
+    const addVoteByUnregisteredUserToPoll = async () => {
+        console.log('addVoteByUnregisteredUserToPoll was called')
+        if (opt1) {
+            try {
+                await agent.Vote.addVoteByUnregisteredUserToPoll(poll.pollId, option1)
+            } catch (e) {
+                console.log(e, 'cant send the vote')
+            }
+        } else {
+            try {
+                await agent.Vote.addVoteByUnregisteredUserToPoll(poll.pollId, option2)
             } catch (e) {
                 console.log(e, 'cant send the vote')
             }
@@ -127,7 +151,7 @@ const VotePage = (props) => {
                 <Button
                     as={Link}
                     to={`/poll/${poll.pollId}/result`}
-                    onClick={votehandler}
+                    onClick={logedIn ? votehandler: addVoteByUnregisteredUserToPoll}
                     disabled={poll.timeRemaining === 'PT0S' || !opt1 && !opt2}
                     style={{marginTop: '2em', textAlign: 'center'}}
                     positive

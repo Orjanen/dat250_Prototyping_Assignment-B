@@ -57,6 +57,7 @@ const Poll = {
 
 const Vote = {
     VoteAsRegisteredUser: (pollId, userId, body) => requests.post(`/vote/poll/${pollId}/user/${userId}`, body),
+    addVoteByUnregisteredUserToPoll: (pollId, body) => requests.post(`/vote/poll/${pollId}`, body),
 }
 
 const IOT = {
