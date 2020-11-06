@@ -16,6 +16,8 @@ public class PollRest {
 
     private Duration timeRemaining;
 
+    private List<String> pairedDevices;
+
     public String getPollId() {
         return pollId;
     }
@@ -86,5 +88,13 @@ public class PollRest {
 
     public void setTimeRemaining(Duration timeRemaining) {
         this.timeRemaining = timeRemaining;
+    }
+
+    public List<String> getPairedDevices() {
+        return pairedDevices;
+    }
+
+    public void setPairedDevices(List<String> pairedDevices) {
+        this.pairedDevices = pairedDevices;
     }
 }

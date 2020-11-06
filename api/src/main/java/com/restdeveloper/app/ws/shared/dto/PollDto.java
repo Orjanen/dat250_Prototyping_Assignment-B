@@ -23,6 +23,8 @@ public class PollDto {
 
     private Duration timeRemaining;
 
+    private List<String> pairedDevices;
+
     public long getId() {
         return id;
     }
@@ -135,5 +137,13 @@ public class PollDto {
 
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
+    }
+
+    public List<String> getPairedDevices() {
+        return pairedDevices;
+    }
+
+    public void setPairedDevices(List<String> pairedDevices) {
+        this.pairedDevices = pairedDevices;
     }
 }

@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "polls")
@@ -69,6 +70,8 @@ public class PollEntity implements Serializable {
 
 
     //TODO: liste med IoTDevice
+    @Transient
+    private List<String> pairedDevices;
 
     private LocalDateTime startTime;
     private Duration duration;
@@ -192,5 +195,19 @@ public class PollEntity implements Serializable {
 
     public void setAlertsHaveBeenSent(boolean alertsHaveBeenSent) {
         this.alertsHaveBeenSent = alertsHaveBeenSent;
+    }
+
+    public List<String> getPairedDevices() {
+        List<String> ioTDevices = new ArrayList<>();
+        for(VoteEntity vote : votes){
+            if(vote.getVoter().getClass().equals(IoTDevice.class)){
+                ioTDevices.add(((IoTDevice)vote.getVoter()).getPublicDeviceId());
+            }
+        }
+        return ioTDevices;
+    }
+
+    public void setPairedDevices(List<String> pairedDevices) {
+        this.pairedDevices = pairedDevices;
     }
 }
