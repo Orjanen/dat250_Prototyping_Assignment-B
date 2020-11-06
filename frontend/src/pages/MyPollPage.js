@@ -32,6 +32,7 @@ const MyPollPage = (props) => {
         setPollId(pollId)
     }
 
+
     return (
         <Segment style={{marginTop: '7em'}}>
             <div style={{textAlign: "center"}}>
@@ -46,7 +47,7 @@ const MyPollPage = (props) => {
                         <List.Content floated='right'>
                             <Button positive
                                     onClick={(pollId) =>{handleOpenClose(poll.pollId)}}
-                            >Handel IOT Devices</Button>
+                            >Add IOT Device</Button>
                             <Button primary
                                     onClick={() =>{props.history.push(`/poll/${poll.pollId}/result`)}}
                             >Result</Button>
@@ -61,7 +62,10 @@ const MyPollPage = (props) => {
                                 :<Label as='a' color='green' ribbon>
                                 Open
                             </Label>}
-                            {`${poll.pollName}`} </List.Content>
+                            {`${poll.pollName}`}  {poll.pairedDevices && poll.pairedDevices.map(device => (
+                            <Label basic color='red' key={device} as='a'>{device}</Label>
+                        ))} </List.Content>
+
                     </List.Item>
                 </List>
                 ))
