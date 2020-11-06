@@ -121,7 +121,7 @@ public class PollController {
                     paramType = "header", dataTypeClass = String.class)
     })
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping(path = "/")
+    @GetMapping()
     public ResponseEntity<List<PollRest>> getAllPolls() {
         List<PollDto> pollDtos = pollService.getAllPolls();
         return ResponseEntity.accepted().body(pollDtos.stream().map(pollDto -> modelMapper.map(pollDto, PollRest.class)).collect(Collectors.toList()));

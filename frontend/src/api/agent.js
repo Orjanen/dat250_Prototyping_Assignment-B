@@ -49,6 +49,8 @@ const User = {
 }
 
 const Poll = {
+    getAll: () => requests.get('/poll'),
+    delete: (id) => requests.del(`/poll/${id}`),
     create: (userId, body) => requests.post(`/poll/user/${userId}`, body),
     details: (pollId) => requests.get(`/poll/${pollId}`),
 }
