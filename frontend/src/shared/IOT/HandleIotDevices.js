@@ -31,9 +31,13 @@ const HandleIotDevices = (props) => {
 
     }))
 
-
     const handleFinalFormSubmit = async (values) => {
-        console.log(values)
+        try {
+            await agent.IOT.pairPollAndDevice(values.publicDeviceId, props.pollId)
+        }catch (e){
+            console.log('Pairing failed')
+        }
+        props.openClose()
     }
     return (
         <Segment style={{marginTop: '3em'}}>

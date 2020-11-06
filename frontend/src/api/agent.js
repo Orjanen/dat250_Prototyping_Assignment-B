@@ -61,6 +61,7 @@ const Vote = {
 
 const IOT = {
     getAllUnpairedDevices: () => requests.get('/device/unpaired'),
+    pairPollAndDevice: (deviceId, pollId) => requests.put(`/device/${deviceId}/poll/${pollId}`)
 }
 
 export default {

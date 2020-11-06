@@ -11,6 +11,7 @@ const MyPollPage = (props) => {
 
     const [user, setUser] = useState({})
     const [open, setOpen] = useState(false)
+    const [pollId, setPollId] = useState(0)
 
     useEffect( () =>{
         const getUser = async (id) =>{
@@ -26,8 +27,9 @@ const MyPollPage = (props) => {
 
     },[props.match.params.id])
 
-    const handleOpenClose = () =>{
+    const handleOpenClose = (pollId) =>{
         setOpen(!open)
+        setPollId(pollId)
     }
 
     return (
@@ -43,7 +45,7 @@ const MyPollPage = (props) => {
                     <List.Item>
                         <List.Content floated='right'>
                             <Button positive
-                                    onClick={() =>{handleOpenClose()}}
+                                    onClick={(pollId) =>{handleOpenClose(poll.pollId)}}
                             >Handel IOT Devices</Button>
                             <Button primary
                                     onClick={() =>{props.history.push(`/poll/${poll.pollId}/result`)}}
@@ -62,10 +64,10 @@ const MyPollPage = (props) => {
                             {`${poll.pollName}`} </List.Content>
                     </List.Item>
                 </List>
-                ))}
-
+                ))
+            }
             {<Modal open={open}>
-                <HandleIotDevices openClose={handleOpenClose}/>
+                <HandleIotDevices openClose={handleOpenClose} pollId={pollId}/>
             </Modal>}
 
         </Segment>
