@@ -198,6 +198,9 @@ public class PollEntity implements Serializable {
     }
 
     public List<String> getPairedDevices() {
+        if(votes == null){
+            return new ArrayList<>();
+        }
         List<String> ioTDevices = new ArrayList<>();
         for(VoteEntity vote : votes){
             if(vote.getVoter().getClass().equals(IoTDevice.class)){
