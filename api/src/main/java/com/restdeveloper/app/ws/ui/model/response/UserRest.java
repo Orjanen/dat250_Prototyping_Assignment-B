@@ -9,7 +9,16 @@ public class UserRest {
     private String firstName;
     private String lastName;
     private String email;
+    private boolean banStatus;
     private List<PollRest> myPolls;
+
+    public boolean isBanStatus() {
+        return banStatus;
+    }
+
+    public void setBanStatus(boolean banStatus) {
+        this.banStatus = banStatus;
+    }
 
     public String getUserId() {
         return userId;

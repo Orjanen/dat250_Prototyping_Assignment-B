@@ -5,6 +5,7 @@ import agent from "../api/agent";
 
 const AdminPage = (props) => {
     const [users, setUsers] = useState([]);
+    const [poll, setPolls] = useState([]);
 
     useEffect( () =>{
         const getUsers = async () =>{
@@ -18,9 +19,21 @@ const AdminPage = (props) => {
         }
         getUsers()
 
-    },[])
+    },[users])
 
-    console.log(users)
+    const banUser = async (id) =>{
+        try {
+            await agent.User.banUser(id)
+        }catch (e){
+            console.log('cant ban the user')
+        }
+        users.forEach(user => {
+            if(user.userId === id) {
+                user.banStatus = !user.banStatus
+            }
+        })
+    }
+
     return (
         <Fragment>
         <Segment style={{marginTop: '7em'}}>
@@ -30,17 +43,19 @@ const AdminPage = (props) => {
                     mainText='Admin Page'
                 />
             </div>
-            {users.forEach(user => (
-                <List divided verticalAlign='middle'>
+            <Header style={{textAlign: "center"}}> Users</Header>
+            {users && users.map(user => (
+                <List divided verticalAlign='middle' key={user.userId}>
                     <List.Item>
                         <List.Content floated='right'>
-                            <Button color='red'>Ban</Button>
+                            <Button color={user.banStatus ? 'green' : 'red'}
+                            onClick={() => banUser(user.userId)}
+                            >{user.banStatus ? 'Unban' : 'ban'}</Button>
                         </List.Content>
-                        <List.Content>{user}</List.Content>
+                        <List.Content>{user.firstName} {user.lastName}</List.Content>
                     </List.Item>
                 </List>
             ))}
-            <Header style={{textAlign: "center"}}> Users</Header>
 
         </Segment>
 

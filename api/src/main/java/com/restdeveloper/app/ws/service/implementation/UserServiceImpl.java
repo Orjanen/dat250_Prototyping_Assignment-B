@@ -151,7 +151,7 @@ public class UserServiceImpl implements UserService {
             throw new ResourceNotFoundException(errorMessage);
         }
 
-        userEntity.setBanStatus(true);
+        userEntity.setBanStatus(!userEntity.isBanStatus());
         userRepository.save(userEntity);
 
         LOGGER.debug("Done banning user");

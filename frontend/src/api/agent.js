@@ -39,6 +39,7 @@ const requests = {
 }
 
 const User = {
+    banUser: (id) => requests.put(`/user/${id}/ban`),
     getAll: () => requests.get('/user'),
     create: (user) => requests.post('/user', user),
     details: (id) => requests.get(`/user/${id}`),
