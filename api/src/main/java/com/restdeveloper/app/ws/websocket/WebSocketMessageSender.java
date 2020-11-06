@@ -6,6 +6,7 @@ import com.restdeveloper.app.ws.shared.dto.VoteDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.web.socket.TextMessage;
 
 @Component
 public class WebSocketMessageSender {
@@ -37,6 +38,6 @@ public class WebSocketMessageSender {
 
     public void notifyDeviceAboutPairedPoll(String deviceId, PollDto pollDto) {
         String jsonString = generatePollStatusString(pollDto, WebSocketMessageConstants.PAIRED_WITH_NEW_CHANNEL);
-        template.convertAndSend("/app/device/" + deviceId + "/", jsonString);
+        template.convertAndSend("/topic/device/" + deviceId, jsonString);
     }
 }

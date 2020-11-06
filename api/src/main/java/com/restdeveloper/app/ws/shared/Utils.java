@@ -18,7 +18,7 @@ public class Utils {
         return generateRandomString(length);
     }
 
-    //TODO Make this Generate a number
+
     public String generatePollId(int length) {
         return generateRandomNumberSting(length);
     }

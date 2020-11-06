@@ -60,6 +60,7 @@ public class WebSocketController {
     public void receiveWebSocketVoteFromIotDevice(@DestinationVariable("deviceId") String deviceId,
                                                   @Payload String message) {
 
+        LOGGER.info("Sending vote to device: " + deviceId);
 
         String[] splitMessage = message.split(String.valueOf(WebSocketMessageConstants.SEPARATOR));
 
@@ -75,7 +76,17 @@ public class WebSocketController {
     }
 
 
-    //TODO: Handle websocket votes from React users
+    @MessageMapping("device/{deviceId}")
+    public String handleDeviceMessage(@DestinationVariable String deviceId, @Payload String payload){
+        LOGGER.info("Received message for queue: /device/" + deviceId + " : " + payload);
+        //if (payload.startsWith())
+        return payload;
+    }
+
+
+
+
+
 
 
     /*
@@ -83,7 +94,7 @@ public class WebSocketController {
      */
     @SubscribeMapping("device/{deviceId}")
     public String handleNewDeviceConnection(@DestinationVariable String deviceId) {
-        LOGGER.debug("WebSocket-Controller initialized to handle new device-connection");
+        LOGGER.info("WebSocket-Controller initialized to handle new device-connection");
 
         IoTDeviceDto deviceDto = ioTDeviceService.getIoTDeviceByPublicDeviceId(deviceId);
         if (deviceDto.getCurrentPoll() == null) {

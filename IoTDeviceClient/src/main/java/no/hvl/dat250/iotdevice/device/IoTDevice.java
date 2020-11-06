@@ -159,4 +159,7 @@ public class IoTDevice {
     public void setPairedPollId(String pairedPollId) {
         this.pairedPollId = pairedPollId;
     }
+
+    public void handleNotPaired() {
+    }
 }

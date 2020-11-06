@@ -47,8 +47,6 @@ public class IoTDeviceServiceImpl implements IoTDeviceService {
     ModelMapper modelMapper = new ModelMapper();
 
 
-    //TODO: Change to IotDTO?
-
 
     @Override
     public IoTDeviceDto getIoTDeviceByPublicDeviceId(String publicDeviceId) {
@@ -140,7 +138,7 @@ public class IoTDeviceServiceImpl implements IoTDeviceService {
         }
         device.pairDeviceWithPoll(pollEntity);
 
-        //TODO: Change if implementation is changed to not allow changing away from un-finished poll
+
         VoteEntity vote = findVoteForDeviceAndPoll(device, pollEntity);
 
         deviceRepository.save(device);

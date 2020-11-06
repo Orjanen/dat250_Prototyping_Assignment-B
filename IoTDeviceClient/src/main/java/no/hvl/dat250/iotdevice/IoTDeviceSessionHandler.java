@@ -23,6 +23,7 @@ public class IoTDeviceSessionHandler extends StompSessionHandlerAdapter implemen
     private IoTDevice device;
     private StompSession session;
     private StompSession.Subscription pollSub;
+    private StompSession.Subscription deviceSub;
 
     private static final Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
         @Override
@@ -47,6 +48,8 @@ public class IoTDeviceSessionHandler extends StompSessionHandlerAdapter implemen
 
         //Subscribe to own queue
         session.subscribe("/app/device/" + device.getPublicId(), this);
+        session.subscribe("/topic/device/" + device.getPublicId(), this);
+
 
 
     }
@@ -59,37 +62,43 @@ public class IoTDeviceSessionHandler extends StompSessionHandlerAdapter implemen
     @Override
     public void handleFrame(StompHeaders headers, Object payload){
         String message = (String)payload;
-
-
-        JsonObject jsonObject = gson.fromJson(message, JsonObject.class);
-        String context = jsonObject.get("context").getAsString();
-
         System.out.println("Received: " + message);
 
+        if(message.startsWith(MessageConstants.NOT_PAIRED)){
+            device.handleNotPaired();
+        } else{
+            JsonObject jsonObject = gson.fromJson(message, JsonObject.class);
+            String context = jsonObject.get("context").getAsString();
 
-        if(context.equals(MessageConstants.PAIRED_WITH_NEW_CHANNEL)){
-
-            //TODO: Confirm pairing on device?
-            Poll poll = gson.fromJson(message, Poll.class);
-
-            pollSub = session.subscribe("/topic/poll/" + poll.getPollId(), this);
-
-            device.setCurrentPoll(poll);
-
-            System.out.println("Subscribed to: " + pollSub.getSubscriptionHeaders());
+            //System.out.println("Received: " + message);
 
 
-        } else if(context.equals(MessageConstants.POLL_ENDED)){
-            device.handlePollEnding();
-            pollSub.unsubscribe();
-            pollSub = null;
-        } else if(context.equals(MessageConstants.POLL_UPDATE)){
-            Vote vote = gson.fromJson(message, Vote.class);
+            if(context.equals(MessageConstants.PAIRED_WITH_NEW_CHANNEL)){
 
-            device.handleNewVoteReceived(vote);
+                //TODO: Confirm pairing on device?
+                Poll poll = gson.fromJson(message, Poll.class);
 
-        } else {
+                pollSub = session.subscribe("/topic/poll/" + poll.getPollId(), this);
+
+                device.setCurrentPoll(poll);
+
+                System.out.println("Subscribed to: " + pollSub.getSubscriptionHeaders());
+
+
+            } else if(context.equals(MessageConstants.POLL_ENDED)){
+                device.handlePollEnding();
+                pollSub.unsubscribe();
+                pollSub = null;
+            } else if(context.equals(MessageConstants.POLL_UPDATE)){
+                Vote vote = gson.fromJson(message, Vote.class);
+
+                device.handleNewVoteReceived(vote);
+
+            } else {
+            }
         }
+
+
 
 
     }
