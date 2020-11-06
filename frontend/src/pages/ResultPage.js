@@ -21,6 +21,11 @@ const ResultPage = (props) => {
         setOptionTwo(oldOptionTwoVotes => oldOptionTwoVotes + opt2)
     }, [])
 
+    const setVotes = useCallback((opt1, opt2) => {
+        setOptionOne(opt1)
+        setOptionTwo(opt2)
+    })
+
 
     useEffect( () =>{
         const getPoll = async (id) =>{
@@ -42,10 +47,9 @@ const ResultPage = (props) => {
     useEffect(() => {
 
         if(poll.pollId === undefined) return
-        console.log(window.localStorage.getItem("token"))
 
-        //On first run: set votes to the poll's total votes
-        updateVotes(poll.optionOneVotes, poll.optionTwoVotes)
+        //On first connect or re-connect: set votes to the poll's total votes
+        setVotes(poll.optionOneVotes, poll.optionTwoVotes)
 
         let connection = new WebSocket("ws://localhost:8080/ws/websocket")
         let ws = Stomp.over(connection);
@@ -54,7 +58,7 @@ const ResultPage = (props) => {
 
             "Authorization": window.localStorage.getItem("token")
         }
-        console.log(headers)
+
 
         ws.connect(headers, function (frame) {
 
