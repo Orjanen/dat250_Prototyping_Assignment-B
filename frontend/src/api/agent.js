@@ -39,6 +39,7 @@ const requests = {
 }
 
 const User = {
+    getAll: () => requests.get('/user'),
     create: (user) => requests.post('/user', user),
     details: (id) => requests.get(`/user/${id}`),
     login: (body) => requests.post('/user/login', body),

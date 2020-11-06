@@ -1,5 +1,6 @@
 package com.restdeveloper.app.ws.ui.controller;
 
+import com.restdeveloper.app.ws.io.entity.UserEntity;
 import com.restdeveloper.app.ws.service.PollService;
 import com.restdeveloper.app.ws.service.UserService;
 import com.restdeveloper.app.ws.service.VoteService;
@@ -192,7 +193,7 @@ public class UserController {
                     paramType = "header", dataTypeClass = String.class)
     })
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping(path = "/")
+    @GetMapping()
     public ResponseEntity<List<UserRest>> getAllUsers() {
         List<UserDto> userDtos = userService.getAllUsers();
         return ResponseEntity.accepted().body(userDtos.stream().map(userDto -> modelMapper.map(userDto, UserRest.class)).collect(Collectors.toList()));
