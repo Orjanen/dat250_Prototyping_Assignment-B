@@ -1,14 +1,16 @@
 import React, {useEffect, useState} from 'react';
-import {List, Button, Segment, Label} from "semantic-ui-react";
+import {List, Button, Segment, Label, Modal} from "semantic-ui-react";
 
 import IconHeader from "../components/header/IconHeader";
 import agent from "../api/agent";
+import HandleIotDevices from "../shared/IOT/HandleIotDevices";
 
 const MyPollPage = (props) => {
 
 
 
     const [user, setUser] = useState({})
+    const [open, setOpen] = useState(false)
 
     useEffect( () =>{
         const getUser = async (id) =>{
@@ -24,6 +26,10 @@ const MyPollPage = (props) => {
 
     },[props.match.params.id])
 
+    const handleOpenClose = () =>{
+        setOpen(!open)
+    }
+
     return (
         <Segment style={{marginTop: '7em'}}>
             <div style={{textAlign: "center"}}>
@@ -36,6 +42,9 @@ const MyPollPage = (props) => {
                 <List key={poll.pollId} divided verticalAlign='middle'>
                     <List.Item>
                         <List.Content floated='right'>
+                            <Button positive
+                                    onClick={() =>{handleOpenClose()}}
+                            >Handel IOT Devices</Button>
                             <Button primary
                                     onClick={() =>{props.history.push(`/poll/${poll.pollId}/result`)}}
                             >Result</Button>
@@ -54,6 +63,10 @@ const MyPollPage = (props) => {
                     </List.Item>
                 </List>
                 ))}
+
+            {<Modal open={open}>
+                <HandleIotDevices openClose={handleOpenClose}/>
+            </Modal>}
 
         </Segment>
 

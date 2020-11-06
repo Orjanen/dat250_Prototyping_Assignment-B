@@ -59,8 +59,13 @@ const Vote = {
     VoteAsRegisteredUser: (pollId, userId, body) => requests.post(`/vote/poll/${pollId}/user/${userId}`, body),
 }
 
+const IOT = {
+    getAllUnpairedDevices: () => requests.get('/device/unpaired'),
+}
+
 export default {
     User,
     Poll,
-    Vote
+    Vote,
+    IOT
 }
