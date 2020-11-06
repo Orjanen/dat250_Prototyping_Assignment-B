@@ -1,8 +1,26 @@
-import React, {Fragment} from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 import {Segment, List, Button, Header} from "semantic-ui-react";
 import IconHeader from "../components/header/IconHeader";
+import agent from "../api/agent";
 
-const AdminPage = () => {
+const AdminPage = (props) => {
+    const [users, setUsers] = useState([]);
+
+    useEffect( () =>{
+        const getUsers = async () =>{
+            try {
+                await  agent.User.getAll().then(response => {
+                    setUsers(response)
+                })
+            }catch (e){
+                console.log('Some thing went wrong')
+            }
+        }
+        getUsers()
+
+    },[])
+
+    console.log(users)
     return (
         <Fragment>
         <Segment style={{marginTop: '7em'}}>
@@ -12,15 +30,18 @@ const AdminPage = () => {
                     mainText='Admin Page'
                 />
             </div>
+            {users.forEach(user => (
+                <List divided verticalAlign='middle'>
+                    <List.Item>
+                        <List.Content floated='right'>
+                            <Button color='red'>Ban</Button>
+                        </List.Content>
+                        <List.Content>{user}</List.Content>
+                    </List.Item>
+                </List>
+            ))}
             <Header style={{textAlign: "center"}}> Users</Header>
-            <List divided verticalAlign='middle'>
-                <List.Item>
-                    <List.Content floated='right'>
-                        <Button color='red'>Ban</Button>
-                    </List.Content>
-                    <List.Content>Lena</List.Content>
-                </List.Item>
-            </List>
+
         </Segment>
 
             <Segment>

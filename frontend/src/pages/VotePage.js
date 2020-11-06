@@ -62,7 +62,20 @@ const VotePage = (props) => {
         </Fragment>
     )
 
-    const show = poll.private && logedIn
+    let show;
+
+    if (poll.private && logedIn){
+        show = true
+    } else if(poll.private && !logedIn){
+        show = false
+    } else if(poll.private){
+        show = true
+    }
+
+    if (poll.private === false){
+        show = true
+    }
+
 
     const modalLogin = (
         <Modal
