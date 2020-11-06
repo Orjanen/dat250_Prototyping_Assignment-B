@@ -4,6 +4,7 @@ import SelectInput from "../Form/SelectInput";
 import IconHeader from "../../components/header/IconHeader";
 import {Field, Form as FinalForm} from "react-final-form";
 import agent from "../../api/agent";
+import {cleanup} from "@testing-library/react";
 
 
 const HandleIotDevices = (props) => {
@@ -21,6 +22,8 @@ const HandleIotDevices = (props) => {
             }
         }
         getAllUnpairedDevices()
+
+        return () => cleanup()
 
     },[devices])
 
