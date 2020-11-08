@@ -75,14 +75,13 @@ const ResultPage = (props) => {
 
     }, [poll, updateVotes])
 
-
     let optionOneVotes = optionOne;
     let optionTwoVotes = optionTwo;
 
     const data =
         [
-        { title: 'optionOne', value: optionOneVotes, color: '#2ddbc6'},
-        { title: 'optionTwo', value: optionTwoVotes, color: '#d4373d' }
+        { title: 'optionOne', value: optionOneVotes, color: '#2ddbc6', text: poll.optionOne},
+        { title: 'optionTwo', value: optionTwoVotes, color: '#d4373d', text: poll.optionTwo }
     ]
 
     let show;
@@ -125,7 +124,7 @@ const ResultPage = (props) => {
                     mainText='Result'
                     subText={`for pollId ${poll.pollId}`}
                 />
-                <Grid columns={4} textAlign='center'>
+                <Grid columns={4} textAlign='center' style={{marginBottom:'2em'}}>
                     <Grid.Column>
                         <div style={{marginTop: '2em'}}>
                             <div>
@@ -142,17 +141,14 @@ const ResultPage = (props) => {
                         </div>
                     </Grid.Column>
                     <Grid.Column>
-                        <div>
                             <PieChart
                                 data={data}
-                                label={({dataEntry}) => dataEntry.value}
+                                label={({dataEntry}) => dataEntry.text}
                                 labelStyle={(index) => ({
                                     fontSize: '5px',
                                     fontFamily: 'sans-serif',
                                 })}
-
                             />
-                        </div>
                     </Grid.Column>
                 </Grid>
 

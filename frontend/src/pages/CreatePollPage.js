@@ -31,7 +31,7 @@ const CreatePollPage = (props) => {
     }
 
     return (
-        <Segment style={{marginTop: '3em'}} textAlign='center'>
+        <Segment style={{marginTop: '3em'}} textAlign='center' clearing>
             <IconHeader
                 icon='wordpress forms'
                 mainText='Create new poll'

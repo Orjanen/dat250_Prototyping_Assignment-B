@@ -38,7 +38,8 @@ const ProfileDetails = (props) => {
     }
 
     return (
-        <Segment style={{marginTop: '3em'}}>
+        <Segment style={{marginTop: '3em'}} clearing
+        >
             <div style={{textAlign:'center'}}>
                 <IconHeader
                     icon='wordpress forms'

@@ -24,7 +24,7 @@ const LoginPage = (props) => {
 
     return (
         <Fragment>
-            <Segment style={{marginTop: '2em'}}>
+            <Segment style={{marginTop: '2em'}} clearing>
                 <div style={{textAlign:'center'}}>
                 <IconHeader
                     mainText='Login or Sign up'
@@ -42,10 +42,10 @@ const LoginPage = (props) => {
                                 placeholder='Email'
                                 component={TextInput}
                             />
-                            <Label basic>Last name</Label>
+                            <Label basic>Password</Label>
                             <Field
                                 name='password'
-                                placeholder='Last Name'
+                                placeholder='Password'
                                 component={TextInput}
                                 type='password'
                             />

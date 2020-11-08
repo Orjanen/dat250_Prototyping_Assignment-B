@@ -43,7 +43,7 @@ const HandleIotDevices = (props) => {
         props.openClose()
     }
     return (
-        <Segment style={{marginTop: '3em'}}>
+        <Segment style={{marginTop: '3em'}} clearing>
             <div style={{textAlign:'center'}}>
                 <IconHeader
                     icon='wordpress forms'

@@ -4,6 +4,7 @@ import {List, Button, Segment, Label, Modal} from "semantic-ui-react";
 import IconHeader from "../components/header/IconHeader";
 import agent from "../api/agent";
 import HandleIotDevices from "../shared/IOT/HandleIotDevices";
+import {cleanup} from "@testing-library/react";
 
 const MyPollPage = (props) => {
 
@@ -25,6 +26,8 @@ const MyPollPage = (props) => {
         }
         getUser(props.match.params.id)
 
+        return () => cleanup()
+
     },[props.match.params.id])
 
     const handleOpenClose = (pollId) =>{
@@ -34,7 +37,7 @@ const MyPollPage = (props) => {
 
 
     return (
-        <Segment style={{marginTop: '7em'}}>
+        <Segment style={{marginTop: '7em'}} clearing>
             <div style={{textAlign: "center"}}>
                 <IconHeader
                     icon='pie graph'

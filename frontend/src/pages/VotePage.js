@@ -15,8 +15,6 @@ const VotePage = (props) => {
 
     const logedIn = (window.localStorage.getItem('token') !== null)
 
-    console.log(logedIn)
-
     useEffect(() => {
         const getPoll = async (id) => {
             try {
