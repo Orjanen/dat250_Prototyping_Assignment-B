@@ -19,7 +19,7 @@ const ResultPage = (props) => {
     const updateVotes = useCallback((opt1, opt2) => {
         setOptionOne(oldOptionOneVotes => oldOptionOneVotes + opt1)
         setOptionTwo(oldOptionTwoVotes => oldOptionTwoVotes + opt2)
-    }, [])
+    }, [optionOne, optionTwo])
 
     const setVotes = useCallback((opt1, opt2) => {
         setOptionOne(opt1)
@@ -39,7 +39,7 @@ const ResultPage = (props) => {
         }
         getPoll(props.match.params.pollId)
 
-    },[props.match.params.pollId])
+    },[props.match.params.pollId, optionOne, optionTwo])
 
 
 

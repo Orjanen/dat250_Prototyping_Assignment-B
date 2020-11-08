@@ -49,6 +49,7 @@ const MyPollPage = (props) => {
                     <List.Item>
                         <List.Content floated='right'>
                             <Button positive
+                                    disabled={poll.timeRemaining === 'PT0S'}
                                     onClick={(pollId) =>{handleOpenClose(poll.pollId)}}
                             >Add IOT Device</Button>
                             <Button primary
