@@ -87,15 +87,22 @@ public class VoteServiceImpl implements VoteService {
             throw new VoteCastForFinishedPollException("Poll is finished, not accepting new votes!");
         }
 
+        int oldOptionOneVotes = voteEntity.getOption1Count();
+        int oldOptionTwoVotes = voteEntity.getOption2Count();
+
         voteEntity.setOption1Count(voteDto.getOption1Count());
         voteEntity.setOption2Count(voteDto.getOption2Count());
 
         VoteEntity updatedVote = voteRepository.save(voteEntity);
         VoteDto returnVote = modelMapper.map(updatedVote, VoteDto.class);
 
-        //TODO: WEBSOCKET: Må kanskje oppdatere poll før den sendes til websocket?
 
-        webSocketMessageSender.sendVoteMessageAfterVoteReceived(poll.getPollId(), returnVote);
+        //Dummy vote containing how much the counts have changed
+        VoteDto voteEntityWithChangedValues = new VoteDto();
+        voteEntityWithChangedValues.setOption1Count(voteDto.getOption1Count() - oldOptionOneVotes);
+        voteEntityWithChangedValues.setOption2Count(voteDto.getOption2Count() - oldOptionTwoVotes);
+
+        webSocketMessageSender.sendVoteMessageAfterVoteReceived(poll.getPollId(), voteEntityWithChangedValues);
 
 
         LOGGER.debug("Done");
