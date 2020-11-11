@@ -17,9 +17,7 @@ import AdminRoute from "./AdminRoute";
 import AdminPage from "./pages/AdminPage";
 
 const App = () => {
-    const user = {
-        firstName: 'admin'
-    }
+
   return (
         <Fragment>
             <NavBar/>
@@ -35,7 +33,7 @@ const App = () => {
                             <PrivateRoute path='/mypoll/:id' exact component={MyPollPage}/>
                             <Route path='/poll/:pollId/result' exact component={ResultPage}/>
                             <PrivateRoute path='/profiledetails/:id' exact component={ProfileDetails}/>
-                            <AdminRoute path='/admin' exact component={AdminPage} user={user}/>
+                            <AdminRoute path='/admin' exact component={AdminPage}/>
                             <Route path='/signup' exact component={SignupPage}/>
                         </Switch>
                     </Container>
