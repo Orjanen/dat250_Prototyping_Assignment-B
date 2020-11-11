@@ -8,8 +8,6 @@ const WelcomePage = (props) => {
     const [pollId, setPollId] = useState('');
     const [showError, setShowError] = useState(false);
 
-    const error = (<p style={{color: 'red'}}> Cant find a Poll with this Id </p>)
-
     const getPoll = async () =>{
 
         let poll = null
@@ -26,6 +24,9 @@ const WelcomePage = (props) => {
         }
 
     }
+
+    const error = (<p style={{color: 'red'}}> Can't find a Poll with this Id / or you need to login, because this poll is private </p>)
+
 
     return (
         <Fragment>
