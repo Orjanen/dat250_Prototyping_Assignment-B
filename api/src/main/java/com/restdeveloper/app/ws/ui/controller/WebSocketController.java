@@ -43,19 +43,6 @@ public class WebSocketController {
     private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketController.class);
 
 
-    @SubscribeMapping("poll/{pollId}/sub")
-    public String confirmSubscriptionToPoll(@DestinationVariable String pollId) {
-        PollDto poll = pollService.getPollByPollId(pollId);
-
-        //TODO: Implement handling of non-existing poll
-        if (poll == null) {
-            return "Poll " + pollId + " does not exists";
-        }
-        LOGGER.debug("WebSocket-Controller initialized to confirm subscription to poll");
-
-        return "Paired with poll: " + pollId;
-    }
-
     @MessageMapping("device/{deviceId}/vote/ws")
     public void receiveWebSocketVoteFromIotDevice(@DestinationVariable("deviceId") String deviceId,
                                                   @Payload String message) {

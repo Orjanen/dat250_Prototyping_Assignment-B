@@ -19,8 +19,7 @@ public class WebSocketMessageSender {
 
         String jsonString = WebSocketMessageConverter.convertVoteToJson(pollId, returnVote,
                                                                         WebSocketMessageConstants.POLL_UPDATE);
-        template.convertAndSend("/topic/poll/" + pollId,
-                                jsonString);
+        template.convertAndSend("/topic/poll/" + pollId, jsonString);
     }
 
     public void sendFinishedPollMessage(PollDto poll) {

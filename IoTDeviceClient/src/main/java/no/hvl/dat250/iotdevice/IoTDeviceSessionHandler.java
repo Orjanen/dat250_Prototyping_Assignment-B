@@ -50,8 +50,6 @@ public class IoTDeviceSessionHandler extends StompSessionHandlerAdapter implemen
         session.subscribe("/app/device/" + device.getPublicId(), this);
         session.subscribe("/topic/device/" + device.getPublicId(), this);
 
-
-
     }
 
     @Override
@@ -70,11 +68,7 @@ public class IoTDeviceSessionHandler extends StompSessionHandlerAdapter implemen
             JsonObject jsonObject = gson.fromJson(message, JsonObject.class);
             String context = jsonObject.get("context").getAsString();
 
-            //System.out.println("Received: " + message);
-
-
             if(context.equals(MessageConstants.PAIRED_WITH_NEW_CHANNEL)){
-
                 //TODO: Confirm pairing on device?
                 Poll poll = gson.fromJson(message, Poll.class);
 

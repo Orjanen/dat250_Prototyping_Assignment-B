@@ -82,7 +82,6 @@ public class IoTDevice {
     }
 
     public void handleNewPollReceived(){
-        //TODO: Setup new poll
         for(DeviceListener listener : deviceListeners){
             listener.onNewPollReceived(currentPoll);
         }

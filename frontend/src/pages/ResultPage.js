@@ -19,12 +19,12 @@ const ResultPage = (props) => {
     const updateVotes = useCallback((opt1, opt2) => {
         setOptionOne(oldOptionOneVotes => oldOptionOneVotes + opt1)
         setOptionTwo(oldOptionTwoVotes => oldOptionTwoVotes + opt2)
-    }, [optionOne, optionTwo])
+    }, [])
 
     const setVotes = useCallback((opt1, opt2) => {
         setOptionOne(opt1)
-        setOptionTwo(opt2)
-    })
+        setOptionTwo( opt2)
+    }, [])
 
 
     useEffect( () =>{
@@ -37,9 +37,11 @@ const ResultPage = (props) => {
                 console.log('Some thing went wrong')
             }
         }
+
         getPoll(props.match.params.pollId)
 
-    },[props.match.params.pollId, optionOne, optionTwo])
+    },[props.match.params.pollId])
+
 
 
 
@@ -59,10 +61,10 @@ const ResultPage = (props) => {
             "Authorization": window.localStorage.getItem("token")
         }
 
-
+        let a;
         ws.connect(headers, function (frame) {
 
-            ws.subscribe("/topic/poll/" +poll.pollId,
+            a = ws.subscribe("/topic/poll/" +poll.pollId,
                 (message) => {
 
                     const vote = JSON.parse(message.body)
@@ -73,7 +75,12 @@ const ResultPage = (props) => {
             )
         }, )
 
-    }, [poll, updateVotes])
+        return function cleanup(){
+            ws.unsubscribe(a.id);
+
+        }
+
+    }, [poll, updateVotes, setVotes])
 
     let optionOneVotes = optionOne;
     let optionTwoVotes = optionTwo;

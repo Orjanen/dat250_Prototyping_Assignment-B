@@ -151,11 +151,8 @@ public class IoTDeviceGUIController implements DeviceListener {
         });
 
         resetDisplayedVotesToCurrentPollVotes(poll);
-        //Duration remaining = new Duration(poll.getTimeRemaining().toSeconds());
 
         java.time.Duration remaining = poll.getTimeRemaining();
-
-
 
         long totalSecondsRemaining = poll.getTimeRemaining().getSeconds();
         String daysString;
@@ -177,12 +174,6 @@ public class IoTDeviceGUIController implements DeviceListener {
                     String countdownText = String.format("D: %d | H: %d | M: %d | S: %d", remainingDays, remainingHours, remainingMinutes, remainingSeconds);
                     countdownLabel.setText(countdownText);
                 }
-
-
-
-
-
-
             }
         });
         Timeline timeline = new Timeline(countdownKeyFrame);

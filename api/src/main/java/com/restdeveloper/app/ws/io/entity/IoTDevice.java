@@ -1,9 +1,6 @@
 package com.restdeveloper.app.ws.io.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 public class IoTDevice extends Voter {
@@ -12,7 +9,7 @@ public class IoTDevice extends Voter {
     @GeneratedValue
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private PollEntity currentPoll;
 
 
@@ -27,7 +24,7 @@ public class IoTDevice extends Voter {
     }
 
     public boolean pairDeviceWithPoll(PollEntity pollEntity) {
-        //TODO: false if already paired
+
         currentPoll = pollEntity;
         return true;
     }
